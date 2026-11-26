@@ -1,0 +1,11 @@
+{
+  "name": "hukuk-mcp",
+  "owner": { "name": "Ihsan Soycelik", "url": "https://github.com/ihsansoycelik" },
+  "plugins": [
+    {
+      "name": "hukuk",
+      "source": "./",
+      "description": "Türk tüketici hukuku ve SGK için MCP sunucusu + kullanım becerisi."
+    }
+  ]
+}

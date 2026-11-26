@@ -25,3 +25,4 @@ export {
   dugumVektorMetni,
 } from "./router.ts";
 export { ftsTokenleri, guvenliFtsToken, ftsAndSorgusu, ftsOrSorgusu, ftsSorgulari } from "./fts.ts";
+export { hukukTerimleri } from "./esanlam.ts";

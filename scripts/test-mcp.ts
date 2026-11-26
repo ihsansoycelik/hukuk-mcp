@@ -141,7 +141,7 @@ async function main(): Promise<void> {
   if (komut === "dogrula") {
     const girdi = rest.join(" ").trim();
     if (!girdi) throw new Error("kimlik veya künye gerekli");
-    const args = girdi.startsWith("m:") || girdi.startsWith("k:") || girdi.startsWith("t/") || girdi.startsWith("s/") ? { id: girdi } : { kunye: girdi };
+    const args = girdi.startsWith("--metin ") ? { metin: girdi.slice(8) } : girdi.startsWith("m:") || girdi.startsWith("k:") || girdi.startsWith("t/") || girdi.startsWith("s/") ? { id: girdi } : { kunye: girdi };
     const r = await client.callTool({ name: "dogrula", arguments: args });
     return bitir((r as { content: { text?: string }[] }).content.map((c) => c.text ?? "").join(""));
   }

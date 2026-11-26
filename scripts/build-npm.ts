@@ -84,5 +84,11 @@ const pkg = {
 };
 writeFileSync(join(OUT, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
 
+// .mcpb (Claude Desktop one-click bundle): same files + manifest.json.
+// Pack with: npx -y @anthropic-ai/mcpb pack dist-npm hukuk-mcp.mcpb
+const manifest = JSON.parse(readFileSync(join(ROOT, "mcpb", "manifest.json"), "utf8")) as { version: string };
+manifest.version = rootPkg.version;
+writeFileSync(join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+
 const mb = (p: string): string => (statSync(p).size / 1e6).toFixed(1) + " MB";
 process.stderr.write(`dist-npm hazır · bundle ${mb(join(OUT, "dist", "index.js"))} · db ${mb(join(OUT, "data", "hukuk.db"))}\n`);

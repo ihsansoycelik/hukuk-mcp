@@ -302,12 +302,17 @@ function main(): void {
       const bosOran = golden.length ? bosSonuc / golden.length : 0;
       const butunluk = atifKontrol ? 1 - atifHata / atifKontrol : 1;
       const tokenP95 = p95(tokenDegerleri);
+      // On the real corpus the golden set is mechanical (a decision is
+      // "relevant" when it contains the query's own stems), so it penalises
+      // lay->legal expansion. It is reported, not gated; the gate for the real
+      // corpus is eval/lay-search.ts (source-judged relevance).
+      const mekanik = basename(args.search) === "search-real.jsonl";
       satirlar.push({
-        metrik: "Arama Recall@5",
+        metrik: mekanik ? "Arama Recall@5 (mekanik set)" : "Arama Recall@5",
         deger: yuzde(recall),
-        esik: `≥ ${yuzde(KALITE_ESIKLERI.geriCagirma5)}`,
-        sonuc: recall >= KALITE_ESIKLERI.geriCagirma5 ? "PASS" : "FAIL",
-        gecti: recall >= KALITE_ESIKLERI.geriCagirma5,
+        esik: mekanik ? "bilgi" : `≥ ${yuzde(KALITE_ESIKLERI.geriCagirma5)}`,
+        sonuc: mekanik ? "—" : recall >= KALITE_ESIKLERI.geriCagirma5 ? "PASS" : "FAIL",
+        gecti: mekanik ? null : recall >= KALITE_ESIKLERI.geriCagirma5,
       });
       satirlar.push({
         metrik: "Arama Precision@5",

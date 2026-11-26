@@ -302,7 +302,10 @@ def build(no_fetch: bool = False) -> dict:
         snapshot_sha = hashlib.sha256(
             json.dumps(snapshot, ensure_ascii=False, sort_keys=True,
                        separators=(",", ":")).encode("utf-8")).hexdigest()
-        surum = f"v20261022.{int(snapshot_sha[:12], 16) % 1_000_000_000}"
+        # vYYYYMMDD.<content hash>: the date is the snapshot day (override with
+        # HUKUK_SNAPSHOT_DATE=YYYYMMDD for reproducible rebuilds)
+        gun = os.environ.get("HUKUK_SNAPSHOT_DATE") or time.strftime("%Y%m%d", time.gmtime())
+        surum = f"v{gun}.{int(snapshot_sha[:12], 16) % 1_000_000_000}"
 
         # version is the maximum source-field version; each YAML carries its own
         ontology_surum = max((o.get("surum") or 0) for o in sources["ontologies"])

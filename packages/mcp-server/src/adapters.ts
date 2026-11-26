@@ -75,6 +75,14 @@ class CorpusAdaptor implements CorpusPort {
     }
   }
 
+  maddeNumaralari(mevzuatId: string): string[] {
+    try {
+      return (this.db.prepare("SELECT madde_no FROM madde WHERE mevzuat_id = ?").all(mevzuatId) as unknown as { madde_no: string }[]).map((r) => r.madde_no);
+    } catch {
+      return [];
+    }
+  }
+
   argumanlar(dugumId: string): ArgumanSatiri[] {
     try {
       return this.db

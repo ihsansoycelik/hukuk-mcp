@@ -168,7 +168,9 @@ def main() -> int:
     ok = err = 0
     t0 = time.time()
     with OUT.open("a", encoding="utf-8") as fh:
-        for phrase, types in KEYWORDS:
+        start = os.environ.get("START_AT")
+        keywords = KEYWORDS[[k for k, _ in KEYWORDS].index(start):] if start else KEYWORDS
+        for phrase, types in keywords:
             for item_type in types:
                 want = PER_KEYWORD if item_type == "YARGITAYKARARI" else max(PER_KEYWORD // 2, 10)
                 got = 0

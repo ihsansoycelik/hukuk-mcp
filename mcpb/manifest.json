@@ -1,0 +1,26 @@
+{
+  "manifest_version": "0.2",
+  "name": "hukuk-mcp",
+  "display_name": "Türk Hukuku (tüketici + SGK)",
+  "version": "0.2.0",
+  "description": "Türk tüketici hukuku ve SGK sorularına kaynaklı, süreleri kuralla hesaplanmış yanıt; atıf denetimi. Çevrimdışı.",
+  "long_description": "hukuk-mcp, 14 kanun ve Yargıtay/BAM kararlarından derlenmiş yerel bir korpusla çalışır. Sorgu anında internete çıkmaz, üretken model kullanmaz. Hukuki danışmanlık değildir.",
+  "author": { "name": "Ihsan Soycelik", "url": "https://github.com/ihsansoycelik" },
+  "homepage": "https://github.com/ihsansoycelik/hukuk-mcp",
+  "repository": { "type": "git", "url": "https://github.com/ihsansoycelik/hukuk-mcp" },
+  "license": "MIT",
+  "keywords": ["hukuk", "tüketici", "sgk", "turkish law"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": { "command": "node", "args": ["${__dirname}/dist/index.js"] }
+  },
+  "tools": [
+    { "name": "hukuk_sor", "description": "Tüketici veya SGK uyuşmazlığını tek çağrıda yanıtlar." },
+    { "name": "derinles", "description": "Bir madde, karar veya konuyu kimliğiyle açar." },
+    { "name": "ara", "description": "Yargıtay ve BAM kararlarında arama." },
+    { "name": "hesapla", "description": "Süre, eşik ve merci kuralları." },
+    { "name": "dogrula", "description": "Atıf denetimi: id, künye veya serbest metin." }
+  ],
+  "compatibility": { "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=22.13.0" } }
+}

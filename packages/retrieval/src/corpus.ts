@@ -14,6 +14,7 @@
  */
 import { DatabaseSync, type StatementSync } from "node:sqlite";
 import { existsSync } from "node:fs";
+import { hukukTerimleri } from "./esanlam.ts";
 import { resolve } from "node:path";
 import { analyze, trLower } from "@hukuk/tr-text";
 import type { AraInput, DugumKaydi, Kart } from "@hukuk/schema";
@@ -132,15 +133,34 @@ export class Corpus {
 
   /* ------------------------------- search -------------------------------- */
 
+  /**
+   * Case-law search. The citizen's own words and the legal terms they imply
+   * (esanlam.ts) are searched separately and merged with reciprocal rank
+   * fusion, so "paramı geri vermiyorlar" also reaches decisions that only say
+   * "bedel iadesi", without letting the expansion drown the literal match.
+   */
   ara(input: AraSorgusu): SearchHit[] {
     const limit = clamp(Math.trunc(input.limit ?? ARAMA_AYARLARI.varsayilanLimit), 1, 10);
+    const ek = process.env.HUKUK_ESANLAM === "0" ? "" : hukukTerimleri(input.sorgu);
+    if (!ek) return this.araTek(input, limit);
+    // route once; both probes share the citizen's topic
+    const _hedef = this.dugumAraDetay(input.sorgu, input.alan, 1).adaylar[0]?.id ?? null;
+    const asil = this.araTek({ ...input, _hedef }, limit * 2);
+    const hukuki = this.araTek({ ...input, sorgu: ek, _hedef, _basit: true }, limit * 2);
+    return rrfBirlestir([asil, hukuki], limit);
+  }
+
+  private araTek(input: AraSorgusu & { _hedef?: string | null; _basit?: boolean }, limit: number): SearchHit[] {
     const sorgular = ftsSorgulari(input.sorgu);
     if (!sorgular.and) return [];
 
     let gevsekTuru: "altkume" | "or" | null = null;
     let satirlar = this.adaylar(sorgular.and, input);
 
-    if (satirlar.length === 0 && ARAMA_AYARLARI.yedekOr) {
+    if ((input as { _basit?: boolean })._basit) {
+      // cheap probe for the expansion terms: strict AND only (OR over
+      // generic legal words is the expensive path on large corpora)
+    } else if (satirlar.length === 0 && ARAMA_AYARLARI.yedekOr) {
       // Strict AND fails on almost every real phrasing because morphology
       // differs between the query and the indexed keys. Probe AND subsets of
       // the rarest tokens and UNION them: one subset often describes a sibling
@@ -186,7 +206,11 @@ export class Corpus {
     const qTokenleri = new Set(analyze(input.sorgu).tokens);
     // Soft ontology agreement: if the router confidently places the question in
     // a leaf/branch, decisions already tagged there rank above lookalikes.
-    const yon = this.dugumAraDetay(input.sorgu, input.alan, 1);
+    const onceden = (input as { _hedef?: string | null })._hedef;
+    const yon =
+      onceden !== undefined
+        ? { adaylar: onceden ? [{ id: onceden }] : [] }
+        : this.dugumAraDetay((input as { dugumMetni?: string }).dugumMetni ?? input.sorgu, input.alan, 1);
     const hedefDugum = yon.adaylar[0]?.id ?? null;
     const hedefDal = hedefDugum ? hedefDugum.split("/").slice(0, 2).join("/") : null;
     const bmDegerleri = satirlar.map((s) => -sayi(s.bm));
@@ -301,7 +325,7 @@ export class Corpus {
     }
 
     if (kosullar.length === 0) {
-      return this.adaylarHizli(match, ARAMA_AYARLARI.adayLimiti);
+      return this.adaylarHizli(match, (input as { _basit?: boolean })._basit ? 40 : ARAMA_AYARLARI.adayLimiti);
     }
 
     const sql =
@@ -310,7 +334,7 @@ export class Corpus {
       `FROM karar_fts JOIN karar k ON k.id = karar_fts.karar_id ` +
       `WHERE karar_fts MATCH ? AND ${kosullar.join(" AND ")}` +
       ` ORDER BY rank ASC LIMIT ?`;
-    parametreler.push(ARAMA_AYARLARI.adayLimiti);
+    parametreler.push((input as { _basit?: boolean })._basit ? 40 : ARAMA_AYARLARI.adayLimiti);
 
     const rows = this.stmt(sql).all(...parametreler) as unknown as AdaySatiri[];
     return rows.map((r) => ({ ...r, bm: sayi(r.bm), kok: metin(r.kok) }));
@@ -576,4 +600,21 @@ function dugumKaydi(r: Record<string, unknown>): DugumKaydi {
     kurallar: jsonDizi(r["kurallar"]),
     maddeler: jsonDizi(r["maddeler"]),
   };
+}
+
+/** Reciprocal rank fusion (k=60) over several ranked hit lists. */
+export function rrfBirlestir(listeler: SearchHit[][], limit: number, k = 60): SearchHit[] {
+  const puan = new Map<string, { hit: SearchHit; p: number }>();
+  for (const liste of listeler) {
+    liste.forEach((h, i) => {
+      const o = puan.get(h.karar_id);
+      const ek = 1 / (k + i + 1);
+      if (o) o.p += ek;
+      else puan.set(h.karar_id, { hit: h, p: ek });
+    });
+  }
+  return [...puan.values()]
+    .sort((a, b) => b.p - a.p || b.hit.skor - a.hit.skor || (a.hit.karar_id < b.hit.karar_id ? -1 : 1))
+    .slice(0, limit)
+    .map((x) => x.hit);
 }

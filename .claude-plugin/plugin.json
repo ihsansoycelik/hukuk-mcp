@@ -1,0 +1,10 @@
+{
+  "name": "hukuk",
+  "description": "Türk tüketici hukuku ve SGK: kaynaklı, süreleri kuralla hesaplanmış yanıt ve atıf denetimi (hukuk-mcp).",
+  "version": "0.2.0",
+  "author": { "name": "Ihsan Soycelik", "url": "https://github.com/ihsansoycelik" },
+  "homepage": "https://github.com/ihsansoycelik/hukuk-mcp",
+  "repository": "https://github.com/ihsansoycelik/hukuk-mcp",
+  "license": "MIT",
+  "keywords": ["hukuk", "tüketici", "sgk", "turkish-law", "mcp"]
+}

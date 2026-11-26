@@ -66,6 +66,7 @@ export type HesaplaInput = z.infer<typeof HesaplaInput>;
 
 export const DogrulaInput = z.object({
   kunye: z.string().optional().describe("Künye metni"),
+  metin: z.string().max(20000).optional().describe("Atıf içeren serbest metin (ör. taslak yanıt). Tüm kanun maddesi ve karar atıflarını tek tek denetler."),
   id: z.string().optional().describe("Kararlı kimlik"),
 });
 export type DogrulaInput = z.infer<typeof DogrulaInput>;

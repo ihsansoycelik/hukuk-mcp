@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "hukuk": { "command": "npx", "args": ["-y", "hukuk-mcp"] }
+  }
+}

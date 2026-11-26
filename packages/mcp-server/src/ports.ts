@@ -59,6 +59,8 @@ export interface CorpusPort {
   maddeGetir(id: string, tarih?: string): MaddeKaydi | null;
   /** Full-text search over the compiled legislation. Optional for minimal corpora. */
   maddeAra?(sorgu: string, limit: number): MaddeKaydi[];
+  /** Article numbers of one statute (range hints in citation checks). Optional. */
+  maddeNumaralari?(mevzuatId: string): string[];
   argumanlar(dugumId: string): ArgumanSatiri[];
   /** Optional so a minimal corpus can still serve every other tool. */
   argumanGetir?(id: string): ArgumanSatiri | null;

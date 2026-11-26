@@ -17,6 +17,7 @@ import {
 } from "@hukuk/schema";
 import { dugumBul, tumDugumler, surum as ontolojiSurum } from "@hukuk/ontology";
 import { paketle, tokenSay, butceyeSikistir } from "./budget.ts";
+import { atifRaporu, atiflariCikar } from "./atif.ts";
 import { hukukSor, yeniOturum, type Oturum } from "./hukukSor.ts";
 import type { CorpusPort, KuralPort } from "./ports.ts";
 import { bugunISO, dayanakMetni, hataMetni, kararSatiri, trTarih } from "./render.ts";
@@ -224,11 +225,12 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
   sunucu.registerTool(
     "dogrula",
     {
-      description: "Bir künye veya kimliğin var olduğunu doğrular.",
+      description: "Atıf denetimi: id, künye veya metin (taslak yanıt). Uydurma, mülga ve kapsam dışı atıfları işaretler.",
       inputSchema: DogrulaInput.shape,
     },
     async (args) => {
       const input = DogrulaInput.parse(args);
+      if (input.metin) return metin(butceyeSikistir(atifRaporu(atiflariCikar(input.metin, corpus)), 1200));
       if (input.id) {
         const [kimlik, asof] = input.id.split("@");
         const tur = idTuru(kimlik ?? input.id);
