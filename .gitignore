@@ -24,3 +24,4 @@ __pycache__/
 dist-npm/
 eval/fixtures/bench.db
 bench/results/*.db
+*.mcpb

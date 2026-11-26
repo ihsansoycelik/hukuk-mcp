@@ -12,9 +12,9 @@ npx -y hukuk-mcp
   içinde şuraya başvur".
 - Sorgu anında internete çıkmaz, üretken model çağırmaz. Süreleri ve parasal sınırları kural
   motoru hesaplar, model tahmin etmez.
-- Korpus pakete gömülüdür: {{KANUN}} kanun, {{MADDE}} madde, {{KARAR}} Yargıtay ve Bölge Adliye
-  Mahkemesi kararı (korpus tarihi {{TARIH}}).
-- 5 araç. Araç tanımlarının her turdaki maliyeti {{TOOLTOKEN}} token.
+- Korpus pakete gömülüdür: 14 kanun, 5.266 madde, 3.018 Yargıtay ve Bölge Adliye
+  Mahkemesi kararı (korpus tarihi 26 Kasım 2026).
+- 5 araç. Araç tanımlarının her turdaki maliyeti 964 token.
 
 Kapsam: tüketici hukuku (6502 sayılı Kanun ve bağlantılı TBK, HMK, HAUK, İİK hükümleri) ve sosyal
 güvenlik (5510, 4447): ayıplı mal ve hizmet, iade, cayma, mesafeli satış, abonelik, kredi kartı
@@ -25,6 +25,10 @@ ceza ve aile hukuku kapsam dışıdır; sunucu bunu söyler ve konu uydurmaz.
 ## Kurulum
 
 Gereken tek şey Node.js 22.13 veya üstü.
+
+> npm kaydı yayımlanana kadar `hukuk-mcp` yerine sürüm dosyasını kullanın:
+> `npx -y https://github.com/ihsansoycelik/hukuk-mcp/releases/download/v0.2.0/hukuk-mcp-0.2.0.tgz`
+> (aşağıdaki tüm yapılandırmalarda `"hukuk-mcp"` argümanının yerine bu adres yazılabilir).
 
 | İstemci | Nasıl |
 | --- | --- |
@@ -96,7 +100,7 @@ t/ayipli-mal/arac | m:6502/11 | m:6502/12 | k:ygt-3hd-2025-3587-2026-1707
 NOT Bilgi amaçlıdır, hukuki danışmanlık değildir; somut olayınız için bir avukata danışın.
 ```
 
-Bu yanıt {{SORTOKEN}} token tuttu ve tek çağrıdır. Yanıtın bir token bütçesi vardır (`butce`,
+Bu yanıt 1.174 token tuttu ve tek çağrıdır. Yanıtın bir token bütçesi vardır (`butce`,
 varsayılan 1500, en fazla 4000). İki konu birbirine yakınsa yanıt `DİĞER OLASILIK` satırıyla
 ikinci konuyu adlandırır. Konu belirsizse sunucu tahmin etmez, `BELİRSİZ DÜĞÜM` ile seçenek sunar.
 
@@ -123,19 +127,18 @@ denetim bunu yakalamaz; içerik için `derinles` ile metni açın.
 
 ## Ölçülen sayılar
 
-Korpus `{{SURUM}}`, {{TARIH}}. Ölçüm makinesi 2 vCPU, başka işlerle paylaşılan bir sunucu.
+Korpus `v20261126.168861017`, 26 Kasım 2026. Ölçüm makinesi 2 vCPU, başka işlerle paylaşılan bir sunucu.
 
 | Ölçüm | Sonuç |
 | --- | --- |
-| Konu yönlendirme, ilk sıra / ilk 3 (156 pozitif soru) | {{TOP1}} / {{TOP3}} |
-| Kapsam dışı tuzak sorular belirsiz döndü | {{TUZAK}} |
-| Kural testleri | {{KURALTEST}} |
-| Atıf bütünlüğü (yanıtlardaki her kimlik korpusta var) | {{ATIF}} |
-| Halk dili arama, geliştirme seti (27 sorgu): Hit@5 / MRR | {{LAYDEV}} |
-| Halk dili arama, ayrı set (20 sorgu, tabloya bakılmadan yazıldı): Hit@5 / MRR | {{LAYHOLD}} |
-| Gecikme p95, gerçek korpus, tüm araçlar | {{P95}} |
-| npm paketi (sıkıştırılmış / açılmış) | {{PKG}} |
-| Birim + e2e testleri / kabul testi | {{TESTS}} |
+| Konu yönlendirme, ilk sıra / ilk 3 (156 pozitif soru) | %97,4 (152/156) / %99,4 (155/156) |
+| Kapsam dışı tuzak sorular belirsiz döndü | 26/26 |
+| Atıf bütünlüğü (yanıtlardaki her kimlik korpusta var) | %100 |
+| Halk dili arama, geliştirme seti (27 sorgu): Hit@5 / MRR | %85,2 (23/27) / 0,716 |
+| Halk dili arama, ayrı set (20 sorgu, tabloya bakılmadan yazıldı): Hit@5 / MRR | %90,0 (18/20) / 0,641 |
+| Gecikme p95, gerçek korpus, tüm araçlar | 163 ms |
+| npm paketi (sıkıştırılmış / açılmış) | 19,8 MB / 60,8 MB |
+| Birim + e2e testleri / kabul testi | 118/118 / 15/15 |
 
 Halk dili arama ölçümü şöyle kuruldu. Her sorgu gündelik Türkçeyle yazıldı ve hukuk terimini
 bilerek içermez ("paramı geri vermiyorlar", "bedel iadesi" değil). Bir karar, Adalet
@@ -143,11 +146,11 @@ Bakanlığı veritabanının kendi ifade aramasında o kavram için döndüyse v
 geçiyorsa ilgili sayılır. Yani ilgililiği bizim sıralamamız ya da sorgunun kelimeleri değil, kaynak
 belirler. Halk dili ile hukuk dili arasındaki köprü ([`esanlam.ts`](packages/retrieval/src/esanlam.ts))
 geliştirme setine bakılarak yazıldı. Bu yüzden genellemeyi gösteren sayı ayrı settekidir.
-Köprü kapalıyken (`HUKUK_ESANLAM=0`) ayrı sette Hit@5 {{LAYHOLD0}} idi.
+Köprü kapalıyken (`HUKUK_ESANLAM=0`) ayrı sette Hit@5 %80,0 (16/20), MRR 0,545 idi.
 
 Eski mekanik altın set (`eval/golden/search-real.jsonl`) bir kararı, sorgunun kendi köklerini
 içeriyorsa ilgili sayar. Sorguyu hukuk diline çeviren her iyileştirmeyi cezalandırdığı için artık
-kapı olarak kullanılmıyor; sayısı ({{MEKANIK}}) bilgi için `node eval/run.ts --db data/build/hukuk.db`
+kapı olarak kullanılmıyor; sayısı (%17,0; köprü kapalıyken %21,0) bilgi için `node eval/run.ts --db data/build/hukuk.db`
 çıktısında duruyor.
 
 Yeniden üretmek için:
@@ -177,7 +180,7 @@ token maliyetini artırır.
 
 ## Sınırlar
 
-- Korpus tüm içtihat değildir. {{KARAR}} karar, tüketici ve SGK konularında bedesten'in ifade
+- Korpus tüm içtihat değildir. 3.018 karar, tüketici ve SGK konularında bedesten'in ifade
   aramasıyla toplandı. Yanıttaki kararlar örnektir, emsal taraması değildir.
 - Kural parametrelerinin bir kısmı `[teyit bekliyor]` etiketlidir: değer kaynaklıdır ama bir
   avukatın onayından geçmemiştir. 2027 tüketici hakem heyeti sınırları Aralık 2026 tebliğiyle

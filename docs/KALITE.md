@@ -1,3 +1,6 @@
+> Güncel ölçümler (26 Kasım 2026, 3.018 kararlık korpus) README'nin "Ölçülen sayılar" bölümündedir.
+> Bu dosyanın geri kalanı 239 kararlık ilk korpusa aittir ve tarihsel kayıt olarak duruyor.
+
 # Kalite kapıları — ölçülen durum
 
 Bu dosya, planın 12. bölümündeki kapıların **gerçek korpus** üzerindeki ölçümünü tek yerde toplar.
