@@ -50,6 +50,12 @@ check "madde kimliği çözümlenir"             "DOĞRU m:6502/11" \
   dogrula "m:6502/11"
 check "uydurma karar kimliği reddedilir"     "KIMLIK_COZULEMEDI" \
   dogrula "k:ygt-99hd-2021-1-2022-2"
+check "BAM kararı bağlantılı Yargıtay incelemesini gösterir" "ÜST İNCELEME Yargıtay k:ygt-11hd-2026-711-2026-5227: onama" \
+  derinles k:bam-ist-bam-4hd-2024-1746-2025-4149 --butce 600
+check "madde en çok dayanan kararları listeler" "DAYANAN KARARLAR" \
+  derinles m:6502/11 --butce 600
+check "Yargıtay'da bozulmuş BAM atfı uyarılır" "Yargıtay'da bozulmuş görünüyor" \
+  dogrula "k:bam-ist-bam-3hd-2024-3399-2025-1043"
 check "madde metni açılır"                   "Zamanaşımı" \
   derinles m:6502/12 --butce 300
 check "değişen madde son değişiklik tarihini gösterir" "DEĞİŞİKLİK son 24.03.2022" \

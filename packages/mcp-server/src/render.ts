@@ -6,7 +6,7 @@
  * Measured saving is in docs/adr/ADR-003-token-butcesi.md.
  */
 import type { KuralSonucu } from "@hukuk/schema";
-import type { ArgumanSatiri, KararOzet } from "./ports.ts";
+import type { ArgumanSatiri, CorpusPort, KararOzet } from "./ports.ts";
 
 /** ISO (2027-03-14) -> 14.03.2027, the form a Turkish reader expects. */
 export function trTarih(iso: string): string {
@@ -132,13 +132,20 @@ export function kuralSatiri(s: KuralSonucu, kuralId: string): string {
   return `- ${kuralId}: ${deger} — ${s.kisa}${dayanak}${durum}`;
 }
 
-export function kararSatiri(k: KararOzet, oncedenGonderildi = false): string {
+/** " · üst: bozma" suffix for a BAM hit whose Yargıtay review is in the corpus; "" otherwise. */
+export function ustEki(corpus: { ustInceleme?(id: string): { ust_sonuc: string | null } | null }, k: KararOzet): string {
+  if (k.mahkeme !== "bam") return "";
+  const u = corpus.ustInceleme?.(k.karar_id);
+  return u?.ust_sonuc ? ` · üst: ${u.ust_sonuc}` : "";
+}
+
+export function kararSatiri(k: KararOzet, oncedenGonderildi = false, ek = ""): string {
   const kunye = `${k.daire || k.mahkeme}, ${trTarih(k.tarih)}`;
   if (oncedenGonderildi) return `- ${k.karar_id} (önceden gönderildi)`;
   const sonuc = k.sonuc ? `, ${k.sonuc}` : "";
   const kesin = k.kesinlesme === "kesin" ? ", kesin" : "";
   const l0 = k.l0 ? ` — ${k.l0}` : "";
-  return `- ${k.karar_id} (${kunye}${sonuc}${kesin})${l0}`;
+  return `- ${k.karar_id} (${kunye}${sonuc}${kesin})${l0}${ek}`;
 }
 
 export function argumanSatiri(a: ArgumanSatiri): string {
@@ -155,4 +162,24 @@ export interface HukukHatasi {
 
 export function hataMetni(h: HukukHatasi): string {
   return `HATA ${h.kod} ${h.mesaj} | SONRAKI ADIM: ${h.sonraki_adim}`;
+}
+
+/** DAYANDIĞI MADDELER / ÜST İNCELEME / İNCELEDİĞİ lines of a decision, from the citation graph. */
+export function kararBaglantiSatirlari(
+  corpus: Pick<CorpusPort, "kararAtiflari" | "ustInceleme" | "altInceleme">,
+  k: Pick<KararOzet, "karar_id" | "mahkeme">,
+): string[] {
+  const out: string[] = [];
+  const maddeler = corpus.kararAtiflari?.(k.karar_id) ?? [];
+  if (maddeler.length) out.push(`DAYANDIĞI MADDELER ${maddeler.slice(0, 6).join(" , ")}`);
+  if (k.mahkeme === "bam") {
+    const u = corpus.ustInceleme?.(k.karar_id);
+    if (u) out.push(`ÜST İNCELEME Yargıtay ${u.ust_karar_id}: ${u.ust_sonuc ?? "sonuç bilinmiyor"} (bağlantılı karar; sonuç metinden sezgisel)`);
+  } else if (k.mahkeme === "yargitay") {
+    for (const a of corpus.altInceleme?.(k.karar_id) ?? []) {
+      const no = [a.alt_esas && `${a.alt_esas} E.`, a.alt_karar && `${a.alt_karar} K.`].filter(Boolean).join(" ");
+      out.push(`İNCELEDİĞİ ${a.alt_daire}${no ? ` ${no}` : ""}${a.alt_karar_id ? ` (${a.alt_karar_id})` : ""}`);
+    }
+  }
+  return out;
 }

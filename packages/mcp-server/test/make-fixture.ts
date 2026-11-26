@@ -150,5 +150,31 @@ insDeg.run("m:6502/11", 3, "degisik", "2022-03-24", "7392", "6", "Değişik:24/3
 insDeg.run("m:6502/11", 2, "mulga", "2020-01-01", "7000", "1", "Mülga:1/1/2020-7000/1 md.");
 insDeg.run("m:6502/11", null, "ek", "2016-06-01", "6000", "5", "Ek: 1/6/2016-6000/5 md.");
 
+// citation graph + appeal chain (Faz 3b): tiny tables mirroring scripts/build-graph.ts
+db.exec(`
+  DROP TABLE IF EXISTS karar_atif; DROP TABLE IF EXISTS ust_inceleme;
+  CREATE TABLE karar_atif (karar_id TEXT NOT NULL, madde_id TEXT NOT NULL, adet INTEGER NOT NULL, mulga INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (karar_id, madde_id));
+  CREATE INDEX karar_atif_madde ON karar_atif(madde_id);
+  CREATE TABLE ust_inceleme (ust_karar_id TEXT NOT NULL, seviye TEXT NOT NULL, alt_daire TEXT, alt_esas TEXT, alt_karar TEXT, alt_karar_id TEXT, ust_sonuc TEXT, kaynak TEXT);
+  CREATE INDEX ust_inceleme_ust ON ust_inceleme(ust_karar_id);
+  CREATE INDEX ust_inceleme_alt ON ust_inceleme(alt_karar_id);
+`);
+const BAM = "k:bam-ist-bam-12hd-2021-77-2022-88";
+insKarar.run(BAM, "bam", "İstanbul Bölge Adliye Mahkemesi 12. Hukuk Dairesi", "", "", "2022-04-05", "bilinmiyor", 50, `https://example.invalid/${BAM}`,
+  "Ayıplı mal nedeniyle bedel iadesi kabul edilmiştir.", "Ayıplı mal nedeniyle bedel iadesi kabul edilmiştir.", 9, 9, null, "kabul", BAM);
+const UST = "k:ygt-3hd-2024-100-2024-200";
+insKarar.run(UST, "yargitay", "3. Hukuk Dairesi", "", "", "2024-05-02", "kesin", 70, `https://example.invalid/${UST}`,
+  "Bölge adliye kararı bozulmuştur.", "Bölge adliye kararı bozulmuştur.", 8, 8, null, "bozma", UST);
+const insAtif = db.prepare("INSERT INTO karar_atif (karar_id, madde_id, adet, mulga) VALUES (?,?,?,?)");
+insAtif.run(BAM, "m:6502/11", 2, 0);
+insAtif.run(BAM, "m:6502/12", 1, 0);
+insAtif.run("k:ygt-13hd-2013-7601-2013-16449", "m:6502/11", 1, 0);
+insAtif.run(UST, "m:6502/11", 3, 0);
+const insUst = db.prepare(
+  "INSERT INTO ust_inceleme (ust_karar_id, seviye, alt_daire, alt_esas, alt_karar, alt_karar_id, ust_sonuc, kaynak) VALUES (?,?,?,?,?,?,?,?)",
+);
+insUst.run(UST, "bam", "İstanbul Bölge Adliye Mahkemesi 12. Hukuk Dairesi", "2021/77", "2022/88", BAM, "bozma", "metin-baslik");
+insUst.run(UST, "ilkderece", "İstanbul 1. Asliye Ticaret Mahkemesi", "2019/10", "2020/20", null, "bozma", "metin-baslik");
+
 db.close();
 console.log(`fixture written: ${out}`);

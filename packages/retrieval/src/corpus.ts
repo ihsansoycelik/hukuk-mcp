@@ -54,6 +54,9 @@ interface KararSatiri extends AdaySatiri {
   kaynak_url: string;
 }
 
+/** Multiplier for a decision that cites an article the routed node's card cites. */
+const ATIF_SINYAL_CARPANI = 1.15;
+
 function metin(v: unknown): string {
   return typeof v === "string" ? v : v == null ? "" : String(v);
 }
@@ -90,6 +93,9 @@ export class Corpus {
   private yonlendirici: DugumYonlendirici | null = null;
   private dfStmt: StatementSync | null = null;
   private dfCache = new Map<string, number>();
+  /** karar_atif exists (checked lazily); false makes the citation signal a no-op */
+  private atifVar: boolean | null = null;
+  private atifKumeCache = new Map<string, Set<string>>();
 
   constructor(dbPath?: string) {
     const secilen = dbPath ?? process.env["HUKUK_DB"] ?? VARSAYILAN_DB;
@@ -259,6 +265,7 @@ export class Corpus {
     // so the weakest candidate does not lose all BM25 credit).
     const normBm = (v: number) => (aralik > 1e-9 ? taban + (1 - taban) * ((v - min) / aralik) : 0.5);
 
+    const atifKume = hedefDugum ? this.atifKumesi(hedefDugum) : null;
     const simdikiYil = new Date().getFullYear();
     const hits: SearchHit[] = [];
     for (let i = 0; i < satirlar.length; i++) {
@@ -288,8 +295,10 @@ export class Corpus {
         if (s.dugum_id === hedefDugum) dugumCarpan = ARAMA_AYARLARI.dugumUyumCarpani;
         else if (hedefDal && s.dugum_id.startsWith(hedefDal + "/")) dugumCarpan = ARAMA_AYARLARI.dalUyumCarpani;
       }
+      const atifCarpan = atifKume?.has(s.id) ? ATIF_SINYAL_CARPANI : 1;
       const skor = yuvarla(
         temel *
+          atifCarpan *
           gevsekCarpan *
           sonucCarpan *
           dugumCarpan *
@@ -324,6 +333,33 @@ export class Corpus {
       return a.karar_id < b.karar_id ? -1 : 1;
     });
     return hits;
+  }
+
+  /**
+   * Decisions that cite an article the routed node's card cites (`karar_atif`).
+   * Null when the signal is off, the node has no statute sources, or the DB has
+   * no karar_atif table (synthetic benches): a cheap no-op there. Cached per node.
+   */
+  private atifKumesi(dugumId: string): Set<string> | null {
+    // Default OFF: eval/variants.ts showed no Hit@5 gain and a lower MRR on the holdouts.
+    if (process.env["HUKUK_ATIF_SINYAL"] !== "1") return null;
+    if (this.atifVar === false) return null;
+    const onbellek = this.atifKumeCache.get(dugumId);
+    if (onbellek) return onbellek.size ? onbellek : null;
+    if (this.atifVar === null) {
+      this.atifVar = !!this.db.prepare("SELECT 1 AS v FROM sqlite_master WHERE name = 'karar_atif' LIMIT 1").get();
+      if (!this.atifVar) return null;
+    }
+    const maddeler = (this.kartGetir(dugumId)?.kaynaklar ?? []).filter((x) => x.startsWith("m:"));
+    const kume = new Set<string>();
+    if (maddeler.length) {
+      const rows = this.db
+        .prepare(`SELECT DISTINCT karar_id FROM karar_atif WHERE madde_id IN (${maddeler.map(() => "?").join(",")})`)
+        .all(...maddeler) as unknown as { karar_id: string }[];
+      for (const r of rows) kume.add(r.karar_id);
+    }
+    this.atifKumeCache.set(dugumId, kume);
+    return kume.size ? kume : null;
   }
 
   private adaylar(match: string, input: AraSorgusu): AdaySatiri[] {

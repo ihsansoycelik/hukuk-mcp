@@ -16,6 +16,7 @@
  *     data/hukuk.db            compiled corpus (read-only SQLite)
  */
 import { build } from "esbuild";
+import { DatabaseSync } from "node:sqlite";
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,6 +29,16 @@ const rootPkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as 
 if (!existsSync(DB)) {
   process.stderr.write(`korpus yok: ${DB}\nÖnce: uv run python pipeline/build.py\n`);
   process.exit(1);
+}
+
+{
+  const kontrol = new DatabaseSync(DB, { readOnly: true });
+  const var_ = kontrol.prepare("SELECT 1 AS v FROM sqlite_master WHERE name = 'karar_atif'").get();
+  kontrol.close();
+  if (!var_) {
+    process.stderr.write(`karar_atif tablosu yok: ${DB}\nGraf adımı çalışmamış. Önce: node scripts/build-graph.ts (ya da pnpm build:data)\n`);
+    process.exit(1);
+  }
 }
 
 rmSync(OUT, { recursive: true, force: true });

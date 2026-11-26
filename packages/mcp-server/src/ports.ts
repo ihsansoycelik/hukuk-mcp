@@ -62,6 +62,23 @@ export interface ArgumanSatiri {
   belirleyici: string | null;
 }
 
+/** One reviewed (lower) decision of a Yargıtay text, from the appeal-chain table. */
+export interface AltIncelemeSatiri {
+  seviye: "bam" | "ilkderece";
+  alt_daire: string;
+  alt_esas: string;
+  alt_karar: string;
+  /** corpus id of the lower decision when it exists in the corpus */
+  alt_karar_id: string | null;
+  ust_sonuc: string | null;
+}
+
+/** Yargıtay review of a BAM decision. `ust_sonuc` is a heuristic read of the text. */
+export interface UstIncelemeKaydi {
+  ust_karar_id: string;
+  ust_sonuc: string | null;
+}
+
 /** Everything the orchestrator needs from the compiled corpus. */
 export interface CorpusPort {
   dugumAra(metin: string, alan?: string, limit?: number): DugumAday[];
@@ -81,6 +98,16 @@ export interface CorpusPort {
   degisiklikler?(maddeId: string): DegisiklikKaydi[];
   /** Article numbers of one statute (range hints in citation checks). Optional. */
   maddeNumaralari?(mevzuatId: string): string[];
+  /** Statute articles a decision cites (`karar_atif`). Optional; [] without the table. */
+  kararAtiflari?(kararId: string): string[];
+  /** Decisions citing an article, newest first then by weight. Optional; [] without the table. */
+  maddeyeDayananKararlar?(maddeId: string, limit: number): string[];
+  /** How many decisions cite the article. Optional; 0 without the table. */
+  maddeyeDayananSayisi?(maddeId: string): number;
+  /** Yargıtay review of a BAM decision (newest review), or null. */
+  ustInceleme?(kararId: string): UstIncelemeKaydi | null;
+  /** Lower decisions a Yargıtay decision reviewed. */
+  altInceleme?(kararId: string): AltIncelemeSatiri[];
   argumanlar(dugumId: string): ArgumanSatiri[];
   /** Optional so a minimal corpus can still serve every other tool. */
   argumanGetir?(id: string): ArgumanSatiri | null;

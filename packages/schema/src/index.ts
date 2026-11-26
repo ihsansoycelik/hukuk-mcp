@@ -196,6 +196,7 @@ export const DogrulaCikti = nesne({
       kimlik: z.string().nullable(),
       durum: z.enum(["DOGRU", "MULGA", "YOK", "KAPSAM", "MULGA_KANUN"]),
       aciklama: z.string(),
+      uyari: z.string().optional(),
     }),
   ),
   ozet: nesne({

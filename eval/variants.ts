@@ -26,8 +26,10 @@ interface Varyant {
 }
 /** The first entry is the default variant the gate applies to. */
 export const VARYANTLAR: Varyant[] = [
-  { ad: "yalın FTS", env: { HUKUK_ESANLAM: "0" } },
-  { ad: "+ köprü", env: { HUKUK_ESANLAM: "1" } },
+  { ad: "yalın FTS", env: { HUKUK_ESANLAM: "0", HUKUK_ATIF_SINYAL: "0" } },
+  // HUKUK_ATIF_SINYAL is off by default: the signal variant below did not beat this one on MRR.
+  { ad: "+ köprü", env: { HUKUK_ESANLAM: "1", HUKUK_ATIF_SINYAL: "0" } },
+  { ad: "+ köprü + atıf sinyali", env: { HUKUK_ESANLAM: "1", HUKUK_ATIF_SINYAL: "1" } },
 ];
 const VARSAYILAN = "+ köprü";
 const ESIK = 0.65;

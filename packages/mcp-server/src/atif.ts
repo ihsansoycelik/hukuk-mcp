@@ -78,6 +78,19 @@ export interface Atif {
   kimlik: string | null;
   durum: AtifDurum;
   aciklama: string;
+  /** soft warning on an otherwise valid citation (e.g. a BAM decision reversed at Yargıtay) */
+  uyari?: string;
+}
+
+/**
+ * Warning for a BAM decision whose linked Yargıtay review looks like a reversal.
+ * The link and the outcome are heuristic, and the text says so.
+ */
+export function bozulmaUyarisi(corpus: Pick<CorpusPort, "ustInceleme">, kararId: string, mahkeme: string): string | null {
+  if (mahkeme !== "bam") return null;
+  const u = corpus.ustInceleme?.(kararId);
+  if (!u?.ust_sonuc || !/bozma/i.test(u.ust_sonuc)) return null;
+  return `⚠ Yargıtay'da bozulmuş görünüyor (bağlantılı karar ${u.ust_karar_id}, sezgisel)`;
 }
 
 function tl(s: string): string {
@@ -107,7 +120,7 @@ const MULGA_RE = MULGA_TAKMA.map((t) => ({
 // A bare article that follows a statute mention in the same text: "…; m. 12 ise…"
 const YALIN_MADDE_RE = /(?<![\p{L}\d])(?:m\.|md\.)\s*(\d+[a-z]?)(?:\s*\/\s*(\d+))?/giu;
 // Court decision: "<court> E. 2021/123, K. 2022/456" in either order of E/K.
-const KARAR_RE = /((?:yargıtay\s+)?(?:\d+\.\s*(?:hukuk|ceza)\s*dairesi|\d+\.\s*hd|hukuk\s+genel\s+kurulu|hgk|[a-zçğıöşü]+\s+bölge\s+adliye\s+mahkemesi\s+\d+\.\s*hukuk\s+dairesi)[^\n;]{0,40}?(?:e\.?\s*)?(\d{4})\s*\/\s*(\d+)\s*(?:e\.?|esas)[\s,]*(?:k\.?\s*)?(\d{4})\s*\/\s*(\d+)\s*(?:k\.?|karar)?)/giu;
+const KARAR_RE = /((?:yargıtay\s+)?(?:\d+\.\s*(?:hukuk|ceza)\s*dairesi|\d+\.\s*hd|hukuk\s+genel\s+kurulu|hgk|[a-zçğıöşüİı]+\s+bölge\s+adliye\s+mahkemesi\s+\d+\.\s*hukuk\s+dairesi)[^\n;]{0,40}?(?:e\.?\s*)?(\d{4})\s*\/\s*(\d+)\s*(?:e\.?|esas)[\s,]*(?:k\.?\s*)?(\d{4})\s*\/\s*(\d+)\s*(?:k\.?|karar)?)/giu;
 
 function fikraSayisi(m: MaddeKaydi): number {
   let enBuyuk = 0;
@@ -267,9 +280,14 @@ export function atiflariCikar(metin: string, corpus: CorpusPort): Atif[] {
       bulunan = corpus.kararGetir(a);
       if (bulunan) break;
     }
+    const uyari = bulunan ? bozulmaUyarisi(corpus, bulunan.karar_id, bulunan.mahkeme) : null;
     out.push(
       bulunan
-        ? { ham, tur: "karar", kimlik: bulunan.karar_id, durum: "DOGRU", aciklama: `${bulunan.daire} | ${bulunan.tarih} | ${bulunan.sonuc ?? ""} | ${bulunan.kaynak_url}` }
+        ? {
+            ham, tur: "karar", kimlik: bulunan.karar_id, durum: "DOGRU",
+            aciklama: `${bulunan.daire} | ${bulunan.tarih} | ${bulunan.sonuc ?? ""} | ${bulunan.kaynak_url}${uyari ? ` | ${uyari}` : ""}`,
+            ...(uyari ? { uyari } : {}),
+          }
         : { ham, tur: "karar", kimlik: adaylar[0] ?? null, durum: "KAPSAM", aciklama: "korpusta yok; gerçek olabilir ama doğrulanamadı, resmî arama ile teyit edin" },
     );
   }

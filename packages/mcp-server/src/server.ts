@@ -21,11 +21,11 @@ import {
 } from "@hukuk/schema";
 import { dugumBul, tumDugumler, surum as ontolojiSurum } from "@hukuk/ontology";
 import { paketle, tokenSay, butceyeSikistir } from "./budget.ts";
-import { atifOzeti, atifRaporu, atiflariCikar, maddeYokAciklama, type Atif } from "./atif.ts";
+import { atifOzeti, atifRaporu, atiflariCikar, bozulmaUyarisi, maddeYokAciklama, type Atif } from "./atif.ts";
 import { degisiklikSatirlari, olayTarihiBul, olaySonrasiUyarilari } from "./zaman.ts";
 import { hukukSor, yeniOturum, type Oturum } from "./hukukSor.ts";
 import type { CorpusPort, KuralPort } from "./ports.ts";
-import { bugunISO, dayanakKimlikleri, dayanakMetni, hataMetni, kararSatiri, sonucDegeri, trTarih } from "./render.ts";
+import { bugunISO, dayanakKimlikleri, kararBaglantiSatirlari, dayanakMetni, hataMetni, kararSatiri, sonucDegeri, trTarih, ustEki } from "./render.ts";
 
 export const SURUM = "0.1.0";
 
@@ -115,9 +115,14 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
         const m = corpus.maddeGetir(kimlik ?? input.id, asof);
         if (!m) return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `madde bulunamadı: ${input.id}`, sonraki_adim: "kimliği dogrula ile kontrol edin" }));
         const dg = degisiklikSatirlari(corpus.degisiklikler?.(m.id) ?? []);
+        const dayanan = corpus.maddeyeDayananKararlar?.(m.id, 3) ?? [];
+        const dayananSatiri = dayanan.length
+          ? `DAYANAN KARARLAR ${corpus.maddeyeDayananSayisi?.(m.id) ?? dayanan.length} karar | ${dayanan.join(" | ")}`
+          : "";
         const govde = [
           `MADDE ${m.id} | ${m.baslik ?? ""}`.trim(),
           ...dg,
+          dayananSatiri,
           m.metin,
           dg.length === 0 && m.degisiklik ? `DEĞİŞİKLİK ${m.degisiklik}` : "",
           `KAYNAK ${m.kaynak_url}`,
@@ -141,6 +146,7 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
           `KARAR ${k.karar_id} | ${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme}`,
           seviye === "L0" ? (k.l0 ?? "") : (k.l1 || k.l0 || ""),
           seviyeNotu,
+          ...kararBaglantiSatirlari(corpus, k),
           `KAYNAK ${k.kaynak_url}`,
         ]
           .filter(Boolean)
@@ -213,7 +219,7 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
       const bolumler = [
         {
           etiket: "KARARLAR",
-          metin: hits.map((k) => kararSatiri(k)).join("\n"),
+          metin: hits.map((k) => kararSatiri(k, false, ustEki(corpus, k))).join("\n"),
           oncelik: 10,
         },
       ];
@@ -309,9 +315,12 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
               ham: input.id, tur: "karar", kimlik: kimlik ?? input.id, durum: "KAPSAM", aciklama: KAPSAM_ACIKLAMA,
             });
           }
-          return tek(`DOĞRU ${k.karar_id} | ${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`, {
+          const uyari = bozulmaUyarisi(corpus, k.karar_id, k.mahkeme);
+          const sonek = uyari ? ` | ${uyari}` : "";
+          return tek(`DOĞRU ${k.karar_id} | ${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}${sonek}`, {
             ham: input.id, tur: "karar", kimlik: k.karar_id, durum: "DOGRU",
-            aciklama: `${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`,
+            aciklama: `${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}${sonek}`,
+            ...(uyari ? { uyari } : {}),
           });
         }
         if (tur === "madde") {
@@ -352,9 +361,12 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
         for (const ad of adaylar) {
           const k = corpus.kararGetir(ad);
           if (k) {
-            return tek(`DOĞRU ${k.karar_id} | ${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`, {
+            const uyari = bozulmaUyarisi(corpus, k.karar_id, k.mahkeme);
+            const sonek = uyari ? ` | ${uyari}` : "";
+            return tek(`DOĞRU ${k.karar_id} | ${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}${sonek}`, {
               ham: input.kunye, tur: "karar", kimlik: k.karar_id, durum: "DOGRU",
-              aciklama: `${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`,
+              aciklama: `${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}${sonek}`,
+              ...(uyari ? { uyari } : {}),
             });
           }
         }

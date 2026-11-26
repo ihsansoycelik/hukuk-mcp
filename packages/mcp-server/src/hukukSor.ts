@@ -17,6 +17,7 @@ import {
   eksikEtiket,
   hataMetni,
   kararSatiri,
+  ustEki,
   kuralSatiri,
   sonucDegeri,
   trTarih,
@@ -372,7 +373,7 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
     const satirlar = kararlar.map((k) => {
       const once = oturum.gonderilen.has(k.karar_id);
       oturum.gonderilen.add(k.karar_id);
-      return kararSatiri(k, once);
+      return kararSatiri(k, once, ustEki(corpus, k));
     });
     bolumler.push({
       etiket: "KARARLAR",

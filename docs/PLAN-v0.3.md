@@ -94,6 +94,11 @@ Bitti sayılır: `pnpm eval` tek komutla tüm varyant tablosunu basıyor, README
 Bitti sayılır: eşleşme oranları derleme özetinde, en az bir kabul testi her yeni uyarı için,
 paket boyutu sınırın altında.
 
+Faz 3 sonrası not (26 Kasım 2026): temyiz zinciri 1.600 BAM başlığı çıkardı, ama korpustaki 610 BAM
+kararından yalnız 8'i bunlarla eşleşti; iki küme bağımsız toplandığı için. Sonraki veri işi: Yargıtay
+başlıklarında geçen BAM kararlarını esas/karar numarasıyla bedesten'den hedefli çekmek. Atıf sinyali
+ayrı setlerde MRR'yi düşürdü (0,653 -> 0,594), varsayılan kapalı.
+
 ## Faz 4: arama kalitesi (ölçüme göre)
 
 - Kararlar için ham ve köklü iki FTS sütunu, sorguya aynı katlama. Faz 2 ölçüsü artış göstermezse

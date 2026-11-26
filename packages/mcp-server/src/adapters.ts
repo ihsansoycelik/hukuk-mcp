@@ -10,7 +10,7 @@ import { DatabaseSync } from "node:sqlite";
 import { Corpus } from "@hukuk/retrieval";
 import type { AraInput } from "@hukuk/schema";
 import { ftsKey } from "@hukuk/tr-text";
-import type { ArgumanSatiri, CorpusPort, DegisiklikKaydi, DugumAday, KararOzet, KuralPort, MaddeKaydi } from "./ports.ts";
+import type { AltIncelemeSatiri, ArgumanSatiri, CorpusPort, UstIncelemeKaydi, DegisiklikKaydi, DugumAday, KararOzet, KuralPort, MaddeKaydi } from "./ports.ts";
 import type { KuralSonucu } from "@hukuk/schema";
 
 const BOS_SONUC: KuralSonucu = {
@@ -96,6 +96,66 @@ class CorpusAdaptor implements CorpusPort {
         .all(maddeId) as unknown as DegisiklikKaydi[];
     } catch {
       return []; // table missing in older DBs
+    }
+  }
+
+  kararAtiflari(kararId: string): string[] {
+    try {
+      return (
+        this.db
+          .prepare("SELECT madde_id FROM karar_atif WHERE karar_id = ? ORDER BY adet DESC, madde_id")
+          .all(kararId) as unknown as { madde_id: string }[]
+      ).map((r) => r.madde_id);
+    } catch {
+      return [];
+    }
+  }
+  maddeyeDayananKararlar(maddeId: string, limit: number): string[] {
+    try {
+      return (
+        this.db
+          .prepare(
+            `SELECT a.karar_id FROM karar_atif a JOIN karar k ON k.id = a.karar_id
+             WHERE a.madde_id = ? ORDER BY k.tarih DESC, k.agirlik DESC, k.id LIMIT ?`,
+          )
+          .all(maddeId, limit) as unknown as { karar_id: string }[]
+      ).map((r) => r.karar_id);
+    } catch {
+      return [];
+    }
+  }
+  maddeyeDayananSayisi(maddeId: string): number {
+    try {
+      const r = this.db.prepare("SELECT COUNT(*) AS n FROM karar_atif WHERE madde_id = ?").get(maddeId) as unknown as { n: number };
+      return r.n;
+    } catch {
+      return 0;
+    }
+  }
+  ustInceleme(kararId: string): UstIncelemeKaydi | null {
+    try {
+      const r = this.db
+        .prepare(
+          `SELECT u.ust_karar_id, u.ust_sonuc FROM ust_inceleme u LEFT JOIN karar k ON k.id = u.ust_karar_id
+           WHERE u.alt_karar_id = ? ORDER BY k.tarih DESC, u.ust_karar_id LIMIT 1`,
+        )
+        .get(kararId);
+      return r ? { ust_karar_id: String(r["ust_karar_id"]), ust_sonuc: (r["ust_sonuc"] as string | null) ?? null } : null;
+    } catch {
+      return null;
+    }
+  }
+  altInceleme(kararId: string): AltIncelemeSatiri[] {
+    try {
+      return this.db
+        .prepare(
+          `SELECT seviye, alt_daire, alt_esas, alt_karar, alt_karar_id, ust_sonuc FROM ust_inceleme
+           WHERE ust_karar_id = ? ORDER BY CASE seviye WHEN 'bam' THEN 0 ELSE 1 END`,
+        )
+        .all(kararId)
+        .map((r) => ({ ...r })) as unknown as AltIncelemeSatiri[];
+    } catch {
+      return [];
     }
   }
 
