@@ -1,0 +1,333 @@
+{
+  "status": "ok",
+  "measuredAt": "2026-10-22T19:29:58.768Z",
+  "gitSha": "1667a4f",
+  "tokenizer": "gpt-tokenizer/encode (cl100k_base)",
+  "anchors": {
+    "corpus": {
+      "source": "data/raw/decisions.jsonl (bizim topladığımız Yargıtay kararları)",
+      "decisions": 244,
+      "charsPerToken": 3.35,
+      "medianDocChars": 3611,
+      "medianDocTokens": 1074,
+      "truncatedAtChars": 40000,
+      "label": "ÖLÇÜLDÜ"
+    },
+    "dayanakDocstring": {
+      "chars": 20000,
+      "estimatedTokens": 5970,
+      "evidence": "BELGE (20 000 karakter bütçesi) + TAHMİN (karakter/token oranı)",
+      "sourceUrl": "https://github.com/afsozer/dayanak/blob/master/docs/MCP_CONTRACTS.md"
+    },
+    "snippet": {
+      "chars": 360,
+      "tokens": 107,
+      "evidence": "BELGE (360 karakter) + ÖLÇÜLDÜ (token dönüşümü)"
+    },
+    "hitsPerSearch": 5,
+    "metadataTokensPerHit": 80,
+    "callsStandard": 4,
+    "callsOptimistic": 2,
+    "roundTripMs": 900,
+    "parseMsPerCall": 40,
+    "rttSource": "TAHMİN"
+  },
+  "profiles": [
+    {
+      "id": "dayanak-core",
+      "label": "afsozer/dayanak — core profil",
+      "toolCount": 11,
+      "schemasOnly": 713,
+      "withDescriptions": null,
+      "evidence": "BELGE",
+      "sourceUrl": "https://github.com/afsozer/dayanak/blob/master/docs/MCP_CONTRACTS.md",
+      "note": "Şemalar belgelenen parametre listelerinden yeniden kuruldu; açıklamalar (docstring) yok → alt sınır. dayanak core docstring bütçesi 20.000 karakter (bkz. anchors.dayanakDocstring)."
+    },
+    {
+      "id": "dayanak-full",
+      "label": "afsozer/dayanak — full profil (47 araç)",
+      "toolCount": 47,
+      "schemasOnly": 3053,
+      "withDescriptions": null,
+      "evidence": "KARIŞIK",
+      "sourceUrl": "https://github.com/afsozer/dayanak#readme",
+      "note": "11 core BELGE + 36 extended TAHMİN (core medyanı 65 token/araç)."
+    },
+    {
+      "id": "yargi-mcp",
+      "label": "saidsurucu/yargi-mcp (ayna: MCYBA/yargi-mcp) — 28 araç",
+      "toolCount": 28,
+      "schemasOnly": 1820,
+      "withDescriptions": null,
+      "evidence": "KARIŞIK",
+      "sourceUrl": "https://github.com/MCYBA/yargi-mcp",
+      "note": "Araç sayısı BELGE (26 aktif + 1 opsiyonel semantik); şemalar TAHMİN (65 token/araç)."
+    },
+    {
+      "id": "mevzuat-mcp-18",
+      "label": "utkumtin/mevzuat-mcp (fork: mertcanureten) — 18 araç",
+      "toolCount": 18,
+      "schemasOnly": 1265,
+      "withDescriptions": null,
+      "evidence": "BELGE",
+      "sourceUrl": "https://github.com/utkumtin/mevzuat-mcp",
+      "note": "9 mevzuat türü × 2 araç; parametre adları README'de belgeli, açıklamalar yok → alt sınır."
+    },
+    {
+      "id": "turkiye-mcp",
+      "label": "ayzekhdawy/turkiye-mcp — 31 araç",
+      "toolCount": 31,
+      "schemasOnly": 2015,
+      "withDescriptions": null,
+      "evidence": "KARIŞIK",
+      "sourceUrl": "https://github.com/ayzekhdawy/turkiye-mcp",
+      "note": "Araç sayısı BELGE (31 MCP aracı); şemalar TAHMİN (65 token/araç)."
+    },
+    {
+      "id": "ictihat-mcp",
+      "label": "aydincan/turk-hukuku-ictihat-mcp — 2 araç",
+      "toolCount": 2,
+      "schemasOnly": 117,
+      "withDescriptions": null,
+      "evidence": "BELGE",
+      "sourceUrl": "https://github.com/aydincan/turk-hukuku-ictihat-mcp",
+      "note": "Küçük yüzeyli rakip: 2 araç (arama + karar getirme). Kurallar/parametreler yok."
+    },
+    {
+      "id": "mevzuat-mcp-4",
+      "label": "aydincan/turk-hukuku-mevzuat-mcp — 4 araç",
+      "toolCount": 4,
+      "schemasOnly": 158,
+      "withDescriptions": null,
+      "evidence": "BELGE",
+      "sourceUrl": "https://github.com/aydincan/turk-hukuku-mevzuat-mcp",
+      "note": "Küçük yüzeyli rakip: 4 araç. Yalnız mevzuat; kural/parametre/süre hesabı yok."
+    }
+  ],
+  "scenarioModel": {
+    "tokensSource": "KARIŞIK: belge + ölçüm + varsayım (aşağıdaki kalemler)",
+    "latencySource": "TAHMİN",
+    "searchCallTokens": 935,
+    "documentTokens": 1074,
+    "perCallMs": 940,
+    "note": "Standart zincir: 1 arama + 2 tam metin + 1 ikinci arama. İyimser zincir (1 arama + 1 tam metin) = 2 çağrı; süre/Token raporun “iyimser” sütununda."
+  },
+  "scenarios": [
+    {
+      "id": "arac-sanziman",
+      "ozet": "Bayiden sıfır araba aldım. Şanzıman 3 ay içinde 4 kez arıza yaptı, her seferinde servise götürdüm ama yine bozuldu. Artık araca güvenmiyorum, paramı geri alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "telefon-kapanma",
+      "ozet": "İnternetten 12 gün önce telefon aldım. Cihaz kendi kendine kapanmaya başladı, servis raporu da yok. İade mi istemeliyim yoksa değişim mi?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "koltuk-cayma",
+      "ozet": "İnternetten koltuk takımı aldım, 20 gün önce teslim edildi. Rengi fotoğraftaki gibi değil, odama hiç uymadı. Cayma hakkım var mı, yoksa süre geçti mi?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "tesisat-yarim-is",
+      "ozet": "Daireme su tesisatı döşemesi için usta ile anlaştım, malzeme dahil 90 bin lira ödedim. İşin yarısını yapıp bıraktı, telefonlarıma çıkmıyor. Ödediğim parayı geri alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "depozito-odemiyor",
+      "ozet": "Kiradan 2 ay önce çıktım, evi temiz teslim ettim. Ev sahibi 25 bin liralık depozitoyu vermiyor, 'boya badana yaptırdım' diyor. Ne yapabilirim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "kart-aidat",
+      "ozet": "Hiç kullanmadığım kredi kartından yıllık 1.250 lira aidat kesilmiş. Bankayı aradım, 'sözleşmede var' dediler. Bu parayı geri alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "spor-salonu-uyelik",
+      "ozet": "Spor salonuna 12 aylık peşin 18 bin lira ödedim. 3 ay sonra başka şehre taşındım. Kalan 9 ayın parasını iade ederler mi, sözleşmede 'iade yok' yazıyor.",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "otel-iptal",
+      "ozet": "Otelin sitesinden 4 gece rezervasyon yaptım, 30 bin lira ödedim. 10 gün önce iptal ettim, 'son 7 gün kuralı' diyerek para iadesi yapmıyorlar. Hakkım var mı?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "ucus-rotar",
+      "ozet": "Uçağım 6 saat rötar yaptı, aktarmam kaçtı ve bir günüm kayboldu. Havayolu 'hava muhalefeti' diyor ama başka uçuşlar kalkıyordu. Tazminat alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "ikinci-el-arac-motor",
+      "ozet": "İkinci el araba aldım, satıcı bireysel. Bir ay sonra motor arızası çıktı, tamir 80 bin lira. Satıcı 'sen aldın, bitti' diyor. Sorumlu tutabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "dogalgaz-fatura",
+      "ozet": "Doğalgaz faturam geçen ay 900 lira gelirken bu ay 3.100 lira geldi. Sayaç okuması da yapılmamış. İtiraz edersem ne olur, ödemezsem ne olur?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "mobilya-gecikme",
+      "ozet": "Yatak odası takımı siparişi verdim, 45 bin lira peşin ödedim. 3 aydır teslim edilmiyor, her hafta 'gelecek hafta' diyorlar. Sözleşmeyi feshedip parayı alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "hakem-heyeti-sure",
+      "ozet": "Tüketici hakem heyetine başvurmak istiyorum. Süre sınırı var mı, harç ödeyecek miyim, 42 bin liralık uyuşmazlık için hangi heyet görevli?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "kidem-tazminat",
+      "ozet": "Fabrikada 7 yıl çalıştım, işten çıkarıldım. Kıdem ve ihbar tazminatımı alamıyorum, işveren 'istifa etmiş sayılırsın' diyor. Ne kadar alabilirim, nereye başvururum?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "kredi-dosya-masrafi",
+      "ozet": "Konut kredisi çekerken 22 bin lira dosya masrafı kesildi. Banka 'yasal' diyor. Bu masrafı geri alabilir miyim, hangi belgeye dayanırım?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "internet-hiz",
+      "ozet": "Sözleşmede 100 Mbps yazıyor ama hız testinde 40 Mbps görüyorum. İptal etmek istesem cayma bedeli isterler mi, yoksa haklı fesih yapabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "eticaret-kayip-kargo",
+      "ozet": "İnternetten 15 bin liralık kulaklık sipariş ettim. Kargo 'teslim edildi' diyor ama bana hiçbir şey gelmedi. Satıcıya da ulaşamıyorum, platform 'biz aracıyız' diyor. Paramı kimden isteyeceğim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "servis-aramizda",
+      "ozet": "Aracımı yetkili servise bıraktım, 2 aydır tamir bekliyor. 'Parça yok' diyorlar ama ikame araç da vermiyorlar. Aracı çekip başka yerde yaptırsam masrafı isteyebilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "sgk-10-90-gun",
+      "ozet": "25 Temmuz 2026'da işten ayrıldım, son bir yılda 109 prim günüm var. 10+90 günlük sağlık hakkım SGK sistemine işlenmedi; ne zamana kadar sağlık hizmeti alabilirim? Bu dönemde cebimden ödediğim muayene ve ilaç katılım paylarını geri alabilir miyim?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "gss-prim-borcu",
+      "ozet": "Çalışmadığım dönem için 47.545,10 TL GSS prim borcu çıkmış; gelir testi başvurum yapılmamış. Borç 60 günü geçtiği için hastanede provizyon alamıyorum. Borcu yapılandırabilir miyim, sağlık hakkım ne olur?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    },
+    {
+      "id": "issizlik-odenegi-700",
+      "ozet": "15 Eylül 2026'da işten çıkarıldım. Son üç yılda 700 prim günüm var ve son 120 gün hizmet akdim kesintisiz. İşsizlik ödeneğine başvurdum; kaç gün ödenek alırım, aylık tutar ne olur?",
+      "calls": 4,
+      "resultTokens": 4018,
+      "latencyMs": 3760,
+      "latencySource": "TAHMİN",
+      "tokensSource": "ÖLÇÜLDÜ/KARIŞIK",
+      "detail": "2 arama (935 tok) + 2 tam metin (1074 tok/karar, ölçüldü medyan)"
+    }
+  ],
+  "optimistic": {
+    "calls": 2,
+    "resultTokens": 2009,
+    "latencyMs": 1880,
+    "latencySource": "TAHMİN"
+  }
+}

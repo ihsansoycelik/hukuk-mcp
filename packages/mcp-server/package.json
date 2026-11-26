@@ -1,0 +1,23 @@
+{
+  "name": "@hukuk/mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./hukukSor": "./src/hukukSor.ts",
+    "./adapters": "./src/adapters.ts",
+    "./ports": "./src/ports.ts"
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "gpt-tokenizer": "^3.0.1",
+    "zod": "^3.25.76",
+    "@hukuk/tr-text": "workspace:*",
+    "@hukuk/schema": "workspace:*",
+    "@hukuk/rules": "workspace:*",
+    "@hukuk/retrieval": "workspace:*",
+    "@hukuk/ontology": "workspace:*"
+  }
+}

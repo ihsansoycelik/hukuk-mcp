@@ -1,0 +1,64 @@
+{
+  "measuredAt": "2026-10-22T19:30:54.249Z",
+  "note": "Gerçek korpus (data/build/hukuk.db, surum v20261022.436046465) ile 3 koşu; medyan p50'li koşu (measurements-hukuk-run1.json) measurements.json olarak kaydedildi. Makine paylaşımlı.",
+  "runs": [
+    {
+      "file": "measurements-hukuk-run1.json",
+      "p50": 4.3,
+      "p95": 21.64,
+      "coldStartMs": 459.66,
+      "loadavg": [
+        4.54,
+        3.95,
+        4.92
+      ],
+      "cpus": 8,
+      "answered": 16,
+      "clarify": 5,
+      "fallback": 0,
+      "toolDefinitionTokens": 885,
+      "resultTokensMedian": 814,
+      "dbVersion": "v20261022.436046465",
+      "decisions": "?"
+    },
+    {
+      "file": "measurements-hukuk-run2.json",
+      "p50": 4.51,
+      "p95": 17.87,
+      "coldStartMs": 652.72,
+      "loadavg": [
+        4.54,
+        3.95,
+        4.92
+      ],
+      "cpus": 8,
+      "answered": 16,
+      "clarify": 5,
+      "fallback": 0,
+      "toolDefinitionTokens": 885,
+      "resultTokensMedian": 814,
+      "dbVersion": "v20261022.436046465",
+      "decisions": "?"
+    },
+    {
+      "file": "measurements-hukuk-run3.json",
+      "p50": 2.92,
+      "p95": 9.93,
+      "coldStartMs": 775.66,
+      "loadavg": [
+        4.54,
+        3.95,
+        4.92
+      ],
+      "cpus": 8,
+      "answered": 16,
+      "clarify": 5,
+      "fallback": 0,
+      "toolDefinitionTokens": 885,
+      "resultTokensMedian": 814,
+      "dbVersion": "v20261022.436046465",
+      "decisions": "?"
+    }
+  ],
+  "chosen": "measurements-hukuk-run1.json"
+}

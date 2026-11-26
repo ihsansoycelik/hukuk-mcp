@@ -1,0 +1,13 @@
+{
+  "name": "@hukuk/demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hukuk/mcp-server": "workspace:*",
+    "@hukuk/schema": "workspace:*"
+  }
+}

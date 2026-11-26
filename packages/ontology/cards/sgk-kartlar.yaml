@@ -1,0 +1,228 @@
+# SGK kartları — elle yazılmış, her cümlesi kaynak kimliği taşır.
+#
+# Kural: bir cümlede hukuki iddia varsa sonunda [m:...] kimliği olmak zorundadır.
+# Kimliği çözülemeyen kart yayına giremez (pipeline doğrular).
+# durum: taslak -> uzman avukat onayı olmadan "uzman_onayli" olamaz.
+#
+# Bu kartlar 5510 ve 4447 sayılı kanunların mevzuat.gov.tr metinlerine dayanır.
+# Tutar/oran gibi değişken değerler karta yazılmaz; kural motoru tarihli
+# parametre tablosundan hesaplar.
+
+surum: 1
+kartlar:
+  - dugum_id: s/saglik/isten-ayrilma-sonrasi-hak
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Zorunlu sigortalılığı sona eren genel sağlık sigortalısı, sona erme tarihinden
+          itibaren on gün sağlık hizmetlerinden yararlanır [m:5510/67]. Geriye doğru bir yıl
+          içinde doksan günlük zorunlu sigortalılığı varsa, aynı tarihten itibaren doksan gün
+          süreyle, bakmakla yükümlü olduğu kişiler dahil sağlık hizmetlerinden yararlandırılır
+          [m:5510/67]. Kanun metni doksan günü başlangıçtan sayar; uygulamada on gün ayrıca
+          eklenerek yüz gün kabul edildiği de görülür, kesin son gün e-Devlet SPAS/provizyon
+          kaydından teyit edilmelidir [m:5510/67].
+      - etiket: HAKLAR
+        metin: |-
+          - Sağlık hizmetlerinin finansmanı ve ilaç temini [m:5510/62] [m:5510/63]
+          - Bakmakla yükümlü olduğunuz eş ve çocukların da yararlanması [m:5510/67]
+          - Süre içinde cepten yapılan sağlık harcamaları için iade talebi [m:5510/97]
+      - etiket: YOL
+        metin: |-
+          1) İşten çıkış tarihinizi ve son bir yıldaki prim gün sayınızı e-Devlet hizmet dökümünden alın [m:5510/67]
+          2) e-Devlet SPAS müstehaklık sorgusundan sağlık hakkınızın görünüp görünmediğini kontrol edin [m:5510/61]
+          3) Provizyon alamıyorsanız SGK il müdürlüğüne yazılı başvuru yapın [m:5510/67]
+          4) Cevap gelmezse veya ret edilirse iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - Doksan günlük uzun süre otomatik değildir; son bir yılda doksan gün zorunlu sigortalılık şartına bağlıdır [m:5510/67]
+          - 4/b (Bağ-Kur) ve 4/c kapsamında prim ve borç koşulları ayrıca değerlendirilir [m:5510/67]
+          - Süre bittiğinde 60/g kapsamında GSS tescili ve prim borcu doğabilir [m:5510/60]
+
+  - dugum_id: s/saglik/provizyon-alinamama
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Sağlık hizmeti sunucusuna başvuruda, son bir yıl içinde toplam otuz gün genel sağlık
+          sigortası prim ödeme gün sayısı aranır [m:5510/67]. 60/g kapsamında genel sağlık
+          sigortalısıysanız ayrıca başvuru tarihinde altmış günden fazla prim ve prime ilişkin
+          borcunuz olmamalıdır; tecil ve taksitlendirme devam ediyorsa bu istisna uygulanır
+          [m:5510/67].
+      - etiket: HAKLAR
+        metin: |-
+          - Acil haller, iş kazası, meslek hastalığı, 18 yaşını doldurmamış olanlar, tıbben başkasının bakımına muhtaç olanlar ve bildirimi zorunlu bulaşıcı hastalıklar gibi hallerde bu şartlar aranmaz [m:5510/67]
+          - Katılım payı alınmayan haller ve kişiler [m:5510/69]
+          - Kayıt/tescil hatası varsa düzeltme talebi [m:5510/61]
+      - etiket: YOL
+        metin: |-
+          1) e-Devlet SPAS müstehaklık sorgusunu ve hizmet dökümünü indirin [m:5510/61]
+          2) Varsa GSS prim borcunuzu borç dökümünden kontrol edin [m:5510/67]
+          3) Provizyonun verilmediği tarih, kurum ve gerekçeyi yazılı olarak isteyin [m:5510/67]
+          4) SGK'ya yazılı başvuru yapın; sonuç yoksa iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - Provizyon alamama her zaman sağlık hakkının olmadığı anlamına gelmez; tescil veya kayıt hatası olabilir [m:5510/61]
+          - Acil hallerde provizyon beklenmeden tedavi yapılır; acil halin sona ermesinden sonra kimlik doğrulaması istenir [m:5510/67]
+          - Altmış günlük borç eşiği yalnızca 60/g kapsamındaki sigortalılar için aranır [m:5510/67]
+
+  - dugum_id: s/saglik/katilim-payi-iadesi
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Katılım payı, sağlık hizmetinden yararlanan kişiden alınır [m:5510/68]. Sağlık hakkı
+          sistemde görünmediği için muayene veya ilaç bedelini cepten ödediyseniz, önce hizmeti
+          veren hastane veya eczaneye, ardından SGK'ya iade başvurusu yapabilirsiniz
+          [m:5510/62] [m:5510/68]. Genel sağlık sigortasından doğan alacaklar, hakkı doğuran
+          olayın öğrenildiği tarihten itibaren iki yıl içinde istenmezse zamanaşımına uğrar;
+          olay tarihinden itibaren beş yıl sonunda düşer [m:5510/97].
+      - etiket: HAKLAR
+        metin: |-
+          - Ayakta hekim ve diş hekimi muayenesi için alınan katılım payının iadesi [m:5510/68]
+          - Ayakta tedavide sağlanan ilaçlar için alınan katılım payının iadesi [m:5510/68]
+          - İş kazası, meslek hastalığı, kronik hastalık, aile hekimi muayenesi gibi katılım payı alınmayan hallerde ödemenin iadesi [m:5510/69]
+          - GSS alacaklarında iki yıllık talep ve beş yıllık düşme süresi [m:5510/97]
+      - etiket: YOL
+        metin: |-
+          1) Ödeme makbuzu, fatura, reçete ve hastane/eczane kayıtlarını toplayın [m:5510/68]
+          2) Hizmeti veren hastane veya eczaneye yazılı iade başvurusu yapın [m:5510/68]
+          3) Sonuç alamazsanız SGK il müdürlüğüne belgelerle başvurun [m:5510/62]
+          4) Ret veya cevapsızlık halinde iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - İade, sağlık hakkının o tarihte var olduğunun belgelenmesine bağlıdır [m:5510/62]
+          - Katılım payı tutarları her yıl yeniden değerleme oranıyla güncellenir; kartta sabit tutar verilmez [m:5510/68]
+          - İki yıllık talep süresi öğrenme tarihinden, beş yıllık dış sınır olay tarihinden işler [m:5510/97]
+
+  - dugum_id: s/gss/gelir-testi
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          60/g kapsamında genel sağlık sigortalısı sayılanlar için gelir testi yapılır; aile
+          içindeki kişi başına düşen aylık gelir asgari ücretin üçte birinden azsa genel sağlık
+          sigortası primi devlet tarafından karşılanır [m:5510/60]. Gelir bu eşiğin altında
+          değilse gelir durumuna göre prim borcu doğar [m:5510/60].
+      - etiket: HAKLAR
+        metin: |-
+          - Gelir testi sonucuna göre tescilin düzeltilmesi [m:5510/60]
+          - Yanlış veya eksik tescilin düzeltilmesi için başvuru [m:5510/61]
+          - Altmış günden fazla prim borcu yoksa sağlık hizmetlerinden yararlanma [m:5510/67]
+      - etiket: YOL
+        metin: |-
+          1) Gelir testi başvurusu yapın; uygulamada başvuru SYDV üzerinden alınır [m:5510/60]
+          2) Test sonucunu ve tescil türünüzü e-Devlet GSS sorgusundan kontrol edin [m:5510/61]
+          3) Sonuç yanlışsa SGK'ya yazılı düzeltme başvurusu yapın [m:5510/61]
+          4) Ret halinde iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - Durumunuzda değişiklik olduğunda en geç bir ay içinde Kuruma başvurmak zorundasınız [m:5510/61]
+          - Gelir testi yapılmazsa veya sonucu bildirilmezse prim borcu çıkabilir [m:5510/60]
+          - Asgari ücret her yıl değişir; eşik hesaplanırken o gün geçerli brüt asgari ücret kullanılmalıdır [m:5510/60]
+
+  - dugum_id: s/gss/prim-borcu
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Genel sağlık sigortası primi süresinde ödenmezse borç, gecikme cezası ve gecikme zammı
+          doğar [m:5510/89]. 60/g kapsamında başvuru tarihinde altmış günden fazla prim ve prime
+          ilişkin borcu olanlara, tecil ve taksitlendirme devam edenler hariç, sağlık
+          hizmetlerinden yararlanma hakkı verilmez [m:5510/67].
+      - etiket: HAKLAR
+        metin: |-
+          - Borcun tecil ve taksitlendirilmesi halinde sağlık hakkının korunması [m:5510/67]
+          - Hatalı tahakkukta düzeltme ve itiraz [m:5510/93]
+          - Kurum alacaklarında on yıllık zamanaşımı [m:5510/93]
+      - etiket: YOL
+        metin: |-
+          1) e-Devlet GSS borç dökümünden dönem, anapara ve gecikme zammını alın [m:5510/89]
+          2) Ödeme güçlüğü varsa SGK'ya tecil/taksitlendirme başvurusu yapın [m:5510/67]
+          3) Borcun hatalı olduğunu düşünüyorsanız yazılı düzeltme başvurusu yapın [m:5510/93]
+          4) Ret halinde iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - Altmış günü geçen borç sağlık provizyonunu engelleyebilir [m:5510/67]
+          - Borç ödendiğinde veya tecil edildiğinde provizyon yeniden açılır [m:5510/67]
+          - On yıllık zamanaşımı Kurumun prim ve diğer alacakları için uygulanır [m:5510/93]
+
+  - dugum_id: s/gelir/issizlik-odenegi
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Hizmet akdi sona ermeden önceki son yüz yirmi gün hizmet akdine tabi olan ve son üç yıl
+          içinde altı yüz, dokuz yüz veya bin seksen gün işsizlik sigortası primi ödemiş sigortalı
+          işsizlere sırasıyla yüz seksen, iki yüz kırk veya üç yüz gün işsizlik ödeneği verilir
+          [m:4447/50]. Günlük ödenek, son dört aylık prime esas kazançlar üzerinden hesaplanan
+          günlük ortalama brüt kazancın yüzde kırkıdır; aylık tutar brüt asgari ücretin yüzde
+          seksenini geçemez [m:4447/50].
+      - etiket: HAKLAR
+        metin: |-
+          - Prim gününe göre yüz seksen, iki yüz kırk veya üç yüz gün ödenek [m:4447/50]
+          - Günlük ortalama brüt kazancın yüzde kırkı oranında ödenek [m:4447/50]
+          - Ödenek alırken genel sağlık sigortası primlerinin Fondan karşılanması [m:4447/50]
+      - etiket: YOL
+        metin: |-
+          1) İŞKUR'a şahsen başvurup yeni bir iş almaya hazır olduğunuzu kaydettirin [m:4447/51]
+          2) İşten çıkış nedeninizi ve son üç yıla ait prim dökümünüzü hazırlayın [m:4447/51]
+          3) Ödenek kesilirse gerekçesini yazılı isteyin [m:4447/52]
+          4) İşsizlik sigortası işlemine karşı tebliğden itibaren on beş gün içinde Kuruma itiraz edin [m:4447/54]
+      - etiket: DİKKAT
+        metin: |-
+          - İstifa veya kendi isteğiyle ayrılma kural olarak ödenek hakkı vermez; kanunda sayılan haklı fesih halleri ayrıca değerlendirilir [m:4447/51]
+          - Son yüz yirmi gün hizmet akdine tabi olma şartı ayrıca aranır [m:4447/50]
+          - Ödenek süresi prim gün sayısına göre değişir; aynı işsizlik dönemi için yeniden hak doğmaz [m:4447/50]
+
+  - dugum_id: s/is-kazasi/bildirim-ve-haklar
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          İşveren, iş kazasını derhal yetkili kolluk kuvvetlerine ve en geç kazadan sonraki üç
+          iş günü içinde Kuruma bildirmek zorundadır [m:5510/13]. İş kazası bildirilmezse,
+          bildirim tarihine kadar geçen süre için sigortalıya ödenen geçici iş göremezlik
+          ödeneği Kurumca işverenden tahsil edilir [m:5510/21].
+      - etiket: HAKLAR
+        metin: |-
+          - Geçici iş göremezlik ödeneği [m:5510/16]
+          - Sürekli iş göremezlik geliri [m:5510/16]
+          - Ölüm halinde hak sahiplerine gelir, evlenme ve cenaze ödeneği [m:5510/16]
+          - İş kazası halinde katılım payı alınmaması [m:5510/69]
+      - etiket: YOL
+        metin: |-
+          1) Kaza yerinde tutanak, tanık ve varsa kamera kaydını toplayın [m:5510/13]
+          2) İşverene yazılı bildirim yapın ve bildirimin yapıldığını belgeleyin [m:5510/13]
+          3) SGK'ya iş kazası bildirgesi verilmesini takip edin [m:5510/13]
+          4) Hak kaybı veya ret halinde iş mahkemesine başvurun [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - Bildirim süresi işverenin yükümlülüğüdür; sürenin kaçırılması sigortalının hakkını tek başına ortadan kaldırmaz [m:5510/21]
+          - Geçici iş göremezlik ödeneği için yetkili hekim veya sağlık kurulundan istirahat raporu gerekir [m:5510/18]
+          - Olayın iş kazası sayılıp sayılmayacağı SGK veya iş müfettişi soruşturmasıyla belirlenebilir [m:5510/13]
+
+  - dugum_id: s/usul/kurum-karari-itiraz
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Bu Kanun hükümlerinin uygulanmasıyla ilgili uyuşmazlıklar, aksine hüküm bulunmayan
+          hallerde iş mahkemelerinde görülür [m:5510/101]. SGK işlemine karşı önce Kuruma yazılı
+          başvuru yapın; ret veya cevapsızlık halinde iş mahkemesine başvurun [m:5510/101].
+      - etiket: HAKLAR
+        metin: |-
+          - Kurum işlemine karşı yazılı başvuru ve gerekçeli cevap isteme [m:5510/101]
+          - Kurumun yersiz ödeme iddiasına karşı m.96 kapsamında savunma [m:5510/96]
+          - İş mahkemesinde dava açma [m:5510/101]
+      - etiket: YOL
+        metin: |-
+          1) Kararın tebliğ tarihini ve gerekçesini kaydedin [m:5510/101]
+          2) SGK'ya yazılı başvuru yapıp kararın düzeltilmesini isteyin [m:5510/101]
+          3) Ret veya cevapsızlık halinde iş mahkemesine başvurun [m:5510/101]
+          4) Süreleri kaçırmamak için somut işlemi bir avukatla değerlendirin [m:5510/101]
+      - etiket: DİKKAT
+        metin: |-
+          - SGK uyuşmazlığında görevli mahkeme idari yargı değil iş mahkemesidir [m:5510/101]
+          - 5510'da her işlem için tek tip bir itiraz süresi öngörülmemiştir; tebliğ tarihini ve özel hükümleri kontrol edin [m:5510/101]
+          - Kurumun yersiz ödeme iddiası varsa m.96'daki süre ve mahsup kuralları ayrıca incelenir [m:5510/96]

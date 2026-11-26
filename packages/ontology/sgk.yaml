@@ -1,0 +1,166 @@
+# Sosyal Güvenlik (SGK) Ontolojisi — v1
+#
+# Omurga: her SGK sorusu bir yaprağa bağlanır; yaprak kendi kural setini ve
+# dayandığı madde kimliklerini taşır. Kimlik uzayı `s/` önekidir; tüketici
+# alanı `t/` önekiyle aynı ontolojide yaşar.
+#
+# Kaynak: 5510 sayılı Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu,
+# 4447 sayılı İşsizlik Sigortası Kanunu (mevzuat.gov.tr).
+# durum: teyit_bekliyor -> uzman (avukat) onayı olmadan "onaylı" sayılmaz.
+#
+# Kapsam sınırı: emeklilik yaşı/aylık hesabı (5510 m.28'in kademeli tablosu)
+# v1'e dahil değildir; iş hukuku (kıdem/ihbar) ayrı alandır.
+
+surum: 1
+ad: Sosyal Güvenlik Hukuku
+kok: s/sgk
+kok_aciklama: Sosyal güvenlik (SGK) kökü.
+durum: teyit_bekliyor
+
+dallar:
+  # ======================= SAĞLIK HAKKI =======================
+  - id: s/saglik
+    ad: Sağlık hakkı ve katılım payı
+    aciklama: Genel sağlık sigortası kapsamında sağlık hizmetlerinden yararlanma, müstehaklık, provizyon ve katılım payı.
+    maddeler: [m:5510/60, m:5510/61, m:5510/62, m:5510/63, m:5510/67, m:5510/68, m:5510/69, m:5510/97]
+    kurallar: [sgk_saglik_hakki, sgk_saglik_hakki_kosullari, gss_alacak_zamanasimi]
+    yapraklar:
+      - id: s/saglik/isten-ayrilma-sonrasi-hak
+        ad: İşten ayrılma sonrası sağlık hakkı (10+90 gün)
+        aciklama: Zorunlu sigortalılığı sona eren 4/a sigortalısının ve bakmakla yükümlü olduğu kişilerin sağlık hizmetlerinden yararlanma süresi; son bir yılda 90 gün zorunlu sigortalılık şartı.
+        tetikleyiciler: [işten ayrıldım, işten çıktım, çıkış tarihi, 90 gün, on gün, sağlık hakkı, sağlık sigortası bitti, provizyon alamıyorum, işsiz kaldım, sigortam bitti, bakmakla yükümlü]
+        ornek_sorgular:
+          - "İşten ayrıldıktan sonra 90 günlük sağlık hakkım SGK sistemine işlenmedi, ne yapabilirim?"
+          - "İşten çıktım sigortam bitti ama hastanede provizyon alamıyorum, hakkım var mı?"
+          - "İşten ayrılalı iki ay oldu, ilaçlarımı cebimden alıyorum, sağlık hakkım ne zaman biter?"
+          - "Çıkış tarihimden sonra 10 gün mü 90 gün mü sağlık hizmeti alabilirim?"
+          - "Son işyerinden ayrıldım, eşim ve çocuğum da benim üzerimden sağlık hizmeti alabilir mi?"
+          - "İşten ayrıldım, son bir yılda 90 gün primim var mı yok mu nasıl anlarım?"
+        maddeler: [m:5510/62, m:5510/63, m:5510/67, m:5510/97]
+        kurallar: [sgk_saglik_hakki]
+
+      - id: s/saglik/provizyon-alinamama
+        ad: Müstehaklık yok / provizyon alınamıyor
+        aciklama: Sağlık hizmeti sunucusunun provizyon vermemesi; son bir yılda 30 gün prim, 60 günden fazla prim borcu ve istisna halleri.
+        tetikleyiciler: [provizyon, müstehak, müstehaklık, SPAS, hastane kabul etmiyor, eczane ilaç vermiyor, 30 gün prim, prim borcu, acil tedavi, sigortalı görünmüyorum]
+        ornek_sorgular:
+          - "Hastane müstehak değilsiniz diyerek provizyon vermedi, oysa sigortalıyım."
+          - "Eczane ilacımı SGK karşılamıyor dedi, provizyon alamıyorum."
+          - "Son bir yılda 30 gün primim yok diye sağlık hizmeti alamıyorum, doğru mu?"
+          - "GSS prim borcum var, hastaneye gitsem provizyon alabilir miyim?"
+          - "SPAS sorgusunda müstehak görünüyorum ama hastane kabul etmiyor."
+          - "Acilde provizyon sorulmadan tedavi oldum, sonra borç çıkardılar."
+        maddeler: [m:5510/60, m:5510/61, m:5510/67, m:5510/69]
+        kurallar: [sgk_saglik_hakki_kosullari]
+
+      - id: s/saglik/katilim-payi-iadesi
+        ad: Muayene ve ilaç katılım payının iadesi
+        aciklama: Sağlık hakkı sistemde görünmediği için cepten ödenen muayene ve ilaç katılım paylarının iadesi; başvuru yolu ve zamanaşımı.
+        tetikleyiciler: [katılım payı, muayene ücreti, ilaç parası, cebimden ödedim, makbuz, hastane, geri ödeme, ücret iadesi]
+        ornek_sorgular:
+          - "Sağlık hakkım sistemde görünmediği için muayene ücretini cebimden ödedim, geri alabilir miyim?"
+          - "Katılım payı ve ilaç bedellerini makbuzla ödedim, iadesi için nereye başvururum?"
+          - "Hastane benden muayene katılım payı aldı, oysa kronik hastalığım var."
+          - "Eczaneden aldığım ilaçların katılım payını geri almanın yolu var mı?"
+          - "SGK müstehak olduğumu sonradan işledi, ödediğim katılım payları ne olacak?"
+          - "Katılım payı iadesi için süre var mı, ne kadar geriye gidebilirim?"
+        maddeler: [m:5510/62, m:5510/68, m:5510/69, m:5510/97]
+        kurallar: [gss_alacak_zamanasimi]
+
+  # ================= GENEL SAĞLIK SİGORTASI =================
+  - id: s/gss
+    ad: Genel sağlık sigortası ve prim borcu
+    aciklama: 60/g kapsamında gelir testi, GSS tescili, prim borcu ve borcun sağlık hizmetine etkisi.
+    maddeler: [m:5510/60, m:5510/61, m:5510/67, m:5510/89, m:5510/93]
+    kurallar: [gss_gelir_testi, gss_prim_zamanasimi]
+    yapraklar:
+      - id: s/gss/gelir-testi
+        ad: GSS gelir testi ve tescil
+        aciklama: 60/g kapsamında gelir testi, kişi başı gelirin asgari ücretin üçte biriyle karşılaştırılması ve tescilin düzeltilmesi.
+        tetikleyiciler: [gelir testi, GSS, genel sağlık sigortası, yeşil kart, 60/g, hane geliri, gelir tespiti, tescil, prim borcu]
+        ornek_sorgular:
+          - "GSS gelir testi nasıl yapılır, hangi gelir seviyesinde prim ödemem gerekir?"
+          - "Gelir testi sonucum yok, SGK bana prim borcu çıkarmış, itiraz edebilir miyim?"
+          - "Hane gelirim asgari ücretin üçte birinin altında, GSS primi ödemem gerekiyor mu?"
+          - "Yeşil kartım vardı, gelir testi yapılmadığı için GSS borcu çıkmış."
+          - "Gelir testi için SYDV'ye mi SGK'ya mı başvurulur?"
+          - "Gelir testi sonucuma itiraz etmek istiyorum, süre ve merci nedir?"
+        maddeler: [m:5510/60, m:5510/61, m:5510/67]
+        kurallar: [gss_gelir_testi]
+
+      - id: s/gss/prim-borcu
+        ad: GSS prim borcu ve sağlık hakkına etkisi
+        aciklama: GSS prim borcunun tahakkuku, 60 günden fazla borcun sağlık hizmetine etkisi, tecil/yapılandırma ve zamanaşımı.
+        tetikleyiciler: [GSS borcu, prim borcu, borç dökümü, 60 gün, yapılandırma, tecil, sağlık hakkı engel, gelir testi borcu, gecikme zammı]
+        ornek_sorgular:
+          - "GSS prim borcum 47 bin lira çıkmış, bu borç sağlık hizmetimi engeller mi?"
+          - "Genel sağlık sigortası primi borcum var, yapılandırma veya tecil yapabilir miyim?"
+          - "GSS borcum 60 günü geçtiği için hastanede provizyon alamıyorum, ne yapmalıyım?"
+          - "GSS prim borcu zamanaşımına uğrar mı, kaç yıl geriye gider?"
+          - "Çalışmadığım dönem için GSS prim borcu tahakkuk etmiş, hatalıysa nasıl düzelttiririm?"
+          - "GSS borcumu ödersem sağlık hakkım hemen başlar mı?"
+        maddeler: [m:5510/67, m:5510/89, m:5510/93]
+        kurallar: [gss_prim_zamanasimi]
+
+  # ===================== GELİR VE ÖDENEKLER =====================
+  - id: s/gelir
+    ad: Gelir, aylık ve ödenekler
+    aciklama: İşsizlik ödeneği ve benzeri gelir desteği; emeklilik hesabı v1 kapsamı dışındadır.
+    maddeler: [m:4447/50, m:4447/51, m:4447/52, m:4447/54]
+    kurallar: [issizlik_odenegi]
+    yapraklar:
+      - id: s/gelir/issizlik-odenegi
+        ad: İşsizlik ödeneği
+        aciklama: İşsizlik ödeneğine hak kazanma şartları, ödenek süresi ve miktarı.
+        tetikleyiciler: [işsizlik maaşı, işsizlik ödeneği, işten çıkarıldım, İŞKUR, prim günü, 600 gün, 900 gün, 1080 gün, işsizlik sigortası]
+        ornek_sorgular:
+          - "İşten çıkarıldım, işsizlik maaşı alabilir miyim, kaç gün prim gerekiyor?"
+          - "Son üç yılda 700 gün primim var, ne kadar süre işsizlik ödeneği alırım?"
+          - "İşsizlik ödeneği ne kadar, maaşımın yüzde kaçı ödeniyor?"
+          - "İstifa ettim, işsizlik ödeneği alamaz mıyım?"
+          - "İŞKUR'a işsizlik ödeneği başvurusu için süre var mı, geç kaldım mı?"
+          - "İşsizlik ödeneği alırken sağlık hizmetlerinden yararlanabilir miyim?"
+        maddeler: [m:4447/50, m:4447/51, m:4447/52, m:4447/54]
+        kurallar: [issizlik_odenegi]
+
+  # ================== İŞ KAZASI VE MESLEK HASTALIĞI ==================
+  - id: s/is-kazasi
+    ad: İş kazası ve meslek hastalığı
+    aciklama: İş kazasının bildirimi, bildirim süresi ve sigortalıya sağlanan haklar.
+    maddeler: [m:5510/13, m:5510/16, m:5510/18, m:5510/21, m:5510/69]
+    kurallar: [is_kazasi_bildirim]
+    yapraklar:
+      - id: s/is-kazasi/bildirim-ve-haklar
+        ad: İş kazası bildirimi ve haklar
+        aciklama: İşverenin iş kazasını bildirme yükümlülüğü, süresi ve geçici/sürekli iş göremezlik hakları.
+        tetikleyiciler: [iş kazası, kaza, meslek hastalığı, işveren bildirmedi, 3 iş günü, geçici iş göremezlik, tutanak, iş yerinde düştüm]
+        ornek_sorgular:
+          - "İş kazası geçirdim, işveren SGK'ya bildirmedi, ne yapabilirim?"
+          - "İş kazası bildirimi kaç iş günü içinde yapılmalı?"
+          - "İş kazası sonrası geçici iş göremezlik ödeneği nasıl alınır?"
+          - "İş yerinde düştüm, hastane masraflarımı SGK karşılar mı?"
+          - "İşveren iş kazasını geç bildirdi, ödenek kimden tahsil edilir?"
+          - "Meslek hastalığı teşhisi kondu, hangi haklarım var?"
+        maddeler: [m:5510/13, m:5510/16, m:5510/18, m:5510/21, m:5510/69]
+        kurallar: [is_kazasi_bildirim]
+
+  # ============================ USUL ============================
+  - id: s/usul
+    ad: SGK işlemleri ve itiraz
+    aciklama: SGK kararlarına karşı başvuru, görevli mahkeme ve usul.
+    maddeler: [m:5510/96, m:5510/101]
+    kurallar: [sgk_dava_yolu]
+    yapraklar:
+      - id: s/usul/kurum-karari-itiraz
+        ad: SGK kararına itiraz ve dava yolu
+        aciklama: SGK işlemlerinden doğan uyuşmazlıklarda görevli mahkeme ve başvuru sırası.
+        tetikleyiciler: [SGK itiraz, kurum kararı, dava, iş mahkemesi, ret cevabı, itiraz dilekçesi, mahkeme, görevli mahkeme, karşılanmadı, ödemeyi reddetti]
+        ornek_sorgular:
+          - "SGK kararına itiraz etmek istiyorum, hangi mahkemeye dava açılır?"
+          - "SGK başvurumu reddetti, iş mahkemesine mi idare mahkemesine mi gidilir?"
+          - "SGK'nın hatalı işlemi yüzünden mağdurum, dava açmadan önce ne yapmalıyım?"
+          - "Sosyal güvenlik uyuşmazlığında görevli mahkeme hangisi?"
+          - "SGK'ya yazılı başvuru yaptım cevap gelmedi, ne kadar beklemeliyim?"
+          - "SGK kararına itiraz süresi kaç gün?"
+        maddeler: [m:5510/96, m:5510/101]
+        kurallar: [sgk_dava_yolu]

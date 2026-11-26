@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "checkedAt": "2026-10-22T19:29:58.433Z",
+  "errorCount": 0,
+  "errors": [],
+  "command": "node_modules/.bin/tsc --noEmit -p tsconfig.json"
+}

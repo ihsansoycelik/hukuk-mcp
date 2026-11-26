@@ -1,0 +1,418 @@
+# Tüketici kartları — elle yazılmış, her cümlesi kaynak kimliği taşır.
+#
+# Kural: bir cümlede hukuki iddia varsa sonunda [m:...] kimliği olmak zorundadır.
+# Kimliği çözülemeyen kart yayına giremez (pipeline doğrular).
+# durum: taslak -> uzman avukat onayı olmadan "uzman_onayli" olamaz.
+
+surum: 1
+kartlar:
+  - dugum_id: t/ayipli-mal/arac
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Satın aldığınız araçta teslimden sonra ortaya çıkan arıza ayıplı mal sayılabilir; bu durumda
+          satıcıya karşı dört seçimlik haktan birini kullanabilirsiniz [m:6502/11]. Satıcının ayıplı maldan
+          sorumluluğu, ayıp sonradan ortaya çıkmış olsa bile teslim tarihinden itibaren iki yıl sürer
+          [m:6502/12]. Ayıp hile veya ağır kusurla gizlenmişse zamanaşımı işlemez [m:6502/12].
+      - etiket: HAKLAR
+        metin: |-
+          - Sözleşmeden dönme: aracı geri verip ödediğiniz bedeli isteme [m:6502/11]
+          - Satış bedelinden ayıp oranında indirim [m:6502/11]
+          - Ücretsiz onarım; masraflar satıcıya aittir [m:6502/11]
+          - Ayıpsız misli ile değiştirme [m:6502/11]
+      - etiket: YOL
+        metin: |-
+          1) Satıcıya yazılı bildirim yapın ve dört haktan hangisini seçtiğinizi açıkça yazın [m:6502/11]
+          2) Ücretsiz onarım veya değiştirme seçtiyseniz satıcının en fazla 30 iş günü vardır [m:6502/11]
+          3) Bu süre dolduğunda diğer seçimlik haklarınıza geçebilirsiniz [m:6502/11]
+          4) Anlaşamazsanız uyuşmazlık değerine göre tüketici hakem heyetine veya tüketici mahkemesine başvurun [m:6502/68] [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - İkinci el araçta satıcının sorumluluğu en az bir yıldır [m:6502/12]
+          - Aracın ayıplı olduğunu ispat yükü teslimden sonraki ilk altı ayda satıcıdadır [m:6502/10]
+          - Servis kayıtları, ekspertiz ve yazışmalar dosyanızın belkemiğidir [m:6502/10]
+
+  - dugum_id: t/ayipli-mal/elektronik
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Telefon, bilgisayar veya televizyon gibi bir cihaz arızalandığında ayıplı mal hükümleri uygulanır;
+          satıcıya karşı dört seçimlik hakkınız vardır [m:6502/11]. Sorumluluk teslimden itibaren iki yıldır
+          [m:6502/12]. Ayıbın varlığını teslimden sonraki altı ay içinde satıcı ispatlamak zorundadır [m:6502/10].
+      - etiket: HAKLAR
+        metin: |-
+          - Sözleşmeden dönme ve bedel iadesi [m:6502/11]
+          - Bedelden ayıp oranında indirim [m:6502/11]
+          - Ücretsiz onarım [m:6502/11]
+          - Ayıpsız misli ile değiştirme [m:6502/11]
+      - etiket: YOL
+        metin: |-
+          1) Arızayı ve tarihini yazılı olarak satıcıya bildirin [m:6502/11]
+          2) Onarım veya değiştirme talebinde satıcının en fazla 30 iş günü vardır [m:6502/11]
+          3) Süre dolduğunda bedel iadesi veya indirim isteyebilirsiniz [m:6502/11]
+          4) Gerekirse tüketici hakem heyetine başvurun [m:6502/68]
+      - etiket: DİKKAT
+        metin: |-
+          - "Kullanıcı hatası" savunması sık görülür; bağımsız teknik rapor isteyin [m:6502/10]
+          - Cihazı onarım için verdiğinizde teslim tutanağı alın [m:6502/10]
+          - Garanti süresi sona ermiş olsa da ayıp zamanaşımı ayrı işler [m:6502/12]
+
+  - dugum_id: t/ayipli-mal/beyaz-esya
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Buzdolabı, çamaşır makinesi gibi büyük ev aletlerinde arıza ayıplı mal kapsamında değerlendirilir
+          [m:6502/8]. Satıcıya karşı dört seçimlik hakkınız vardır [m:6502/11]. Sorumluluk süresi teslimden
+          itibaren iki yıldır [m:6502/12].
+      - etiket: HAKLAR
+        metin: |-
+          - Sözleşmeden dönme ve bedel iadesi [m:6502/11]
+          - Bedelden indirim [m:6502/11]
+          - Ücretsiz onarım [m:6502/11]
+          - Ayıpsız misli ile değiştirme [m:6502/11]
+      - etiket: YOL
+        metin: |-
+          1) Servis fişi ve arıza kaydı alın [m:6502/10]
+          2) Satıcıya yazılı talepte bulunun [m:6502/11]
+          3) Onarım için azami 30 iş günü bekleyin [m:6502/11]
+          4) Sonuç almazsanız hakem heyetine başvurun [m:6502/68]
+      - etiket: DİKKAT
+        metin: |-
+          - Aynı arıza tekrar ediyorsa servis kayıtları sayısı önemlidir [m:6502/10]
+          - Garanti belgesi olmasa da yasal haklarınız saklıdır [m:6502/56]
+          - Değişim talebi için ürünün ayıpsız mislinin bulunması gerekir [m:6502/11]
+
+  - dugum_id: t/ayipli-mal/ikinci-el-galeri
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Galeri veya yetkili satıcıdan alınan ikinci el araçta da ayıplı mal hükümleri uygulanır
+          [m:6502/8] [m:6502/11]. İkinci el satışlarda satıcının sorumluluğu bir yıldan az olamaz
+          [m:6502/12]. Hasar veya ayıp hile ile gizlenmişse zamanaşımı işlemez [m:6502/12].
+      - etiket: HAKLAR
+        metin: |-
+          - Bedel iadesi için sözleşmeden dönme [m:6502/11]
+          - Ayıp oranında bedel indirimi [m:6502/11]
+          - Ücretsiz onarım [m:6502/11]
+          - Ayıpsız misli ile değiştirme [m:6502/11]
+      - etiket: YOL
+        metin: |-
+          1) Tramer ve servis geçmişini yazılı olarak isteyin [m:6502/10]
+          2) Ayıbı öğrendiğiniz tarihi belgeleyin [m:6502/10]
+          3) Satıcıya ihtarname gönderin [m:6502/11]
+          4) Gerekirse hakem heyeti veya tüketici mahkemesi [m:6502/68] [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - "Beğenmeme" veya "pazarlık" ayıp değildir; ayıp teknik bir bozukluktur [m:6502/8]
+          - Kilometre düşürülmesi ve hasar gizleme ayrı bir hile iddiasıdır [m:6502/12]
+          - İkinci el konut/tatil amaçlı taşınmazda asgari sorumluluk üç yıldır [m:6502/12]
+
+  - dugum_id: t/ayipli-mal/konut
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Konut ve tatil amaçlı taşınmazlarda ayıplı ifa için özel süre vardır: teslimden itibaren beş yıl
+          [m:6502/12]. Bu süre kanunla veya sözleşmeyle uzatılabilir [m:6502/12]. Ayıp hile ile gizlenmişse
+          zamanaşımı işlemez [m:6502/12].
+      - etiket: HAKLAR
+        metin: |-
+          - Sözleşmeden dönme [m:6502/11]
+          - Bedelden ayıp oranında indirim [m:6502/11]
+          - Ücretsiz onarım [m:6502/11]
+          - Ayıpsız misli ile değiştirme [m:6502/11]
+      - etiket: YOL
+        metin: |-
+          1) Ayıpları fotoğraf, bilirkişi veya ekspertiz ile belgeleyin [m:6502/10]
+          2) Satıcı/müteahhide yazılı bildirim yapın [m:6502/11]
+          3) Onarım veya değiştirmede azami altmış iş günü vardır [m:6502/11]
+          4) Sonuç almazsanız tüketici mahkemesine başvurun [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Ticari amaçla alınan taşınmaz tüketici işlemi sayılmaz [m:6502/2]
+          - Ön ödemeli konut satışında ayrı cayma ve teminat kuralları vardır [m:6502/43]
+          - Tapu ve teslim tarihi, sürenin başlangıcı için belirleyicidir [m:6502/12]
+
+  - dugum_id: t/mesafeli-sozlesme/cayma-hakki
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          İnternet, telefon veya posta yoluyla kurulan mesafeli sözleşmelerde, gerekçe göstermeden ve cezai
+          şart ödemeden cayma hakkınız vardır [m:6502/48]. Cayma süresi on dört gündür ve kural olarak malın
+          teslimi veya hizmetin ifasından başlar [m:6502/48].
+      - etiket: HAKLAR
+        metin: |-
+          - On dört gün içinde gerekçesiz cayma [m:6502/48]
+          - Cayma hakkının kullanıldığına dair bildirimi satıcıya yöneltmeniz yeterlidir [m:6502/48]
+          - Satıcı, cayma bildiriminden sonra bedeli iade etmekle yükümlüdür [m:6502/48]
+      - etiket: YOL
+        metin: |-
+          1) Cayma bildirimini yazılı veya kalıcı veri saklayıcısıyla gönderin [m:6502/48]
+          2) Gönderi tarihini belgeleyin [m:6502/48]
+          3) Ürünü satıcının talimatına uygun şekilde geri gönderin [m:6502/48]
+          4) İade yapılmazsa hakem heyetine başvurun [m:6502/68]
+      - etiket: DİKKAT
+        metin: |-
+          - Tüketicinin onayıyla hazırlanan kişiye özel ürünlerde cayma hakkı sınırlıdır [m:6502/48]
+          - Cayma hakkı, ayıplı maldan doğan haklardan ayrıdır [m:6502/11]
+          - On dört gün geçse bile ürün ayıplıysa zamanaşımı içinde haklarınız sürer [m:6502/12]
+
+  - dugum_id: t/ayipli-hizmet/tamir-servis
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Hizmet sözleşmede belirlenen sürede başlamazsa veya gereken özellikleri taşımazsa ayıplı hizmettir
+          [m:6502/13]. Bu durumda tüketici, sözleşmeden dönme, bedelden indirim veya yeniden ifa
+          seçimlik haklarına sahiptir [m:6502/15].
+      - etiket: HAKLAR
+        metin: |-
+          - Sözleşmeden dönme [m:6502/15]
+          - Bedelden indirim [m:6502/15]
+          - Hizmetin yeniden görülmesi [m:6502/15]
+          - Seçimlik hakla birlikte tazminat isteme [m:6502/15]
+      - etiket: YOL
+        metin: |-
+          1) Teslim tutanağı ve servis fişi alın [m:6502/10]
+          2) Hizmeti verene yazılı bildirim yapın [m:6502/15]
+          3) Yeniden ifa için azami otuz iş günü vardır [m:6502/15]
+          4) Sonuç yoksa hakem heyeti veya tüketici mahkemesi [m:6502/68] [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Hizmette zamanaşımı, ifa tarihinden itibaren iki yıldır [m:6502/16]
+          - Ağır kusur veya hile varsa zamanaşımı işlemez [m:6502/16]
+          - Onarım sırasında oluşan yeni hasar ayrıca tazminat konusu olabilir [m:6502/15]
+
+  - dugum_id: t/finansal/kredi-masraflari
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Sözleşmeyi düzenleyenin kendi menfaati doğrultusunda yaptığı masraflar için tüketiciden ek bedel
+          istenemez [m:6502/4]. Kredi veren kuruluşların faiz dışında alacağı ücret ve masrafların türleri
+          Merkez Bankası düzenlemeleriyle belirlenir [m:6502/4]. Talep edilen her ücretin sözleşme eki olarak
+          yazılı verilmesi zorunludur [m:6502/4].
+      - etiket: HAKLAR
+        metin: |-
+          - Kendi menfaati için yapılan masrafın iadesini isteme [m:6502/4]
+          - Yazılı olarak bildirilmeyen ücrete itiraz [m:6502/4]
+          - Haksız şart niteliğindeki ücret maddesinin bağlamaması [m:6502/5]
+      - etiket: YOL
+        metin: |-
+          1) Kredi sözleşmesini ve masraf kalemlerini isteyin [m:6502/4]
+          2) Bankaya yazılı itiraz edin [m:6502/4]
+          3) Cevap yoksa hakem heyetine başvurun [m:6502/68]
+          4) Tutar sınırı aşıyorsa tüketici mahkemesi [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Zorunlu vergi ve harç niteliğindeki kalemler iade kapsamında değildir [m:6502/4]
+          - İade talebi için ödeme belgesi şarttır [m:6502/10]
+          - Kredi kartı aidatı ayrı bir başlıktır [m:6502/31]
+
+  - dugum_id: t/finansal/kredi-karti-aidati
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Kart çıkaran kuruluşlar, tüketicilere yıllık üyelik aidatı ve benzeri isim altında ücret
+          tahsil etmedikleri bir kredi kartı türü sunmak zorundadır [m:6502/31]. Aidat, haksız şart
+          denetimine de tabidir [m:6502/5].
+      - etiket: HAKLAR
+        metin: |-
+          - Aidatsız kart türü talep etme [m:6502/31]
+          - Kesilen aidatın iadesini isteme [m:6502/31]
+          - Haksız şart maddesine itiraz [m:6502/5]
+      - etiket: YOL
+        metin: |-
+          1) Hesap özetinden kesinti tarihini çıkarın [m:6502/31]
+          2) Bankaya yazılı iade talebi gönderin [m:6502/31]
+          3) Cevap yoksa hakem heyetine başvurun [m:6502/68]
+          4) Tutar sınırı üstündeyse tüketici mahkemesi [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Kesintinin üzerinden uzun süre geçtiyse zamanaşımı ayrıca değerlendirilir [m:6502/12]
+          - Kart sözleşmesindeki aidat maddesi tek başına haklılık doğurmaz [m:6502/5]
+          - Aynı dönem için mükerrer kesinti varsa belgeleyin [m:6502/10]
+
+  - dugum_id: t/haksiz/haksiz-sozlesme-sarti
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Tüketici sözleşmesinde yer alan ve taraflar arasındaki hak ve yükümlülüklerde tüketici aleyhine
+          dengesizlik yaratan şart haksızdır [m:6502/5]. Haksız şart, sözleşmenin niteliğine ve yazılış
+          biçimine bakılmaksızın tüketiciyi bağlamaz [m:6502/5].
+      - etiket: HAKLAR
+        metin: |-
+          - Haksız şartın tüketiciyi bağlamaması [m:6502/5]
+          - Sözleşmenin haksız şart dışındaki hükümlerle ayakta kalması [m:6502/5]
+          - Haksız şart nedeniyle ödenen bedelin iadesi [m:6502/5]
+      - etiket: YOL
+        metin: |-
+          1) Sözleşme metnini ve genel işlem koşullarını isteyin [m:6502/5]
+          2) Hangi maddenin haksız olduğunu yazılı olarak belirtin [m:6502/5]
+          3) Karşı tarafa yazılı itiraz gönderin [m:6502/5]
+          4) Gerekirse hakem heyeti veya mahkeme [m:6502/68] [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Şartın açık ve anlaşılır olmaması tek başına haksızlık göstergesi olabilir [m:6502/5]
+          - Haksız şart denetimi tek tek maddeler üzerinden yapılır [m:6502/5]
+          - Ticari işlemlerde haksız şart hükümleri uygulanmaz [m:6502/2]
+
+  - dugum_id: t/garanti-ve-servis/garanti-belgesi
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Üretici ve ithalatçılar, garanti belgesi düzenlemek ve tüketiciye vermek zorundadır [m:6502/56].
+          Garanti belgesinin içeriği ve azami tamir süresi yönetmelikle belirlenir [m:6502/56]. İhtiyari
+          garanti taahhüdünde tüketiciden masraf istenemez [m:6502/57].
+      - etiket: HAKLAR
+        metin: |-
+          - Garanti belgesi talep etme [m:6502/56]
+          - Garanti kapsamında ücretsiz onarım [m:6502/56]
+          - İhtiyari garantide ek masraf ödememe [m:6502/57]
+      - etiket: YOL
+        metin: |-
+          1) Garanti belgesini ve satış fişini saklayın [m:6502/56]
+          2) Yetkili servise yazılı başvurun [m:6502/56]
+          3) Tamir süresi aşılırsa seçimlik hakları kullanın [m:6502/11]
+          4) Gerekirse hakem heyeti [m:6502/68]
+      - etiket: DİKKAT
+        metin: |-
+          - Garanti süresi, yasal zamanaşımı süresini kısaltmaz [m:6502/12]
+          - Garanti belgesi verilmemesi satıcının sorumluluğunu kaldırmaz [m:6502/56]
+          - Reklamdaki vaatler de taahhüt kapsamındadır [m:6502/57]
+
+  - dugum_id: t/usul/hakem-heyeti-basvurusu
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Değeri kanunda belirtilen sınırın altında kalan uyuşmazlıklarda tüketici hakem heyetine başvuru
+          zorunludur; bu sınırın üzerindeki uyuşmazlıklar için heyete başvurulamaz [m:6502/68]. Başvuru,
+          tüketicinin yerleşim yerindeki veya işlemin yapıldığı yerdeki heyete yapılır [m:6502/68].
+      - etiket: HAKLAR
+        metin: |-
+          - Ücretsiz başvuru [m:6502/68]
+          - Heyetin başvuruyu kabul etme zorunluluğu [m:6502/68]
+          - Karara itiraz hakkı [m:6502/70]
+      - etiket: YOL
+        metin: |-
+          1) Fatura, sözleşme, servis fişi ve yazışmaları toplayın [m:6502/68]
+          2) Yerleşim yerinizdeki heyete dilekçeyle başvurun [m:6502/68]
+          3) Heyet kararını bekleyin [m:6502/69]
+          4) Karar aleyhinize ise itiraz yolunu kullanın [m:6502/70]
+      - etiket: DİKKAT
+        metin: |-
+          - Parasal sınır her yıl güncellenir; başvuru tarihindeki sınır geçerlidir [m:6502/68]
+          - Sınır üstündeki uyuşmazlıkta doğrudan mahkemeye gidilir [m:6502/68]
+          - Heyet kararına itiraz, tüketici mahkemesine yapılır [m:6502/70]
+
+  - dugum_id: t/usul/tuketici-mahkemesi-davasi
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Tüketici işlemlerinden doğan uyuşmazlıklarda tüketici mahkemeleri görevlidir [m:6502/73].
+          Tüketici mahkemelerinde dava açılmadan önce arabulucuya başvurulmuş olması dava şartıdır
+          [m:6502/73A]. Ancak hakem heyeti görevine giren uyuşmazlıklar bu şartın dışındadır [m:6502/73A].
+      - etiket: HAKLAR
+        metin: |-
+          - Tüketici mahkemesinde dava açma [m:6502/73]
+          - Tüketici olarak harçtan muafiyet [m:6502/73]
+          - Arabuluculuk sonunda anlaşma [m:6502/73A]
+      - etiket: YOL
+        metin: |-
+          1) Uyuşmazlık değerini ve hakem heyeti sınırını kontrol edin [m:6502/68]
+          2) Sınır üstündeyse arabulucuya başvurun [m:6502/73A]
+          3) Arabuluculuk tutanağını ekleyerek dava açın [m:6502/73A]
+          4) Görevli ve yetkili mahkemeyi doğrulayın [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Arabuluculuk yapılmadan açılan dava usulden reddedilebilir [m:6502/73A]
+          - Harç muafiyeti tüketicinin davacı olduğu hâllerde geçerlidir [m:6502/73]
+          - Dava, tüketici mahkemesinin bulunduğu yerde açılır [m:6502/73]
+
+  - dugum_id: t/konut-ve-tatil/paket-tur
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Paket tur sözleşmesinde tüketici, tur başlamadan önce sözleşmeden dönebilir [m:6502/51].
+          Dönme hâlinde yapılan masraflar ve tazminat düzenlenmiştir [m:6502/51]. Turun ayıplı ifası
+          hâlinde ayıplı hizmet hükümleri uygulanır [m:6502/13].
+      - etiket: HAKLAR
+        metin: |-
+          - Tur başlamadan sözleşmeden dönme [m:6502/51]
+          - Ayıplı ifada bedelden indirim [m:6502/15]
+          - Tazminat isteme [m:6502/15]
+      - etiket: YOL
+        metin: |-
+          1) Tur sözleşmesini ve ödeme belgelerini saklayın [m:6502/51]
+          2) Acenteye yazılı bildirim yapın [m:6502/51]
+          3) İade yapılmazsa hakem heyeti veya mahkeme [m:6502/68] [m:6502/73]
+      - etiket: DİKKAT
+        metin: |-
+          - Dönme bildiriminin süresi ve kesinti oranı sözleşmeye göre değişir [m:6502/51]
+          - Mücbir sebep hâlleri ayrı değerlendirilir [m:6502/51]
+          - Havayolu iptalleri taşıyıcı kurallarına da tabidir [m:6502/13]
+
+  - dugum_id: t/abonelik/enerji-fatura
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Elektrik, doğalgaz veya su faturasına, endekse ya da sayaca ilişkin uyuşmazlık tüketici işlemidir
+          ve abonelik sözleşmesi hükümlerine tabidir [m:6502/52]. Faturayı ödemiş olmanız itiraz hakkınızı
+          ortadan kaldırmaz [m:6502/52]. Uyuşmazlık değeri yıllık parasal sınırın altındaysa tüketici hakem
+          heyeti görevlidir [m:6502/68].
+      - etiket: HAKLAR
+        metin: |-
+          - Faturaya ve endekse itiraz edip düzeltme isteme [m:6502/52]
+          - Sayaca ilişkin kayıt ve tutanakları talep etme [m:6502/52]
+          - Aboneliği gerekçe göstermeden sona erdirme [m:6502/52]
+          - Fesih hâlinde ödenen ücretin on beş gün içinde kesintisiz iadesi [m:6502/52]
+          - Hakem heyetine ücretsiz başvuru [m:6502/68]
+          - Heyet kararına iki hafta içinde tüketici mahkemesine itiraz [m:6502/70]
+      - etiket: YOL
+        metin: |-
+          1) Dağıtım veya tedarik şirketine yazılı itiraz edin; endeks dökümünü, sayaç söküm/takma tutanağını ve fatura hesabını isteyin [m:6502/52]
+          2) Şirketin yazılı cevabını bekleyin; cevap esasa girmiyorsa belge talebini yineleyin [m:6502/52]
+          3) Uyuşmazlık tutarı yıllık sınırın altındaysa tüketici hakem heyetine başvurun [m:6502/68]
+          4) Heyet kararı aleyhinize ise tebliğden itibaren iki hafta içinde tüketici mahkemesine itiraz edin [m:6502/70]
+      - etiket: DİKKAT
+        metin: |-
+          - Fatura ödenmiş olsa da itiraz ve iade talebi saklıdır [m:6502/52]
+          - Sayaca ve endekse ilişkin teknik usuller elektrik piyasası yönetmeliğinde düzenlenir; bu kart yalnızca tüketici hukuku çerçevesini verir [m:6502/52]
+          - Hakem heyeti kararına itiraz süresi kanunda "iki hafta"dır; kılavuzlarda geçen "15 gün" ifadesiyle karıştırılmamalıdır [m:6502/70]
+          - Tüketici davacı olduğunda harçtan muaftır [m:6502/73]
+
+  - dugum_id: t/abonelik/otomatik-yenileme
+    durum: taslak
+    bolumler:
+      - etiket: ÖZET
+        metin: >-
+          Abonelik sözleşmelerinde tüketicinin fesih hakkı ve yenileme koşulları düzenlenmiştir
+          [m:6502/52]. Tüketiciye bilgi verilmeden yapılan yenileme ve zorlaştırılan fesih, haksız
+          ticari uygulama oluşturabilir [m:6502/62].
+      - etiket: HAKLAR
+        metin: |-
+          - Aboneliği sona erdirme [m:6502/52]
+          - Kesilen bedelin iadesini isteme [m:6502/52]
+          - Haksız uygulama için şikâyet [m:6502/62]
+      - etiket: YOL
+        metin: |-
+          1) Fesih bildirimini yazılı gönderin ve kayıt alın [m:6502/52]
+          2) Bankadan itiraz/chargeback seçeneklerini sorun [m:6502/52]
+          3) Gerekirse hakem heyetine başvurun [m:6502/68]
+      - etiket: DİKKAT
+        metin: |-
+          - Ücretsiz deneme dönemleri otomatik ücretli döneme dönüşebilir [m:6502/52]
+          - Fesih hakkının kullanılması engellenemez [m:6502/52]
+          - Dijital hizmetlerde ifa başladıysa iade kapsamı değişebilir [m:6502/48]

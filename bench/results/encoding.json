@@ -1,0 +1,53 @@
+{
+  "measuredAt": "2026-10-22T14:52:37.628Z",
+  "tokenizer": "gpt-tokenizer/encode (cl100k_base)",
+  "corpus": "data/raw/decisions.jsonl (gerçek karar metinleri)",
+  "samples": [
+    {
+      "bodyChars": 600,
+      "jsonCompactTokens": 611,
+      "jsonPrettyTokens": 743,
+      "taggedTokens": 568,
+      "savingsVsCompact": 7,
+      "savingsVsPretty": 23.6,
+      "bytes": {
+        "jsonCompact": 1640,
+        "jsonPretty": 1959,
+        "tagged": 1443
+      }
+    },
+    {
+      "bodyChars": 1800,
+      "jsonCompactTokens": 983,
+      "jsonPrettyTokens": 1115,
+      "taggedTokens": 940,
+      "savingsVsCompact": 4.4,
+      "savingsVsPretty": 15.7,
+      "bytes": {
+        "jsonCompact": 2930,
+        "jsonPretty": 3249,
+        "tagged": 2733
+      }
+    },
+    {
+      "bodyChars": 4000,
+      "jsonCompactTokens": 1380,
+      "jsonPrettyTokens": 1512,
+      "taggedTokens": 1337,
+      "savingsVsCompact": 3.1,
+      "savingsVsPretty": 11.6,
+      "bytes": {
+        "jsonCompact": 4314,
+        "jsonPretty": 4633,
+        "tagged": 4117
+      }
+    }
+  ],
+  "summary": {
+    "averageSavingsVsCompactJson": 4.8,
+    "averageSavingsVsPrettyJson": 17,
+    "tokenizerCostPerResponseMs": 0.333,
+    "tokenizerRuns": 200
+  },
+  "methodNote": "Aynı anlamsal içerik iki kodlamada; içerik gerçek karar metninden alınan özetle sabit. Fark yalnızca kodlama yükü: anahtar tekrarı, tırnak/kaçış, süslü parantez, girinti."
+}

@@ -1,0 +1,26 @@
+node_modules/
+data/raw/
+data/build/*.db
+data/build/*.db-*
+*.log
+.DS_Store
+.env
+
+# --- dsh push hygiene (2026-10-30) ---
+.DS_Store
+._*
+__MACOSX/
+node_modules/
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+*.log
+__pycache__/
+*.pyc
+.venv/
+
+dist-npm/
+eval/fixtures/bench.db
+bench/results/*.db

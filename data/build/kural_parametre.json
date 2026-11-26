@@ -1,0 +1,530 @@
+{
+ "surum": "kural-parametre-2026.2",
+ "kayitlar": [
+  {
+   "kural_id": "gorevli_merci",
+   "anahtar": "hakem_heyeti_ust_sinir",
+   "deger": 66000,
+   "gecerlilik_bas": "2023-01-01",
+   "gecerlilik_bit": "2023-12-31",
+   "kaynak_url": "https://tuketici.ticaret.gov.tr/haberler/tuketici-hakem-heyetlerine-basvurularda-2023-yili-parasal-degerleri-yeniden-belirlendi",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gorevli_merci",
+   "anahtar": "hakem_heyeti_ust_sinir",
+   "deger": 104000,
+   "gecerlilik_bas": "2024-01-01",
+   "gecerlilik_bit": "2024-12-31",
+   "kaynak_url": "https://www.resmigazete.gov.tr/eskiler/2023/12/20231220-3.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gorevli_merci",
+   "anahtar": "hakem_heyeti_ust_sinir",
+   "deger": 149000,
+   "gecerlilik_bas": "2025-01-01",
+   "gecerlilik_bit": "2025-12-31",
+   "kaynak_url": "https://www.resmigazete.gov.tr/eskiler/2024/12/20241220-2.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gorevli_merci",
+   "anahtar": "hakem_heyeti_ust_sinir",
+   "deger": 186000,
+   "gecerlilik_bas": "2026-01-01",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251223-5.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gorevli_merci",
+   "anahtar": "kanun_temel_sinir",
+   "deger": 30000,
+   "gecerlilik_bas": "2022-10-01",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "arabuluculuk_dava_sarti",
+   "anahtar": "yururluk_bas",
+   "deger": "2023-09-01",
+   "gecerlilik_bas": "2023-09-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.resmigazete.gov.tr/eskiler/2023/03/20230301-1.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "cayma_suresi",
+   "anahtar": "sure_gun",
+   "deger": 14,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "kanuni_oran",
+   "deger": 9,
+   "gecerlilik_bas": "2005-05-01",
+   "gecerlilik_bit": "2026-07-30",
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3095.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "kanuni_oran",
+   "deger": 31,
+   "gecerlilik_bas": "2026-07-31",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "kanuni_oran_carpani",
+   "deger": 0.8,
+   "gecerlilik_bas": "2026-07-31",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3095.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "reeskont_oran",
+   "deger": 38.75,
+   "gecerlilik_bas": "2025-12-20",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 9.75,
+   "gecerlilik_bas": "2016-12-31",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 19.5,
+   "gecerlilik_bas": "2018-06-29",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 18.25,
+   "gecerlilik_bas": "2019-10-11",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 13.75,
+   "gecerlilik_bas": "2019-12-21",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 10,
+   "gecerlilik_bas": "2020-06-13",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 16.75,
+   "gecerlilik_bas": "2020-12-19",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 15.75,
+   "gecerlilik_bas": "2021-12-31",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 10.75,
+   "gecerlilik_bas": "2022-12-31",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 16.75,
+   "gecerlilik_bas": "2023-06-24",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 26.75,
+   "gecerlilik_bas": "2023-09-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 31.75,
+   "gecerlilik_bas": "2023-09-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 36.75,
+   "gecerlilik_bas": "2023-11-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 41.75,
+   "gecerlilik_bas": "2023-12-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 44.25,
+   "gecerlilik_bas": "2023-12-23",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 51.75,
+   "gecerlilik_bas": "2024-04-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 49.25,
+   "gecerlilik_bas": "2024-12-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 44.25,
+   "gecerlilik_bas": "2025-03-08",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 42.25,
+   "gecerlilik_bas": "2025-09-17",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "avans_oran",
+   "deger": 39.75,
+   "gecerlilik_bas": "2025-12-20",
+   "gecerlilik_bit": "2026-12-31",
+   "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/Reeskont+ve+Avans+Faiz+Oranlari",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "temel_sure_yil",
+   "deger": 2,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "konut_sure_yil",
+   "deger": 5,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "ikinci_el_taban_yil",
+   "deger": 1,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "konut_ikinci_el_taban_yil",
+   "deger": 3,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "onarim_is_gunu",
+   "deger": 30,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "ayip_zamanasimi",
+   "anahtar": "onarim_is_gunu_konut",
+   "deger": 60,
+   "gecerlilik_bas": "2014-05-28",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "yasal_faiz",
+   "anahtar": "yil_gun_sayisi",
+   "deger": 365,
+   "gecerlilik_bas": "1984-12-19",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3095.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "sgk_saglik_hakki",
+   "anahtar": "temel_gun",
+   "deger": 10,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "sgk_saglik_hakki",
+   "anahtar": "ek_gun",
+   "deger": 90,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "sgk_saglik_hakki",
+   "anahtar": "ek_gun_kosul_prim_gun",
+   "deger": 90,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "sgk_saglik_hakki_kosullari",
+   "anahtar": "asgari_prim_gun",
+   "deger": 30,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "sgk_saglik_hakki_kosullari",
+   "anahtar": "azami_borc_gun",
+   "deger": 60,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gss_alacak_zamanasimi",
+   "anahtar": "talep_sure_yil",
+   "deger": 2,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gss_alacak_zamanasimi",
+   "anahtar": "dusme_sure_yil",
+   "deger": 5,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gss_gelir_testi",
+   "anahtar": "gelir_esik_pay",
+   "deger": {
+    "pay": 1,
+    "payda": 3
+   },
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "gss_prim_zamanasimi",
+   "anahtar": "zamanaşımı_yil",
+   "deger": 10,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "son_hizmet_gun",
+   "deger": 120,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "asgari_prim_gun_180",
+   "deger": 600,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "asgari_prim_gun_240",
+   "deger": 900,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "asgari_prim_gun_300",
+   "deger": 1080,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "sure_180",
+   "deger": 180,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "sure_240",
+   "deger": 240,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "sure_300",
+   "deger": 300,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "kazanc_orani",
+   "deger": 0.4,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "tavan_orani",
+   "deger": 0.8,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "issizlik_odenegi",
+   "anahtar": "ay_gun",
+   "deger": 30,
+   "gecerlilik_bas": "2008-05-26",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4447.htm",
+   "durum": "teyit_bekliyor"
+  },
+  {
+   "kural_id": "is_kazasi_bildirim",
+   "anahtar": "bildirim_is_gunu",
+   "deger": 3,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  },
+  {
+   "kural_id": "is_kazasi_bildirim",
+   "anahtar": "kendi_adina_gec_bildirim_ay",
+   "deger": 1,
+   "gecerlilik_bas": "2008-10-01",
+   "gecerlilik_bit": null,
+   "kaynak_url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5510.htm",
+   "durum": "uzman_onayli"
+  }
+ ]
+}

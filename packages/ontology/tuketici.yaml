@@ -1,0 +1,504 @@
+# Tüketici Hukuku Ontolojisi — v0
+#
+# Omurga: her karar, kart, kural ve sorgu bir düğüme bağlanır.
+# Tasarım kuralları:
+#   - Düğüm sınırı hukuki sonuç değiştiğinde çizilir (konut ayıbı 5 yıl, diğer mal 2 yıl).
+#   - Yaprak düğüm = tek bir uyuşmazlık konusu + onu yöneten kural seti.
+#   - Talep tipi (iade/onarım/indirim) düğüm değil, kartın içindeki seçimlik haklar
+#     listesidir; 6502 m.11 zaten bir menü verir. Bu bilinçli bir sapmadır (bkz. NOTES).
+#   - Çapraz konular (arabuluculuk, hakem heyeti, süre) düğüm değil, kuraldır.
+#
+# Maddeler gerçek kanun metninden doğrulanmıştır (6502, 6098, 6100).
+# durum: teyit_bekliyor -> uzman (avukat) onayı olmadan "onaylı" sayılmaz.
+
+surum: 1
+ad: Tüketici Hukuku
+kok: t/tuketici
+durum: teyit_bekliyor
+
+dallar:
+  # ============================ AYIPLI MAL ============================
+  - id: t/ayipli-mal
+    ad: Ayıplı mal
+    aciklama: Teslim edilen malın sözleşmede kararlaştırılan veya objektif olarak bulunması gereken nitelikleri taşımaması.
+    maddeler: [m:6502/8, m:6502/9, m:6502/10, m:6502/11, m:6502/12]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, ayip_zamanasimi, yetkili_yer, harc_durumu]
+    yapraklar:
+      - id: t/ayipli-mal/arac
+        ad: Araçta ayıp (sıfır veya ikinci el)
+        aciklama: Satın alınan araçta teslimden sonra ortaya çıkan arıza, gizli ayıp veya ayıp gizleme.
+        tetikleyiciler: [araç, araba, otomobil, şanzıman, motor, servis, galeri, sıfır araç, ikinci el araç, arıza, kilometre]
+        ornek_sorgular:
+          - "Bayiden aldığım sıfır arabanın şanzımanı 3 ayda 4 kez arıza yaptı, paramı geri alabilir miyim?"
+          - "İkinci el aldığım aracın motoru değişmiş çıktı, satıcı galeri."
+          - "Araçta boya değişeni olduğu söylenmedi, sonradan öğrendim ne yapabilirim?"
+          - "Servis aracı 2 aydır tamir edemiyor, iade isteyebilir miyim?"
+          - "Arabanın direksiyon kutusu garantiden değişti ama arıza tekrarladı."
+      - id: t/ayipli-mal/elektronik
+        ad: Elektronik cihazda ayıp
+        aciklama: Telefon, bilgisayar, televizyon gibi cihazlarda arıza, ayıp veya tekrarlayan servis.
+        tetikleyiciler: [telefon, cep telefonu, bilgisayar, laptop, televizyon, tablet, kulaklık, elektronik, batarya, ekran]
+        ornek_sorgular:
+          - "Aldığım telefon 1 hafta sonra şarj tutmamaya başladı, iade edebilir miyim?"
+          - "Laptop ekranı kendiliğinden kırıldı, servis kullanıcı hatası diyor."
+          - "Televizyon 3 kez servise gitti aynı arızadan, yenisiyle değiştirirler mi?"
+          - "Tablet su aldı diye garanti dışı dediler ama suya sokmadım."
+          - "Kulaklık bozuk çıktı, mağaza değişim yapmıyor."
+      - id: t/ayipli-mal/beyaz-esya
+        ad: Beyaz eşyada ayıp
+        aciklama: Buzdolabı, çamaşır makinesi, bulaşık makinesi, fırın gibi büyük ev aletlerinde arıza.
+        tetikleyiciler: [buzdolabı, çamaşır makinesi, bulaşık makinesi, fırın, bulaşık, beyaz eşya, klima, ocak, süpürge]
+        ornek_sorgular:
+          - "Çamaşır makinesi ilk ayda su kaçırıyor, tamir mi iade mi istemeliyim?"
+          - "Buzdolabı 2 ayda bozuldu, servis 3 haftadır parça bekliyor."
+          - "Bulaşık makinesi garantide ama servis ücret istiyor."
+          - "Fırının camı kendiliğinden çatladı, kullanıcı hatası dediler."
+          - "Klima soğutmuyor, 4 kez tamir edildi hâlâ aynı."
+      - id: t/ayipli-mal/mobilya
+        ad: Mobilyada ayıp
+        aciklama: Koltuk, yatak, dolap gibi mobilyalarda kırık, renk atması, ölçü uyumsuzluğu veya erken deformasyon.
+        tetikleyiciler: [mobilya, koltuk, kanepe, yatak, dolap, masa, sandalye, gardırop, kumaş, deri]
+        ornek_sorgular:
+          - "Aldığım koltuk 3 ayda çöktü, değişim istiyorum."
+          - "Yatak söylenen ölçüde gelmedi, para iadesi alabilir miyim?"
+          - "Mobilyanın derisi soyuldu, satıcı normal diyor."
+          - "Gardırop kurulumda çizildi, servis ilgilenmiyor."
+          - "Sipariş ettiğim renk yerine başka renk geldi."
+      - id: t/ayipli-mal/konut
+        ad: Konut veya tatil amaçlı taşınmazda ayıp
+        aciklama: Konut ve tatil amaçlı taşınmazlarda ayıplı ifa; beş yıllık özel zamanaşımı ve teslim sonrası gizli ayıplar. Ticari amaçlı alımlar kapsam dışıdır.
+        tetikleyiciler: [konut, daire, ev, taşınmaz, villa, yazlık, tapu, iskân, inşaat, kaba inşaat, sözleşme]
+        ornek_sorgular:
+          - "Yeni aldığım dairede duvarlar nem yapıyor, müteahhit ilgilenmiyor."
+          - "Yazlıkta tesisat patladı, teslimden 2 yıl sonra ortaya çıktı."
+          - "Dairenin metrekaresi sözleşmedekinden küçük çıktı."
+          - "Konut ayıbında zamanaşımı kaç yıl?"
+          - "Müteahhit eksik işleri tamamlamıyor, ne yapabilirim?"
+      - id: t/ayipli-mal/ikinci-el-galeri
+        ad: İkinci el araç — galeri satışı
+        aciklama: Yetkili satıcı veya galeriden yapılan ikinci el araç satışında ayıp, hasar gizleme ve bir yıllık asgari sorumluluk.
+        tetikleyiciler: [galeri, ikinci el, hasar kaydı, tramer, kilometresi düşük, oynanmış, gizlenmiş hasar, yetkili satıcı]
+        ornek_sorgular:
+          - "Galeriden aldığım araçta ağır hasar kaydı varmış, söylemediler."
+          - "İkinci el araç 6 ayda motor yaptı, galeri sorumlu mu?"
+          - "Kilometre düşürülmüş çıktı, satıcı iade eder mi?"
+          - "İkinci elde ayıp sorumluluğu kaç yıl?"
+          - "Aracın şasi kaydı varmış, satıcı gizlemiş."
+      - id: t/ayipli-mal/gida
+        ad: Gıdada ayıp veya bozuk ürün
+        aciklama: Son kullanma tarihi geçmiş, bozuk veya ambalajı hasarlı gıda ürünleri.
+        tetikleyiciler: [gıda, bozuk, son kullanma, tarihi geçmiş, ambalaj, market, ürün, küflü, kokmuş]
+        ornek_sorgular:
+          - "Markette aldığım ürün bozuk çıktı, iade almadılar."
+          - "Son kullanma tarihi geçmiş ürün sattılar."
+          - "Ambalajı açılmış gıda bozuk çıktı, şikâyet edebilir miyim?"
+          - "Ürünün içinden yabancı madde çıktı."
+          - "Market fişi yok diye iade kabul etmiyor."
+      - id: t/ayipli-mal/tekstil
+        ad: Giyim ve tekstilde ayıp
+        aciklama: Çekme, solma, dikiş bozukluğu, yırtık gibi kullanım öncesi veya erken ortaya çıkan ayıplar.
+        tetikleyiciler: [giyim, tekstil, kıyafet, elbise, ayakkabı, çanta, çekti, soldu, dikiş, yırtıldı]
+        ornek_sorgular:
+          - "Yeni aldığım kıyafet ilk yıkamada çekti, değiştirirler mi?"
+          - "Ayakkabı 2 haftada yırtıldı, mağaza kabul etmiyor."
+          - "Montun astarı söküldü, garanti var mı?"
+          - "Çanta boyası aktı, kullanıcı hatası diyorlar."
+          - "Ürün etiketi söylenen kumaş değil."
+
+  # ========================== AYIPLI HİZMET ===========================
+  - id: t/ayipli-hizmet
+    ad: Ayıplı hizmet
+    aciklama: Hizmetin sözleşmede belirlenen sürede başlamaması veya gereken özellikleri taşımaması.
+    maddeler: [m:6502/13, m:6502/14, m:6502/15, m:6502/16]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, ayip_zamanasimi, yetkili_yer, harc_durumu]
+    yapraklar:
+      - id: t/ayipli-hizmet/tamir-servis
+        ad: Tamir ve bakım hizmetinde ayıp
+        aciklama: Onarım sonrası arızanın devam etmesi, yeni hasar oluşması, parça takılmaması veya süresinde tamamlanmaması.
+        tetikleyiciler: [tamir, servis, bakım, usta, arıza devam, parça, işçilik, tamirci, tadilat, tesisat, tamirat, iş yarım kaldı, yarım bıraktı]
+        ornek_sorgular:
+          - "Telefonu tamire verdim, ekranı çizik geldi."
+          - "Servis 3 haftadır arabamı teslim etmiyor."
+          - "Tamir ettirdim ama aynı arıza devam ediyor."
+          - "Usta söylediğinden fazla ücret istedi."
+          - "Beyaz eşya tamirinde yanlış parça takılmış."
+          - "Banyo tesisatını yaptırdım, usta işi yarım bıraktı ve parasını istiyor."
+      - id: t/ayipli-hizmet/egitim-kurs
+        ad: Eğitim ve kurs hizmetinde ayıp
+        aciklama: Ders saatinin dolmaması, söz verilen içeriğin verilmemesi, eğitmen değişikliği veya kursun kapanması.
+        tetikleyiciler: [kurs, eğitim, ders, sınav, eğitmen, sertifika, okul, dil kursu, kurs ücreti]
+        ornek_sorgular:
+          - "Ödediğim kurs 10 ders yerine 3 ders yapıldı, para iadesi isterim."
+          - "Kurs kapanınca ücretimi geri vermiyorlar."
+          - "Söz verilen sertifika verilmedi."
+          - "Eğitmen hiç gelmedi, kayıt ücreti iadesi alabilir miyim?"
+          - "Online kursun içeriği reklamdakinden farklı çıktı."
+      - id: t/ayipli-hizmet/saglik-estetik
+        ad: Sağlık ve estetik hizmetinde ayıp
+        aciklama: Estetik işlem, diş tedavisi veya benzeri hizmetlerde beklenen sonucun oluşmaması, komplikasyon ve bilgilendirme eksikliği.
+        tetikleyiciler: [estetik, saç ekimi, diş, implant, botoks, lazer, klinik, tedavi, komplikasyon]
+        ornek_sorgular:
+          - "Saç ekimi sonrası iz kaldı, klinik sorumlu mu?"
+          - "Diş implantı 2 ayda düştü, ücret iadesi istiyorum."
+          - "Estetik işlem öncesi riskler anlatılmadı."
+          - "Lazer epilasyon yanık izi bıraktı."
+          - "Diş tedavisi söz verilen şekilde bitmedi."
+      - id: t/ayipli-hizmet/tasimacilik-kargo
+        ad: Taşıma ve kargo hizmetinde ayıp
+        aciklama: Kargonun kaybolması, geç teslimi, hasarlı teslimi veya içeriğin eksik çıkması.
+        tetikleyiciler: [kargo, kurye, gönderi, teslim, kayıp, hasarlı, geç geldi, paket, taşıma]
+        ornek_sorgular:
+          - "Kargom kayboldu, firma tazminat vermiyor."
+          - "Paketim ezilmiş geldi, içindeki ürün kırık."
+          - "Kargo 10 gün gecikti, mağdur oldum."
+          - "Kurye paketi komşuya bırakmış, ürün kayıp."
+          - "Gönderdiğim ürünün içeriği eksik çıktı."
+      - id: t/ayipli-hizmet/otel-konaklama
+        ad: Otel ve konaklama hizmetinde ayıp
+        aciklama: Rezervasyonda vaat edilen oda, olanak veya hizmetin verilmemesi; erken çıkış ve iade talepleri.
+        tetikleyiciler: [otel, tatil, rezervasyon, konaklama, oda, pansiyon, her şey dahil, rezervasyon iptali]
+        ornek_sorgular:
+          - "Otelde vaat edilen deniz manzaralı oda verilmedi."
+          - "Her şey dahil aldım ama yemekler dahil değildi."
+          - "Otel rezervasyonu tek taraflı iptal etti."
+          - "Oda kirli ve klima bozuktu, para iadesi istiyorum."
+          - "Tatil köyünde söylenen olanaklar yoktu."
+
+  # ========================= MESAFELİ SÖZLEŞME ========================
+  - id: t/mesafeli-sozlesme
+    ad: Mesafeli sözleşmeler
+    aciklama: İnternet, telefon veya posta yoluyla kurulan, tarafların fiziksel olarak karşı karşıya gelmediği sözleşmeler.
+    maddeler: [m:6502/48, m:6502/49]
+    kurallar: [cayma_suresi, gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer, harc_durumu]
+    yapraklar:
+      - id: t/mesafeli-sozlesme/cayma-hakki
+        ad: Cayma hakkı (14 gün)
+        aciklama: Mesafeli sözleşmelerde tüketicinin gerekçe göstermeksizin on dört gün içinde cayma hakkı; sürenin başlangıcı ve istisnaları.
+        tetikleyiciler: [cayma, iptal, 14 gün, on dört gün, vazgeçtim, internetten aldım, iade hakkı]
+        ornek_sorgular:
+          - "İnternetten aldığım ürünü 10 gün sonra iade etmek istiyorum, hakkım var mı?"
+          - "Cayma süresi teslimden mi siparişten mi başlar?"
+          - "Kargo 5 gün gecikti, cayma sürem uzar mı?"
+          - "Telefonla yaptığım alışverişte cayma hakkım var mı?"
+          - "14 gün geçti ama ürün ayıplı çıktı, iade alırlar mı?"
+      - id: t/mesafeli-sozlesme/teslimat-gecikmesi
+        ad: Teslimatın gecikmesi veya hiç yapılmaması
+        aciklama: Mesafeli satışta malın süresinde teslim edilmemesi; tüketicinin cayma veya tazminat hakları.
+        tetikleyiciler: [teslim edilmedi, gelmedi, kargo gelmedi, gecikti, sipariş, teslimat süresi, mobilya gelmedi, hâlâ teslim edilmedi, teslim tarihi geçti]
+        ornek_sorgular:
+          - "Siparişim 1 aydır gelmedi, paramı geri alabilir miyim?"
+          - "Sitede 3 günde teslim yazıyordu, 3 hafta oldu."
+          - "Satıcı stokta yok diyor ama para iadesi yapmıyor."
+          - "Ürün hiç gelmedi, kargo firması suçu satıcıya atıyor."
+          - "Teslimat tarihi sürekli öteleniyor."
+          - "Sipariş ettiğim mobilya iki aydır teslim edilmedi, satıcı tarih vermiyor."
+      - id: t/mesafeli-sozlesme/iade-bedeli
+        ad: İade bedelinin ödenmemesi
+        aciklama: Cayma veya ayıp nedeniyle iade edilen ürünün bedelinin, kargo masrafının iadesi; kesinti yapılması.
+        tetikleyiciler: [para iadesi, ücret iadesi, kesinti, kargo ücreti, iade süresi, hesabıma geçmedi]
+        ornek_sorgular:
+          - "Ürünü iade ettim ama 1 aydır para gelmedi."
+          - "İade ederken kargo ücretini benden kestiler."
+          - "Satıcı 'kullanılmış' diyerek kesinti yaptı."
+          - "İade onaylandı ama hesabıma geçmedi."
+          - "Kuponla aldığım ürünün iadesinde para yerine kupon veriyorlar."
+      - id: t/mesafeli-sozlesme/pazaryeri-sorumlulugu
+        ad: Pazaryeri ve aracı platform sorumluluğu
+        aciklama: Trendyol, Hepsiburada gibi aracı hizmet sağlayıcılar üzerinden yapılan satışlarda satıcı ve platform sorumluluğu.
+        tetikleyiciler: [trendyol, hepsiburada, amazon, pazaryeri, platform, aracı, satıcı, site, online mağaza]
+        ornek_sorgular:
+          - "Trendyol'dan aldım, satıcı ilgilenmiyor, platform sorumlu mu?"
+          - "Pazaryerinde sahte ürün satılıyor, kim sorumlu?"
+          - "Satıcı kapanmış, platform paramı vermiyor."
+          - "Platform ürünü kaldırdı ama iade süreci işlemiyor."
+          - "Aracı site satıcı bilgilerini vermiyor."
+
+  # ============================== ABONELİK =============================
+  - id: t/abonelik
+    ad: Abonelik sözleşmeleri
+    aciklama: Süreli veya otomatik yenilenen aboneliklerde fesih, yenileme ve fatura uyuşmazlıkları.
+    maddeler: [m:6502/52]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer]
+    yapraklar:
+      - id: t/abonelik/gsm-internet
+        ad: GSM, internet ve TV aboneliği
+        aciklama: Taahhüt, cayma bedeli, hız düşüklüğü ve hizmet kesintisi uyuşmazlıkları.
+        tetikleyiciler: [gsm, hat, internet, fiber, ttnet, turkcell, vodafone, taahhüt, cayma bedeli, hız]
+        ornek_sorgular:
+          - "İnternet hızım sözleşmede yazanın yarısı, cayma bedeli isterler mi?"
+          - "Taahhüdüm bitti ama otomatik yenilemişler."
+          - "Hattımı kapatmak istiyorum, cayma bedeli çok yüksek."
+          - "İnternet 1 aydır kesintili, fatura ödemek zorunda mıyım?"
+          - "Taahhüt süresi dolmadan operatör değiştirdim."
+      - id: t/abonelik/enerji-fatura
+        ad: Elektrik, doğalgaz ve su faturası
+        aciklama: Hatalı endeks, yüksek fatura, kesinti ve abonelik iptali uyuşmazlıkları.
+        tetikleyiciler: [elektrik, doğalgaz, su, fatura, endeks, sayaç, kesinti, abonelik iptali, dağıtım, faturam yüksek geldi, kaçak tahakkuk, aboneliğimi iptal ettim]
+        ornek_sorgular:
+          - "Elektrik faturam normalin 4 katı geldi, itiraz edebilir miyim?"
+          - "Sayaç arızalı, fatura yüksek çıkıyor."
+          - "Doğalgaz faturamı ödemedim diye haksız kesinti yapıldı."
+          - "Aboneliğimi iptal ettim ama fatura gelmeye devam ediyor."
+          - "Su faturasında kaçak tahakkuku yapılmış."
+          - "Doğalgaz faturası geçen aya göre 3 kat fazla geldi, itiraz etmek istiyorum."
+      - id: t/abonelik/uyelik-spor
+        ad: Spor salonu ve kulüp üyeliği
+        aciklama: Üyelik sözleşmesinde fesih, dondurma, taşınma ve otomatik yenileme uyuşmazlıkları.
+        tetikleyiciler: [spor salonu, gym, üyelik, fitness, kulüp, dondurma, aidat, abonelik iptali, salon kapandı, üyeliğimi iptal, sakatlandım]
+        ornek_sorgular:
+          - "Spor salonu üyeliğimi iptal etmek istiyorum, kabul etmiyorlar."
+          - "Salon kapandı, kalan üyelik ücretimi geri alamıyorum."
+          - "Taşındım, başka şehirde salon yok, ücret iadesi isterim."
+          - "Üyeliğim otomatik yenilenmiş, haberim yoktu."
+          - "Sakatlandım, üyeliği dondurmak istiyorum."
+          - "Spor salonuna yazıldım ama salonda eğitmen yok, üyeliğimi iptal edip paramı istiyorum."
+      - id: t/abonelik/otomatik-yenileme
+        ad: Otomatik yenilenen abonelikler
+        aciklama: Dijital hizmet, dergi, uygulama gibi aboneliklerde haber verilmeden yenileme ve iptal zorluğu.
+        tetikleyiciler: [otomatik yenileme, abonelik, iptal, dijital, uygulama, netflix, spotify, dergi, üyelik]
+        ornek_sorgular:
+          - "Aboneliğimi iptal ettim ama kartımdan çekim yapılmış."
+          - "Ücretsiz denemeydi, otomatik ücretlendirildi."
+          - "İptal butonu yok, nasıl iptal ederim?"
+          - "Yıllık üyelik habersiz yenilendi."
+          - "Kullanmadığım abonelik ücreti iade edilir mi?"
+
+  # ============================== FİNANSAL =============================
+  - id: t/finansal
+    ad: Finansal hizmetler
+    aciklama: Tüketici kredisi, kredi kartı, konut finansmanı ve sigorta ürünlerinden doğan uyuşmazlıklar.
+    maddeler: [m:6502/4, m:6502/5, m:6502/22, m:6502/29, m:6502/30, m:6502/31, m:6502/32, m:6502/35]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer, harc_durumu]
+    yapraklar:
+      - id: t/finansal/kredi-masraflari
+        ad: Kredi masrafı ve dosya masrafı
+        aciklama: Kredi kullandırılırken alınan dosya masrafı, ipotek tesis ücreti, sigorta ve sair masrafların iadesi.
+        tetikleyiciler: [kredi, dosya masrafı, kredi masrafı, ipotek, tesis ücreti, sigorta, ekspertiz, masraf iadesi]
+        ornek_sorgular:
+          - "Kredi çektiğimde dosya masrafı aldılar, geri alabilir miyim?"
+          - "Konut kredisinde ipotek ücreti iadesi isteyebilir miyim?"
+          - "Kredi masrafları için hangi mercie başvurmalıyım?"
+          - "Bankam sigorta yaptırmamı zorunlu tuttu."
+          - "Ekspertiz ücretini ben ödedim, iadesi olur mu?"
+      - id: t/finansal/kredi-karti-aidati
+        ad: Kredi kartı aidatı
+        aciklama: Kart aidatı, yıllık üyelik bedeli ve benzeri kesintilerin haksız şart kapsamında iadesi.
+        tetikleyiciler: [kredi kartı, aidat, kart aidatı, yıllık ücret, banka, kesinti, iade, haksız şart]
+        ornek_sorgular:
+          - "Kredi kartımdan yıllık aidat kesilmiş, iade alabilir miyim?"
+          - "Kart aidatı iadesi için hakem heyetine başvurabilir miyim?"
+          - "Bankam aidatı geri ödemiyor."
+          - "Kullanmadığım kartdan aidat alınmış."
+          - "Kart aidatı kaç yıl geriye dönük istenebilir?"
+      - id: t/finansal/erken-odeme
+        ad: Erken ödeme ve erken kapama
+        aciklama: Kredinin erken kapatılmasında faiz ve masraf indirimi, erken ödeme tazminatı.
+        tetikleyiciler: [erken ödeme, erken kapama, kredi kapatma, tazminat, faiz indirimi, yapılandırma]
+        ornek_sorgular:
+          - "Krediyi erken kapatırsam faiz iadesi alır mıyım?"
+          - "Bankam erken ödeme tazminatı kesti."
+          - "Konut kredisini erken kapattım, masraf iadesi var mı?"
+          - "Erken ödeme indirimi nasıl hesaplanır?"
+          - "Yapılandırma sonrası fazla ödeme yapmışım."
+      - id: t/finansal/bagli-kredi
+        ad: Bağlı kredi ve bağlı taksitli satış
+        aciklama: Mal veya hizmet alımıyla bağlantılı kredide, malın teslim edilmemesi hâlinde tüketicinin bankaya karşı hakları.
+        tetikleyiciler: [bağlı kredi, taksitli satış, kredi ile aldım, banka, teslim edilmedi, satıcı]
+        ornek_sorgular:
+          - "Kredi ile aldığım ürün gelmedi, bankaya ödeme yapmak zorunda mıyım?"
+          - "Bağlı kredide satıcı sözleşmeden dönerse ne olur?"
+          - "Bankam ürünü teslim etmeyen satıcıya ödeme yaptı."
+          - "Bağlı kredi taksitlerini durdurabilir miyim?"
+          - "Satıcı battı, kredi borcu kimde kalır?"
+      - id: t/finansal/sigorta
+        ad: Sigorta ürünleri
+        aciklama: Zorunlu veya ihtiyari sigortalarda poliçe, prim, hasar ödemesi ve cayma hakkı uyuşmazlıkları.
+        tetikleyiciler: [sigorta, poliçe, prim, hasar, kasko, dask, hayat sigortası, tazminat, sigorta şirketi]
+        ornek_sorgular:
+          - "Kasko hasarımı ödemiyorlar, ne yapabilirim?"
+          - "Kredi çekerken zorunlu hayat sigortası yapıldı, iadesi olur mu?"
+          - "DASK primim yüksek, itiraz edebilir miyim?"
+          - "Sigorta poliçesinden cayma hakkım var mı?"
+          - "Hasar ekspertizi düşük bedel belirledi."
+
+  # ========================== KONUT VE TATİL ==========================
+  - id: t/konut-ve-tatil
+    ad: Konut ve tatil sözleşmeleri
+    aciklama: Ön ödemeli konut satışı, devre tatil ve paket tur sözleşmelerinden doğan uyuşmazlıklar.
+    maddeler: [m:6502/40, m:6502/43, m:6502/45, m:6502/50, m:6502/51]
+    kurallar: [cayma_suresi, gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer]
+    yapraklar:
+      - id: t/konut-ve-tatil/on-odemeli-konut
+        ad: Ön ödemeli konut satışı
+        aciklama: Yapılacak konutun ön ödemeyle alınmasında cayma, teminat, teslim ve sözleşmeden dönme.
+        tetikleyiciler: [ön ödemeli, konut, müteahhit, inşaat, teslim, cayma, teminat, sözleşmeden dönme, proje]
+        ornek_sorgular:
+          - "Ön ödemeli daireyi 14 gün içinde cayma hakkım var mı?"
+          - "Müteahhit konutu zamanında teslim etmiyor."
+          - "Ön ödeme yaptım, proje iptal oldu, paramı alamıyorum."
+          - "Sözleşmede teslim tarihi yok, ne yapabilirim?"
+          - "Konut tesliminde eksikler var, ödeme yapmalı mıyım?"
+      - id: t/konut-ve-tatil/devre-tatil
+        ad: Devre tatil ve uzun süreli tatil hizmeti
+        aciklama: Devre tatil sözleşmelerinde cayma hakkı, tanıtım amaçlı davetler ve satış baskısı.
+        tetikleyiciler: [devre tatil, tatil köyü, timeshare, üyelik, cayma, tanıtım, otel, sözleşme]
+        ornek_sorgular:
+          - "Tanıtım toplantısında devre tatil sözleşmesi imzaladım, cayabilir miyim?"
+          - "Devre tatil üyeliğine 14 gün içinde iptal hakkım var mı?"
+          - "Tatil köyü üyeliği için kredi çektirdiler."
+          - "Devre tatil sözleşmesi geçerli mi?"
+          - "Üyelik yıllık aidatı habersiz artırıldı."
+      - id: t/konut-ve-tatil/paket-tur
+        ad: Paket tur sözleşmesi
+        aciklama: Paket turun iptali, değiştirilmesi, eksik ifası ve tazminat.
+        tetikleyiciler: [paket tur, tur, seyahat, uçak, otel, iptal, acente, rezervasyon, tazminat]
+        ornek_sorgular:
+          - "Paket turu 3 gün önce iptal ettim, ücret iadesi alabilir miyim?"
+          - "Turda vaat edilen otel farklı çıktı."
+          - "Acente turu iptal etti, tazminat isteyebilir miyim?"
+          - "Uçuş iptal oldu, paket tur ücreti iade edilir mi?"
+          - "Tur programı değişti, haklarım neler?"
+
+  # ========================= GARANTİ VE SERVİS =========================
+  - id: t/garanti-ve-servis
+    ad: Garanti ve satış sonrası hizmet
+    aciklama: Garanti belgesi, satış sonrası hizmet yükümlülüğü ve yedek parça temini.
+    maddeler: [m:6502/56, m:6502/57, m:6502/58]
+    kurallar: [gorevli_merci, yetkili_yer]
+    yapraklar:
+      - id: t/garanti-ve-servis/garanti-belgesi
+        ad: Garanti belgesi
+        aciklama: Garanti belgesinin verilmemesi, kapsamı ve garanti süresi içinde yapılan işlemler.
+        tetikleyiciler: [garanti, garanti belgesi, garanti süresi, 2 yıl, kapsam, servis, üretici]
+        ornek_sorgular:
+          - "Garanti belgesi verilmedi, hakkım var mı?"
+          - "Garanti süresi ne kadar, 2 yıl mı?"
+          - "Garanti kapsamında değişim yapılır mı?"
+          - "Garanti dışı denildi ama arıza üretim hatası."
+          - "Garanti belgesinde ürün adı yanlış yazılmış."
+      - id: t/garanti-ve-servis/satis-sonrasi-hizmet
+        ad: Satış sonrası hizmet
+        aciklama: Üretici ve ithalatçının satış sonrası hizmet, servis istasyonu ve azami tamir süresi yükümlülükleri.
+        tetikleyiciler: [satış sonrası, servis istasyonu, tamir süresi, üretici, ithalatçı, yedek parça, servis]
+        ornek_sorgular:
+          - "Servis 30 iş gününü geçti, ne yapabilirim?"
+          - "Üretici servis istasyonu bulundurmuyor."
+          - "Tamir süresi doldu, yeni ürün talep edebilir miyim?"
+          - "İthalatçı firma kapanmış, garanti kimde?"
+          - "Servis ücreti alındı ama garanti kapsamındaydı."
+      - id: t/garanti-ve-servis/yedek-parca
+        ad: Yedek parça temini
+        aciklama: Ürünün piyasaya sürülmesinden sonra belirli süre yedek parça bulundurma yükümlülüğü.
+        tetikleyiciler: [yedek parça, parça bulunamıyor, üretimden kalktı, tedarik, servis, parça süresi]
+        ornek_sorgular:
+          - "Ürün için yedek parça bulunamıyor, haklarım neler?"
+          - "Üretimden kalkan ürüne parça temin zorunluluğu var mı?"
+          - "Servis parça yok diye tamir edemiyor."
+          - "Yedek parça için 2 aydır bekliyorum."
+          - "Muadil parça taktılar, kabul etmeli miyim?"
+
+  # ==================== HAKSIZ ŞART VE UYGULAMA =======================
+  - id: t/haksiz
+    ad: Haksız şart ve haksız ticari uygulama
+    aciklama: Tüketici sözleşmelerindeki haksız şartlar, aldatıcı reklam ve haksız ticari uygulamalar.
+    maddeler: [m:6502/5, m:6502/61, m:6502/62]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer]
+    yapraklar:
+      - id: t/haksiz/haksiz-sozlesme-sarti
+        ad: Haksız sözleşme şartı
+        aciklama: Tüketici aleyhine dengesizlik yaratan, açık ve anlaşılır olmayan veya müzakere edilmemiş şartlar.
+        tetikleyiciler: [haksız şart, sözleşme, küçük yazı, tek taraflı, cayma bedeli, tek taraflı değişiklik, genel işlem koşulu]
+        ornek_sorgular:
+          - "Sözleşmede tek taraflı fiyat artışı maddesi var, geçerli mi?"
+          - "Küçük yazıyla ek ücret konmuş, itiraz edebilir miyim?"
+          - "Sözleşmedeki 'hiçbir koşulda iade yok' maddesi geçerli mi?"
+          - "Haksız şart nedeniyle sözleşme iptal edilir mi?"
+          - "Bankanın tek taraflı masraf maddesi haksız mı?"
+      - id: t/haksiz/haksiz-ticari-uygulama
+        ad: Haksız ticari uygulama
+        aciklama: Tüketiciyi yanıltan, baskı altına alan veya karar verme özgürlüğünü bozan ticari uygulamalar.
+        tetikleyiciler: [haksız ticari uygulama, yanıltma, baskı, indirim, kampanya, sahte indirim, stokta yok, tükendi]
+        ornek_sorgular:
+          - "İndirimli diye aldım, aslında indirim yokmuş."
+          - "Kampanya koşulları sonradan değiştirildi."
+          - "Stokta var gösterip sonra iptal ettiler."
+          - "Sahte yorumlarla ürün aldım."
+          - "Sürekli aranıp satışa zorluyorlar."
+      - id: t/haksiz/yaniltici-reklam
+        ad: Yanıltıcı reklam
+        aciklama: Reklamda vaat edilen özelliklerin üründe bulunmaması, abartılı iddialar ve karşılaştırmalı reklam.
+        tetikleyiciler: [reklam, yanıltıcı, vaat, reklam kurulu, şikâyet, abartı, sağlık beyanı, kampanya]
+        ornek_sorgular:
+          - "Reklamda %50 indirim yazıyordu, kasada farklı fiyat çıktı."
+          - "Ürün reklamdaki gibi çıkmadı, Reklam Kurulu'na şikâyet edebilir miyim?"
+          - "Sağlığa iyi geldiği söylenen ürün etkisiz."
+          - "Reklamda 'en iyi' deniyor, kanıt yok."
+          - "Yanıltıcı reklam için tazminat isteyebilir miyim?"
+
+  # =============================== USUL ================================
+  - id: t/usul
+    ad: Usul ve başvuru yolları
+    aciklama: Bir uyuşmazlık tipi değil, "nasıl yapılır" soruları için rehber düğümler; kural motoruyla en yoğun çalışan dal.
+    maddeler: [m:6502/68, m:6502/69, m:6502/70, m:6502/73, m:6502/73A]
+    kurallar: [gorevli_merci, arabuluculuk_dava_sarti, yetkili_yer, harc_durumu, sure_son_gun]
+    yapraklar:
+      - id: t/usul/hakem-heyeti-basvurusu
+        ad: Tüketici hakem heyetine başvuru
+        aciklama: Başvuru yeri, parasal sınır, gerekli belgeler, süre ve karara itiraz.
+        tetikleyiciler: [hakem heyeti, başvuru, dilekçe, kaymakamlık, parasal sınır, ücretsiz, belge, itiraz]
+        ornek_sorgular:
+          - "Tüketici hakem heyetine nasıl başvururum?"
+          - "Hakem heyeti için parasal sınır ne kadar?"
+          - "Başvuru için hangi belgeler gerekli?"
+          - "Hakem heyeti kararına itiraz nasıl yapılır?"
+          - "Hakem heyeti ne kadar sürede karar verir?"
+      - id: t/usul/tuketici-mahkemesi-davasi
+        ad: Tüketici mahkemesinde dava
+        aciklama: Görevli mahkeme, arabuluculuk dava şartı, harç ve dava dilekçesi.
+        tetikleyiciler: [tüketici mahkemesi, dava, dava açmak, arabuluculuk, harç, dilekçe, görevli mahkeme]
+        ornek_sorgular:
+          - "Tüketici mahkemesinde dava açmak için ne gerekli?"
+          - "Dava açmadan arabulucuya gitmek zorunlu mu?"
+          - "Tüketici mahkemesinde harç öder miyim?"
+          - "Hangi tüketici mahkemesi yetkili?"
+          - "Dava dilekçesini kendim yazabilir miyim?"
+      - id: t/usul/itiraz-ve-istinaf
+        ad: İtiraz ve istinaf
+        aciklama: Hakem heyeti kararına itiraz, ilk derece kararına karşı istinaf ve temyiz yolları.
+        tetikleyiciler: [itiraz, istinaf, temyiz, karar, süre, bölge adliye, yargıtay, kesin]
+        ornek_sorgular:
+          - "Hakem heyeti kararına kaç gün içinde itiraz edilir?"
+          - "Tüketici mahkemesi kararına istinaf süresi ne kadar?"
+          - "İtiraz dilekçesini nereye vereceğim?"
+          - "Karar kesinleşti mi nasıl anlarım?"
+          - "İstinaf sonrası Yargıtay'a gidilir mi?"
+      - id: t/usul/icra
+        ad: İcra ve tahsil
+        aciklama: Kesinleşen kararın icraya konulması, itiraz ve haciz süreçleri.
+        tetikleyiciler: [icra, haciz, tahsil, ödeme emri, itiraz, kesinleşme, avukat, dosya]
+        ornek_sorgular:
+          - "Hakem heyeti kararını icraya nasıl koyarım?"
+          - "Ödeme emrine itiraz süresi ne kadar?"
+          - "Karşı taraf ödemezse ne yapabilirim?"
+          - "İcra masraflarını kim öder?"
+          - "Kesinleşmemiş karar icraya konur mu?"
+      - id: t/usul/arabuluculuk-basvurusu
+        ad: Arabuluculuk başvurusu
+        aciklama: Tüketici uyuşmazlıklarında dava şartı arabuluculuk başvurusu, süreç ve anlaşma belgesi.
+        tetikleyiciler: [arabuluculuk, arabulucu, dava şartı, anlaşma, başvuru, adliye, uzlaşma]
+        ornek_sorgular:
+          - "Arabuluculuğa nasıl başvururum?"
+          - "Arabuluculuk ücretli mi?"
+          - "Arabulucuda anlaşırsam icra edilebilir mi?"
+          - "Arabuluculukta anlaşamazsam ne olur?"
+          - "Hakem heyeti kapsamındaki işte arabuluculuk gerekir mi?"
+      - id: t/usul/on-bilgilendirme
+        ad: Ön bilgilendirme ve sözleşme şekli
+        aciklama: Mesafeli ve iş yeri dışı sözleşmelerde ön bilgilendirme yükümlülüğü ve şekil şartları.
+        tetikleyiciler: [ön bilgilendirme, sözleşme, bilgilendirme, yazılı, onay, şekil şartı, cayma]
+        ornek_sorgular:
+          - "Sipariş öncesi ön bilgilendirme yapılmadı, cayma hakkım etkilenir mi?"
+          - "Sözleşme yazılı değil, geçerli mi?"
+          - "Onay kutusu işaretlenmeden üyelik başlatılmış."
+          - "Ön bilgilendirme formu verilmedi."
+          - "Sözlü yapılan alışverişte cayma hakkı var mı?"

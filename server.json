@@ -1,0 +1,16 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ihsansoycelik/hukuk-mcp",
+  "title": "Türk Hukuku (tüketici + SGK)",
+  "description": "Türk tüketici hukuku ve SGK sorularına kaynaklı, süreleri kuralla hesaplanmış tek çağrılık yanıt. Çevrimdışı, LLM'siz.",
+  "repository": { "url": "https://github.com/ihsansoycelik/hukuk-mcp", "source": "github" },
+  "version": "0.2.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "hukuk-mcp",
+      "version": "0.2.0",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@hukuk/retrieval",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@hukuk/tr-text": "workspace:*",
+    "@hukuk/schema": "workspace:*"
+  }
+}

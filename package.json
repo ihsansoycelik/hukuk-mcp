@@ -1,0 +1,41 @@
+{
+  "name": "hukuk-mcp",
+  "private": true,
+  "type": "module",
+  "version": "0.2.0",
+  "packageManager": "pnpm@12.6.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test packages/*/test/*.test.ts",
+    "mcp": "node packages/mcp-server/src/index.ts",
+    "build:data": "python3 pipeline/build.py",
+    "bench": "node bench/bench.ts",
+    "sor": "node scripts/test-mcp.ts",
+    "test:mcp": "node scripts/test-mcp.ts tools",
+    "kabul": "./scripts/kabul-testi.sh",
+    "demo": "node packages/demo/src/index.ts",
+    "check": "pnpm typecheck && pnpm test && pnpm kabul",
+    "build:npm": "node scripts/build-npm.ts",
+    "collect:kararlar": "python3 pipeline/collect/bedesten.py"
+  },
+  "dependencies": {
+    "@hukuk/ontology": "workspace:*",
+    "@hukuk/retrieval": "workspace:*",
+    "@hukuk/rules": "workspace:*",
+    "@hukuk/schema": "workspace:*",
+    "@hukuk/tr-text": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "gpt-tokenizer": "^3.0.1",
+    "yaml": "^2.8.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13"
+  }
+}

@@ -1,0 +1,194 @@
+{"id":"r001","sorgu":"aracım serviste yirmi gündür bekliyor aynı arızadan bıktım iade istiyorum","dogru":["t/ayipli-mal/arac"],"tur":"normal"}
+{"id":"r002","sorgu":"sıfır aldığım araçta boya farkı var bayi ayıp kabul etmiyor","dogru":["t/ayipli-mal/arac"],"tur":"normal"}
+{"id":"r003","sorgu":"arabanın direksiyon kutusu garantiden değişti ama arıza yine tekrarladı","dogru":["t/ayipli-mal/arac"],"tur":"normal"}
+{"id":"r004","sorgu":"telefonum iki hafta sonra kapanıp açılmaya başladı mağaza iade almıyor","dogru":["t/ayipli-mal/elektronik"],"tur":"normal"}
+{"id":"r005","sorgu":"laptopun bataryası şişti servis garanti dışı dedi","dogru":["t/ayipli-mal/elektronik"],"tur":"normal"}
+{"id":"r006","sorgu":"televizyonun ekranında çizgiler çıktı üçüncü servis bakışında hâlâ aynı","dogru":["t/ayipli-mal/elektronik"],"tur":"normal"}
+{"id":"r007","sorgu":"çamaşır makinesi su kaçırıyor servis conta değişecek deyip parça bekletiyor","dogru":["t/ayipli-mal/beyaz-esya"],"tur":"normal"}
+{"id":"r008","sorgu":"buzdolabı iki ayda soğutmamaya başladı satıcı değişim yapmıyor","dogru":["t/ayipli-mal/beyaz-esya"],"tur":"normal"}
+{"id":"r009","sorgu":"fırının camı kendiliğinden çatladı kullanıcı hatası dediler","dogru":["t/ayipli-mal/beyaz-esya"],"tur":"normal"}
+{"id":"r010","sorgu":"koltuk üç ayda çöktü satıcı kullanım hatası diyor değişim istiyorum","dogru":["t/ayipli-mal/mobilya"],"tur":"normal"}
+{"id":"r011","sorgu":"sipariş ettiğim yatak söylenen ölçüde gelmedi para iadesi istiyorum","dogru":["t/ayipli-mal/mobilya"],"tur":"normal"}
+{"id":"r012","sorgu":"gardırobun kaplaması soyuldu servis ilgilenmiyor","dogru":["t/ayipli-mal/mobilya"],"tur":"normal"}
+{"id":"r013","sorgu":"yeni dairede duvarlar nem yapıyor müteahhit ayıbı kabul etmiyor","dogru":["t/ayipli-mal/konut"],"tur":"normal"}
+{"id":"r014","sorgu":"dairenin metrekaresi sözleşmedekinden küçük çıktı satıcı brüt alanı gösteriyor","dogru":["t/ayipli-mal/konut"],"tur":"normal"}
+{"id":"r015","sorgu":"yazlığın tesisatı patladı teslimden iki yıl sonra ortaya çıktı","dogru":["t/ayipli-mal/konut"],"tur":"normal"}
+{"id":"r016","sorgu":"galeriden aldığım araçta tramer kaydı varmış söylemediler","dogru":["t/ayipli-mal/ikinci-el-galeri"],"tur":"normal"}
+{"id":"r017","sorgu":"ikinci el aracın kilometresi düşürülmüş çıktı galeri sorumlu mu","dogru":["t/ayipli-mal/ikinci-el-galeri"],"tur":"normal"}
+{"id":"r018","sorgu":"galeri aracın şasi hasarını gizlemiş ne yapabilirim","dogru":["t/ayipli-mal/ikinci-el-galeri"],"tur":"normal"}
+{"id":"r019","sorgu":"markette aldığım sütün son kullanma tarihi geçmiş iade almadılar","dogru":["t/ayipli-mal/gida"],"tur":"normal"}
+{"id":"r020","sorgu":"ambalajı kapalı peynirin içi küflü çıktı şikayet etmek istiyorum","dogru":["t/ayipli-mal/gida"],"tur":"normal"}
+{"id":"r021","sorgu":"aldığım gıdanın içinden yabancı madde çıktı market fiş istiyor","dogru":["t/ayipli-mal/gida"],"tur":"normal"}
+{"id":"r022","sorgu":"yeni aldığım elbise ilk yıkamada çekti mağaza değiştirmiyor","dogru":["t/ayipli-mal/tekstil"],"tur":"normal"}
+{"id":"r023","sorgu":"ayakkabının tabanı iki haftada yırtıldı satıcı yapıştırmayı öneriyor","dogru":["t/ayipli-mal/tekstil"],"tur":"normal"}
+{"id":"r024","sorgu":"çantamın boyası aktı kullanıcı hatası dediler","dogru":["t/ayipli-mal/tekstil"],"tur":"normal"}
+
+{"id":"r025","sorgu":"telefonu tamire verdim ekranı çizik geldi kamera da çalışmıyor","dogru":["t/ayipli-hizmet/tamir-servis"],"tur":"normal"}
+{"id":"r026","sorgu":"servis aynı arızayı iki kez tamir etti ama araç yine yolda kaldı","dogru":["t/ayipli-hizmet/tamir-servis"],"tur":"normal"}
+{"id":"r027","sorgu":"usta söylediğinden fazla ücret istedi işçilik faturası şişirilmiş","dogru":["t/ayipli-hizmet/tamir-servis"],"tur":"normal"}
+{"id":"r028","sorgu":"ödediğim kurs on ders yerine üç ders yapıldı para iadesi istiyorum","dogru":["t/ayipli-hizmet/egitim-kurs"],"tur":"normal"}
+{"id":"r029","sorgu":"dil kursu kapandı kalan derslerin ücretini geri vermiyorlar","dogru":["t/ayipli-hizmet/egitim-kurs"],"tur":"normal"}
+{"id":"r030","sorgu":"kurs söz verilen sertifikayı vermedi eğitmen de hiç gelmedi","dogru":["t/ayipli-hizmet/egitim-kurs"],"tur":"normal"}
+{"id":"r031","sorgu":"saç ekimi sonrası saç derimde kalıcı iz kaldı klinik sorumlu mu","dogru":["t/ayipli-hizmet/saglik-estetik"],"tur":"normal"}
+{"id":"r032","sorgu":"diş implantı iki ayda düştü klinik ücret iadesi yapmıyor","dogru":["t/ayipli-hizmet/saglik-estetik"],"tur":"normal"}
+{"id":"r033","sorgu":"lazer epilasyon yanık izi bıraktı işlem öncesi riskler anlatılmadı","dogru":["t/ayipli-hizmet/saglik-estetik"],"tur":"normal"}
+{"id":"r034","sorgu":"kargom kayboldu firma tazminat vermiyor ne yapabilirim","dogru":["t/ayipli-hizmet/tasimacilik-kargo"],"tur":"normal"}
+{"id":"r035","sorgu":"paketim ezilmiş geldi içindeki cam ürün kırık kargo firması kabul etmiyor","dogru":["t/ayipli-hizmet/tasimacilik-kargo"],"tur":"normal"}
+{"id":"r036","sorgu":"kurye paketi komşuya bırakmış ürün kayıp kargo şirketi sorumlu değil diyor","dogru":["t/ayipli-hizmet/tasimacilik-kargo"],"tur":"normal"}
+{"id":"r037","sorgu":"otelde vaat edilen deniz manzaralı oda verilmedi para iadesi istiyorum","dogru":["t/ayipli-hizmet/otel-konaklama"],"tur":"normal"}
+{"id":"r038","sorgu":"her şey dahil aldım ama yemekler dahil değildi otel ek ücret istedi","dogru":["t/ayipli-hizmet/otel-konaklama"],"tur":"normal"}
+{"id":"r039","sorgu":"otel rezervasyonu tek taraflı iptal etti oda kirli ve klima bozuktu","dogru":["t/ayipli-hizmet/otel-konaklama"],"tur":"normal"}
+
+{"id":"r040","sorgu":"internetten aldığım ayakkabıyı on gün sonra iade etmek istiyorum hakkım var mı","dogru":["t/mesafeli-sozlesme/cayma-hakki"],"tur":"normal"}
+{"id":"r041","sorgu":"telefonla yaptığım alışverişte cayma hakkım var mı on dört gün geçti","dogru":["t/mesafeli-sozlesme/cayma-hakki"],"tur":"normal"}
+{"id":"r042","sorgu":"on dört gün bitti ama ürün ayıplı çıktı iade alırlar mı","dogru":["t/mesafeli-sozlesme/cayma-hakki"],"tur":"normal"}
+{"id":"r043","sorgu":"siparişim bir aydır gelmedi satıcı kargoyu suçluyor paramı geri istiyorum","dogru":["t/mesafeli-sozlesme/teslimat-gecikmesi"],"tur":"normal"}
+{"id":"r044","sorgu":"sitede üç günde teslim yazıyordu üç hafta oldu kargoya bile verilmedi","dogru":["t/mesafeli-sozlesme/teslimat-gecikmesi"],"tur":"normal"}
+{"id":"r045","sorgu":"ürün hiç gelmedi kargo firması suçu satıcıya atıyor para iadesi yok","dogru":["t/mesafeli-sozlesme/teslimat-gecikmesi"],"tur":"normal"}
+{"id":"r046","sorgu":"ürünü iade ettim ama bir aydır para gelmedi hesabıma geçmedi","dogru":["t/mesafeli-sozlesme/iade-bedeli"],"tur":"normal"}
+{"id":"r047","sorgu":"iade ederken kargo ücretini benden kestiler kesinti yapabilirler mi","dogru":["t/mesafeli-sozlesme/iade-bedeli"],"tur":"normal"}
+{"id":"r048","sorgu":"satıcı kullanılmış diyerek iade bedelinden kesinti yaptı","dogru":["t/mesafeli-sozlesme/iade-bedeli"],"tur":"normal"}
+{"id":"r049","sorgu":"trendyoldan aldım satıcı ilgilenmiyor platform sorumlu mu","dogru":["t/mesafeli-sozlesme/pazaryeri-sorumlulugu"],"tur":"normal"}
+{"id":"r050","sorgu":"hepsiburadada satılan ürün sahte çıktı satıcı kapanmış platform bilgi vermiyor","dogru":["t/mesafeli-sozlesme/pazaryeri-sorumlulugu"],"tur":"normal"}
+{"id":"r051","sorgu":"pazaryeri satıcının adresini vermiyor aracı site sorumluluk kabul etmiyor","dogru":["t/mesafeli-sozlesme/pazaryeri-sorumlulugu"],"tur":"normal"}
+
+{"id":"r052","sorgu":"internet hızım sözleşmede yazanın yarısı cayma bedeli isterler mi","dogru":["t/abonelik/gsm-internet"],"tur":"normal"}
+{"id":"r053","sorgu":"taahhüdüm bitti ama operatör otomatik yenilemiş cayma bedeli istiyor","dogru":["t/abonelik/gsm-internet"],"tur":"normal"}
+{"id":"r054","sorgu":"hattımı kapatmak istiyorum cayma bedeli çok yüksek çıkardılar","dogru":["t/abonelik/gsm-internet"],"tur":"normal"}
+{"id":"r055","sorgu":"elektrik faturam normalin dört katı geldi endeks doğru okunmuş diyorlar","dogru":["t/abonelik/enerji-fatura"],"tur":"normal"}
+{"id":"r056","sorgu":"doğalgaz sayacı arızalı fatura yüksek tahakkuk etti itiraz edebilir miyim","dogru":["t/abonelik/enerji-fatura"],"tur":"normal"}
+{"id":"r057","sorgu":"su faturasında kaçak tahakkuku yapılmış aboneliğim iptal oldu","dogru":["t/abonelik/enerji-fatura"],"tur":"normal"}
+{"id":"r058","sorgu":"spor salonu kapandı kalan üyelik ücretimi geri alamıyorum","dogru":["t/abonelik/uyelik-spor"],"tur":"normal"}
+{"id":"r059","sorgu":"taşındım başka şehirde salon yok üyelik ücreti iadesi isterim","dogru":["t/abonelik/uyelik-spor"],"tur":"normal"}
+{"id":"r060","sorgu":"sakatlandım spor salonu üyeliğimi dondurmak istiyorum kabul etmiyorlar","dogru":["t/abonelik/uyelik-spor"],"tur":"normal"}
+{"id":"r061","sorgu":"ücretsiz denemeydi otomatik ücretlendirildi kartımdan çekim yapılmış","dogru":["t/abonelik/otomatik-yenileme"],"tur":"normal"}
+{"id":"r062","sorgu":"netflix aboneliğimi iptal ettim ama yine kartımdan çekim yapılmış","dogru":["t/abonelik/otomatik-yenileme"],"tur":"normal"}
+{"id":"r063","sorgu":"yıllık üyelik haber verilmeden yenilendi kullanmadığım abonelik iade edilir mi","dogru":["t/abonelik/otomatik-yenileme"],"tur":"normal"}
+
+{"id":"r064","sorgu":"kredi çektiğimde dosya masrafı aldılar geri alabilir miyim","dogru":["t/finansal/kredi-masraflari"],"tur":"normal"}
+{"id":"r065","sorgu":"konut kredisinde ipotek tesis ücreti ve ekspertiz ücreti iadesi isteyebilir miyim","dogru":["t/finansal/kredi-masraflari"],"tur":"normal"}
+{"id":"r066","sorgu":"bankam sigorta yaptırmamı zorunlu tuttu kredi masrafı kesildi","dogru":["t/finansal/kredi-masraflari"],"tur":"normal"}
+{"id":"r067","sorgu":"kredi kartımdan yıllık aidat kesilmiş iade alabilir miyim","dogru":["t/finansal/kredi-karti-aidati"],"tur":"normal"}
+{"id":"r068","sorgu":"kullanmadığım kartdan aidat alınmış banka geri ödemiyor","dogru":["t/finansal/kredi-karti-aidati"],"tur":"normal"}
+{"id":"r069","sorgu":"kart aidatı için hakem heyetine başvurabilir miyim kaç yıl geriye istenir","dogru":["t/finansal/kredi-karti-aidati"],"tur":"normal"}
+{"id":"r070","sorgu":"krediyi erken kapatırsam faiz iadesi alır mıyım banka vermiyor","dogru":["t/finansal/erken-odeme"],"tur":"normal"}
+{"id":"r071","sorgu":"bankam erken ödeme tazminatı kesti bu kesinti doğru mu","dogru":["t/finansal/erken-odeme"],"tur":"normal"}
+{"id":"r072","sorgu":"yapılandırma sonrası fazla ödeme yapmışım erken ödeme indirimi hesaplanmadı","dogru":["t/finansal/erken-odeme"],"tur":"normal"}
+{"id":"r073","sorgu":"kredi ile aldığım ürün gelmedi bankaya ödeme yapmak zorunda mıyım","dogru":["t/finansal/bagli-kredi"],"tur":"normal"}
+{"id":"r074","sorgu":"satıcı battı teslim edilmeyen ürünün kredi borcu kimde kalır","dogru":["t/finansal/bagli-kredi"],"tur":"normal"}
+{"id":"r075","sorgu":"bağlı kredide satıcı sözleşmeden döndü banka taksitleri istiyor","dogru":["t/finansal/bagli-kredi"],"tur":"normal"}
+{"id":"r076","sorgu":"kasko hasarımı ödemiyorlar ekspertiz düşük bedel belirledi","dogru":["t/finansal/sigorta"],"tur":"normal"}
+{"id":"r077","sorgu":"kredi çekerken zorunlu hayat sigortası yapıldı primi geri alabilir miyim","dogru":["t/finansal/sigorta"],"tur":"normal"}
+{"id":"r078","sorgu":"dask primim yüksek itiraz edebilir miyim poliçeyi iptal ettirmek istiyorum","dogru":["t/finansal/sigorta"],"tur":"normal"}
+
+{"id":"r079","sorgu":"ön ödemeli daireyi aldım müteahhit konutu zamanında teslim etmiyor","dogru":["t/konut-ve-tatil/on-odemeli-konut"],"tur":"normal"}
+{"id":"r080","sorgu":"ön ödeme yaptım proje iptal oldu paramı alamıyorum","dogru":["t/konut-ve-tatil/on-odemeli-konut"],"tur":"normal"}
+{"id":"r081","sorgu":"sözleşmede teslim tarihi yok müteahhit eksik işleri tamamlamıyor","dogru":["t/konut-ve-tatil/on-odemeli-konut"],"tur":"normal"}
+{"id":"r082","sorgu":"tanıtım toplantısında devre tatil sözleşmesi imzaladım cayabilir miyim","dogru":["t/konut-ve-tatil/devre-tatil"],"tur":"normal"}
+{"id":"r083","sorgu":"devre tatil üyeliğinde yıllık aidat habersiz artırıldı ne yapabilirim","dogru":["t/konut-ve-tatil/devre-tatil"],"tur":"normal"}
+{"id":"r084","sorgu":"tatil köyü üyeliği için kredi çektirdiler sözleşme geçerli mi","dogru":["t/konut-ve-tatil/devre-tatil"],"tur":"normal"}
+{"id":"r085","sorgu":"paket turu üç gün önce iptal ettim ücret iadesi alabilir miyim","dogru":["t/konut-ve-tatil/paket-tur"],"tur":"normal"}
+{"id":"r086","sorgu":"turda vaat edilen otel farklı çıktı acente tazminat öder mi","dogru":["t/konut-ve-tatil/paket-tur"],"tur":"normal"}
+{"id":"r087","sorgu":"uçuş iptal oldu paket tur ücreti iade edilir mi acente sorumlu mu","dogru":["t/konut-ve-tatil/paket-tur"],"tur":"normal"}
+
+{"id":"r088","sorgu":"garanti belgesi verilmedi hakkım var mı satıcı gerekli değil diyor","dogru":["t/garanti-ve-servis/garanti-belgesi"],"tur":"normal"}
+{"id":"r089","sorgu":"garanti dışı denildi ama arıza üretim hatası ücret ödemek zorunda mıyım","dogru":["t/garanti-ve-servis/garanti-belgesi"],"tur":"normal"}
+{"id":"r090","sorgu":"garanti süresi ne kadar iki yıl mı belgede ürün adı yanlış yazılmış","dogru":["t/garanti-ve-servis/garanti-belgesi"],"tur":"normal"}
+{"id":"r091","sorgu":"servis otuz iş gününü geçti yeni ürün talep edebilir miyim","dogru":["t/garanti-ve-servis/satis-sonrasi-hizmet"],"tur":"normal"}
+{"id":"r092","sorgu":"ithalatçı firma kapanmış garanti kimde servis bulamıyorum","dogru":["t/garanti-ve-servis/satis-sonrasi-hizmet"],"tur":"normal"}
+{"id":"r093","sorgu":"üretici servis istasyonu bulundurmuyor tamir süresi doldu ne yapabilirim","dogru":["t/garanti-ve-servis/satis-sonrasi-hizmet"],"tur":"normal"}
+{"id":"r094","sorgu":"ürün için yedek parça bulunamıyor servis iki aydır bekletiyor","dogru":["t/garanti-ve-servis/yedek-parca"],"tur":"normal"}
+{"id":"r095","sorgu":"üretimden kalkan ürüne yedek parça temin zorunluluğu var mı","dogru":["t/garanti-ve-servis/yedek-parca"],"tur":"normal"}
+{"id":"r096","sorgu":"servis parça yok diye tamir edemiyor muadil parça takmak istiyor","dogru":["t/garanti-ve-servis/yedek-parca"],"tur":"normal"}
+
+{"id":"r097","sorgu":"sözleşmede tek taraflı fiyat artışı maddesi var geçerli mi","dogru":["t/haksiz/haksiz-sozlesme-sarti"],"tur":"normal"}
+{"id":"r098","sorgu":"küçük yazıyla ek ücret konmuş itiraz edebilir miyim","dogru":["t/haksiz/haksiz-sozlesme-sarti"],"tur":"normal"}
+{"id":"r099","sorgu":"sözleşmedeki hiçbir koşulda iade yok maddesi geçerli mi banka tek taraflı masraf koymuş","dogru":["t/haksiz/haksiz-sozlesme-sarti"],"tur":"normal"}
+{"id":"r100","sorgu":"indirimli diye aldım aslında indirim yokmuş sahte indirim yapılmış","dogru":["t/haksiz/haksiz-ticari-uygulama"],"tur":"normal"}
+{"id":"r101","sorgu":"stokta var gösterip sonra iptal ettiler kampanya koşulları değişti","dogru":["t/haksiz/haksiz-ticari-uygulama"],"tur":"normal"}
+{"id":"r102","sorgu":"sahte yorumlarla ürün aldım sürekli arayıp satışa zorluyorlar","dogru":["t/haksiz/haksiz-ticari-uygulama"],"tur":"normal"}
+{"id":"r103","sorgu":"reklamda yüzde elli indirim yazıyordu kasada farklı fiyat çıktı","dogru":["t/haksiz/yaniltici-reklam"],"tur":"normal"}
+{"id":"r104","sorgu":"sağlığa iyi geldiği söylenen ürün etkisiz yanıltıcı reklam şikayeti","dogru":["t/haksiz/yaniltici-reklam"],"tur":"normal"}
+{"id":"r105","sorgu":"ürün reklamdaki gibi çıkmadı reklam kuruluna şikayet edebilir miyim","dogru":["t/haksiz/yaniltici-reklam"],"tur":"normal"}
+
+{"id":"r106","sorgu":"tüketici hakem heyetine nasıl başvururum hangi belgeler gerekli","dogru":["t/usul/hakem-heyeti-basvurusu"],"tur":"normal"}
+{"id":"r107","sorgu":"hakem heyeti için parasal sınır ne kadar hangi mercie başvurulur","dogru":["t/usul/hakem-heyeti-basvurusu"],"tur":"normal"}
+{"id":"r108","sorgu":"hakem heyeti kararı ne kadar sürede verilir başvuru dilekçesi nasıl yazılır","dogru":["t/usul/hakem-heyeti-basvurusu"],"tur":"normal"}
+{"id":"r109","sorgu":"tüketici mahkemesinde dava açmak için ne gerekli harç öder miyim","dogru":["t/usul/tuketici-mahkemesi-davasi"],"tur":"normal"}
+{"id":"r110","sorgu":"dava açmadan arabulucuya gitmek zorunlu mu tüketici mahkemesi","dogru":["t/usul/tuketici-mahkemesi-davasi"],"tur":"normal"}
+{"id":"r111","sorgu":"hangi tüketici mahkemesi yetkili dava dilekçesini kendim yazabilir miyim","dogru":["t/usul/tuketici-mahkemesi-davasi"],"tur":"normal"}
+{"id":"r112","sorgu":"hakem heyeti kararına kaç gün içinde itiraz edilir","dogru":["t/usul/itiraz-ve-istinaf"],"tur":"normal"}
+{"id":"r113","sorgu":"tüketici mahkemesi kararına istinaf süresi ne kadar nereye başvurulur","dogru":["t/usul/itiraz-ve-istinaf"],"tur":"normal"}
+{"id":"r114","sorgu":"istinaf sonrası yargıtaya gidilir mi karar kesinleşti mi nasıl anlarım","dogru":["t/usul/itiraz-ve-istinaf"],"tur":"normal"}
+{"id":"r115","sorgu":"hakem heyeti kararını icraya nasıl koyarım karşı taraf ödemiyor","dogru":["t/usul/icra"],"tur":"normal"}
+{"id":"r116","sorgu":"ödeme emrine itiraz süresi ne kadar icra dosyasına nasıl itiraz edilir","dogru":["t/usul/icra"],"tur":"normal"}
+{"id":"r117","sorgu":"kesinleşmemiş karar icraya konur mu icra masraflarını kim öder","dogru":["t/usul/icra"],"tur":"normal"}
+{"id":"r118","sorgu":"arabuluculuğa nasıl başvururum dava şartı arabuluculuk süreci","dogru":["t/usul/arabuluculuk-basvurusu"],"tur":"normal"}
+{"id":"r119","sorgu":"arabuluculuk ücretli mi anlaşırsam icra edilebilir mi","dogru":["t/usul/arabuluculuk-basvurusu"],"tur":"normal"}
+{"id":"r120","sorgu":"arabuluculukta anlaşamazsam ne olur hakem heyeti kapsamında gerekir mi","dogru":["t/usul/arabuluculuk-basvurusu"],"tur":"normal"}
+{"id":"r121","sorgu":"sipariş öncesi ön bilgilendirme yapılmadı cayma hakkım etkilenir mi","dogru":["t/usul/on-bilgilendirme"],"tur":"normal"}
+{"id":"r122","sorgu":"onay kutusu işaretlenmeden üyelik başlatılmış sözleşme geçerli mi","dogru":["t/usul/on-bilgilendirme"],"tur":"normal"}
+{"id":"r123","sorgu":"ön bilgilendirme formu verilmedi sözlü alışverişte cayma hakkı var mı","dogru":["t/usul/on-bilgilendirme"],"tur":"normal"}
+
+{"id":"r124","sorgu":"internetten aldığım telefon bozuk çıktı hem iade hem ayıp için ne yapabilirim","dogru":["t/mesafeli-sozlesme/cayma-hakki","t/ayipli-mal/elektronik"],"tur":"iki"}
+{"id":"r125","sorgu":"trendyoldan aldığım ayakkabı ayıplı çıktı satıcı ve platform ilgilenmiyor","dogru":["t/mesafeli-sozlesme/pazaryeri-sorumlulugu","t/ayipli-mal/tekstil"],"tur":"iki"}
+{"id":"r126","sorgu":"kredi kartı aidatı ve dosya masrafı geri alınır mı ikisi için tek başvuru","dogru":["t/finansal/kredi-karti-aidati","t/finansal/kredi-masraflari"],"tur":"iki"}
+{"id":"r127","sorgu":"spor salonu kapandı ama otomatik yenilenen üyeliğim devam ediyor","dogru":["t/abonelik/uyelik-spor","t/abonelik/otomatik-yenileme"],"tur":"iki"}
+{"id":"r128","sorgu":"paket turda otel vaat edilenden farklıydı acente ve otel sorumlu mu","dogru":["t/konut-ve-tatil/paket-tur","t/ayipli-hizmet/otel-konaklama"],"tur":"iki"}
+{"id":"r129","sorgu":"devre tatil için kredi çektirdiler hem üyelik hem kredi iadesi istiyorum","dogru":["t/konut-ve-tatil/devre-tatil","t/finansal/bagli-kredi"],"tur":"iki"}
+{"id":"r130","sorgu":"garanti süresi bitti ama servis ücret istiyor satış sonrası hizmet yükümlülüğü var mı","dogru":["t/garanti-ve-servis/garanti-belgesi","t/garanti-ve-servis/satis-sonrasi-hizmet"],"tur":"iki"}
+{"id":"r131","sorgu":"konut kredisinde dosya masrafı ve erken kapama faizi iadesi istiyorum","dogru":["t/finansal/kredi-masraflari","t/finansal/erken-odeme"],"tur":"iki"}
+{"id":"r132","sorgu":"mesafeli satışta teslimat gecikti cayma hakkı ve iade bedeli ne olacak","dogru":["t/mesafeli-sozlesme/teslimat-gecikmesi","t/mesafeli-sozlesme/iade-bedeli"],"tur":"iki"}
+{"id":"r133","sorgu":"reklamda indirim vardı kasada farklı çıktı haksız ticari uygulama mı yanıltıcı reklam mı","dogru":["t/haksiz/yaniltici-reklam","t/haksiz/haksiz-ticari-uygulama"],"tur":"iki"}
+
+{"id":"r134","sorgu":"2016 yılında aldığım buzdolabı hâlâ bozuk iade istiyorum","dogru":["t/ayipli-mal/beyaz-esya"],"tur":"sure","not":"Zamanaşımı kural motorunun işi; yönlendirme yine ayıplı mal dalına gitmeli."}
+{"id":"r135","sorgu":"beş yıl önce teslim edilen dairede nem sorunu şimdi ortaya çıktı","dogru":["t/ayipli-mal/konut"],"tur":"sure","not":"Konutta beş yıllık özel süre; süre aşımı routing kararını değiştirmez."}
+{"id":"r136","sorgu":"2018 yılında aldığım telefon için şimdi iade davası açabilir miyim","dogru":["t/ayipli-mal/elektronik"],"tur":"sure","not":"Eski tarihli ayıp; süre ayrı kural."}
+{"id":"r137","sorgu":"2014 yılında yapılan saç ekiminin izleri için tazminat istiyorum","dogru":["t/ayipli-hizmet/saglik-estetik"],"tur":"sure","not":"Eski tarihli hizmet; süre ayrı kural."}
+{"id":"r138","sorgu":"2019 yılında iptal ettiğim paket turun ücreti hâlâ ödenmedi","dogru":["t/konut-ve-tatil/paket-tur"],"tur":"sure","not":"Eski alacak; yönlendirme aynı düğüm."}
+
+{"id":"r139","sorgu":"komşum gece gürültü yapıyor nereye şikayet ederim","dogru":[],"tur":"od"}
+{"id":"r140","sorgu":"arsa aldım imar durumu bozuk çıktı tapuda sorun var","dogru":[],"tur":"od"}
+{"id":"r141","sorgu":"boşanma davası açmak istiyorum velayet nasıl olur","dogru":[],"tur":"od"}
+{"id":"r142","sorgu":"işten çıkarıldım kıdem ve ihbar tazminatı alabilir miyim","dogru":[],"tur":"od"}
+{"id":"r143","sorgu":"trafik cezası yedim itiraz etmek istiyorum","dogru":[],"tur":"od"}
+{"id":"r144","sorgu":"kiracım kirasını ödemiyor tahliye davası nasıl açılır","dogru":[],"tur":"od"}
+{"id":"r145","sorgu":"miras paylaşımı nasıl olur kardeşim pay vermiyor","dogru":[],"tur":"od"}
+{"id":"r146","sorgu":"vergi cezasına itiraz süresi ne kadar","dogru":[],"tur":"od"}
+{"id":"r147","sorgu":"ehliyetimi geri almak istiyorum mahkemeye başvuru","dogru":[],"tur":"od"}
+{"id":"r148","sorgu":"ceza davasında avukat tutmak zorunda mıyım","dogru":[],"tur":"od"}
+{"id":"r149","sorgu":"devlet hastanesinde ameliyat oldum doktor hatası var ne yapabilirim","dogru":[],"tur":"od"}
+{"id":"r150","sorgu":"okulda öğretmenim bana kötü davrandı şikayet etmek istiyorum","dogru":[],"tur":"od"}
+{"id":"r151","sorgu":"komşunun ağacı bahçeme gölge yapıyor dalları kesebilir miyim","dogru":[],"tur":"od"}
+{"id":"r152","sorgu":"oturduğum binada asansör bozuk yönetici ilgilenmiyor","dogru":[],"tur":"od"}
+{"id":"r153","sorgu":"yıllık iznimi kullanamadım işyeri izin vermiyor","dogru":[],"tur":"od"}
+{"id":"r154","sorgu":"askerlik tecil işlemlerini nasıl yaparım","dogru":[],"tur":"od"}
+{"id":"r155","sorgu":"noter satışıyla araç aldım ama devir yapılmadı","dogru":[],"tur":"od"}
+{"id":"r156","sorgu":"dolandırıldım karşı taraf parayı alıp kaçtı savcılığa suç duyurusu","dogru":[],"tur":"od"}
+{"id":"r157","sorgu":"eczaneden aldığım ilaç yan etki yaptı ilaç firmasını şikayet","dogru":[],"tur":"od","not":"SGK alanı eklendi; ilaç yan etkisi ürün/malpraktis sorusudur, katılım payı değil — tuzak kalır."}
+{"id":"r158","sorgu":"belediyeye su borcum var itiraz etmek istiyorum","dogru":[],"tur":"od"}
+{"id":"r159","sorgu":"elektrik kesintisi yüzünden işyerimdeki ürünler bozuldu ticari zarar","dogru":[],"tur":"od"}
+{"id":"r160","sorgu":"hastane faturası SGK tarafından karşılanmadı ne yapabilirim","dogru":["s/usul/kurum-karari-itiraz"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r161","sorgu":"uçak rötar yaptı yolcu hakları tazminatı nasıl alınır","dogru":[],"tur":"od"}
+{"id":"r162","sorgu":"yurtdışından aldığım ürün gümrükte takıldı ne yapmalıyım","dogru":[],"tur":"od"}
+{"id":"r163","sorgu":"kripto para borsası paramı geri vermiyor","dogru":[],"tur":"od"}
+{"id":"r164","sorgu":"belediyenin park yapmasına itiraz etmek istiyorum","dogru":[],"tur":"od"}
+{"id":"r165","sorgu":"öğrenci yurdunda kalan kardeşim odadan memnun değil yurt müdürü ilgilenmiyor","dogru":[],"tur":"od"}
+{"id":"r166","sorgu":"emekli maaşım eksik yatıyor SGK itirazı","dogru":["s/usul/kurum-karari-itiraz"],"tur":"normal","not":"SGK alanı eklendi"}
+
+{"id":"r167","sorgu":"geçen ay işten çıktım sağlık sigortam ne zamana kadar geçerli","dogru":["s/saglik/isten-ayrilma-sonrasi-hak"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r168","sorgu":"işten ayrıldım kaç gün daha hastaneden ücretsiz yararlanabilirim","dogru":["s/saglik/isten-ayrilma-sonrasi-hak"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r169","sorgu":"acil serviste müstehak değilsin dediler oysa çalışıyorum","dogru":["s/saglik/provizyon-alinamama"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r170","sorgu":"eczaneden ilaç alırken sistemde sigortalı çıkmıyorum","dogru":["s/saglik/provizyon-alinamama"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r171","sorgu":"muayene ve ilaç için cebimden ödediğim parayı nasıl geri alırım","dogru":["s/saglik/katilim-payi-iadesi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r172","sorgu":"hastane benden fark ücreti aldı sağlık hakkım varken","dogru":["s/saglik/katilim-payi-iadesi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r173","sorgu":"hane gelirim düşük gelir tespiti yaptırmadım prim borcu çıkmış","dogru":["s/gss/gelir-testi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r174","sorgu":"yeşil kartımı iptal etmişler gelir testi yapılmamış diyorlar","dogru":["s/gss/gelir-testi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r175","sorgu":"prim borcum altmış günü geçtiği için hastanede işlem yapmıyorlar","dogru":["s/gss/prim-borcu"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r176","sorgu":"borcumu yapılandırsam sağlık hakkım açılır mı","dogru":["s/gss/prim-borcu"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r177","sorgu":"işten çıkarıldım işkur bana ne kadar süre ödeme yapar","dogru":["s/gelir/issizlik-odenegi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r178","sorgu":"işsizlik maaşı başvurusu ne zaman yapılır süresi var mı","dogru":["s/gelir/issizlik-odenegi"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r179","sorgu":"iş yerinde elim makineye sıkıştı işveren olayı bildirmedi","dogru":["s/is-kazasi/bildirim-ve-haklar"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r180","sorgu":"iş kazası sonrası raporlu günlerimin parasını kim öder","dogru":["s/is-kazasi/bildirim-ve-haklar"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r181","sorgu":"sosyal güvenlik kurumu haksız işlem yaptı hangi mahkemeye başvurulur","dogru":["s/usul/kurum-karari-itiraz"],"tur":"normal","not":"SGK alanı eklendi"}
+{"id":"r182","sorgu":"kurumun ret cevabına itiraz etmek için hangi yolu izlemeliyim","dogru":["s/usul/kurum-karari-itiraz"],"tur":"normal","not":"SGK alanı eklendi"}
