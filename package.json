@@ -17,7 +17,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm kabul",
     "build:npm": "node scripts/build-npm.ts",
     "collect:kararlar": "python3 pipeline/collect/bedesten.py",
-    "eval": "node --no-warnings eval/run.ts --db data/build/hukuk.db && node --no-warnings eval/lay-search.ts --golden eval/golden/search-lay-holdout.jsonl"
+    "eval": "node --no-warnings eval/run.ts --db data/build/hukuk.db && node --no-warnings eval/variants.ts"
   },
   "dependencies": {
     "@hukuk/ontology": "workspace:*",
