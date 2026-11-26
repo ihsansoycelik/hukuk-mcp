@@ -42,6 +42,17 @@ export interface MaddeKaydi {
   degisiklik: string | null;
 }
 
+export interface DegisiklikKaydi {
+  fikra: number | null;
+  tur: string;
+  /** ISO YYYY-MM-DD */
+  tarih: string;
+  kanun_no: string | null;
+  kanun_madde: string | null;
+  /** original note text, e.g. "Mülga ikinci fıkra: 7/5/2010-5982/5 md." */
+  ham?: string;
+}
+
 export interface ArgumanSatiri {
   id: string;
   taraf: string;
@@ -63,6 +74,11 @@ export interface CorpusPort {
   maddeGetir(id: string, tarih?: string): MaddeKaydi | null;
   /** Full-text search over the compiled legislation. Optional for minimal corpora. */
   maddeAra?(sorgu: string, limit: number): MaddeKaydi[];
+  /**
+   * Parsed amendment notes of one article, newest first. Optional; [] when the
+   * DB has no `madde_degisiklik` table.
+   */
+  degisiklikler?(maddeId: string): DegisiklikKaydi[];
   /** Article numbers of one statute (range hints in citation checks). Optional. */
   maddeNumaralari?(mevzuatId: string): string[];
   argumanlar(dugumId: string): ArgumanSatiri[];

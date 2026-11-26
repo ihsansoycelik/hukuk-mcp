@@ -56,6 +56,39 @@ def insert_laws(conn: sqlite3.Connection, laws: list[LawRecord],
     return n
 
 
+def insert_degisiklikler(conn: sqlite3.Connection, laws: list[LawRecord]) -> dict:
+    """Parse amendment notes of every article into madde_degisiklik.
+
+    Returns counts: notes seen, parsed, and up to 10 unparsed samples.
+    """
+    from pipeline.parse.degisiklik import parse_madde
+
+    seen = parsed = 0
+    samples: list[str] = []
+    n_unparsed = 0
+    for law in laws:
+        for art in law.articles:
+            res = parse_madde(art.metin, art.degisiklik)
+            seen += res.seen
+            parsed += len(res.notes)
+            n_unparsed += len(res.unparsed)
+            for u in res.unparsed:
+                if len(samples) < 10:
+                    samples.append(f"{art.id}: {u}")
+            conn.executemany(
+                "INSERT INTO madde_degisiklik"
+                " (madde_id, fikra, tur, tarih, kanun_no, kanun_madde, ham)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [(art.id, n.fikra, n.tur, n.tarih, n.kanun_no, n.kanun_madde, n.ham)
+                 for n in res.notes],
+            )
+    conn.commit()
+    oran = round(100.0 * parsed / seen, 2) if seen else 100.0
+    return {"degisiklik_not_sayisi": seen, "degisiklik_ayristirilan": parsed,
+            "degisiklik_oran": oran, "degisiklik_ayristirilamayan": n_unparsed,
+            "degisiklik_ornek_ayristirilamayan": samples}
+
+
 def insert_kararlar(conn: sqlite3.Connection, rows: list[dict]) -> int:
     """Insert karar + karar_fts rows. ``rows`` already carry summaries/tokens."""
     for r in rows:
@@ -97,6 +130,7 @@ def counts(conn: sqlite3.Connection) -> dict[str, int]:
         "dugum": conn.execute("SELECT COUNT(*) FROM dugum").fetchone()[0],
         "kart": conn.execute("SELECT COUNT(*) FROM kart").fetchone()[0],
         "arguman": conn.execute("SELECT COUNT(*) FROM arguman").fetchone()[0],
+        "madde_degisiklik": conn.execute("SELECT COUNT(*) FROM madde_degisiklik").fetchone()[0],
     }
 
 

@@ -16,6 +16,7 @@
  * passes. The output says so.
  */
 import type { CorpusPort, MaddeKaydi } from "./ports.ts";
+import { trTarih } from "./render.ts";
 
 /** Statute number -> lower-case aliases people actually write. */
 export const KANUN_TAKMA_ADLARI: Record<string, { ad: string; takma: string[] }> = {
@@ -114,6 +115,26 @@ function fikraSayisi(m: MaddeKaydi): number {
   return enBuyuk;
 }
 
+/** Text of paragraph `n` ("(n) …" up to the next marker), or null when absent. */
+function fikraMetni(m: MaddeKaydi, n: number): string | null {
+  const isaretler = [...m.metin.matchAll(/(?:^|\s)\((\d{1,2})\)\s/g)];
+  const i = isaretler.findIndex((x) => Number(x[1]) === n);
+  if (i < 0) return null;
+  const bas = isaretler[i]!.index! + isaretler[i]![0].length;
+  const son = isaretler[i + 1]?.index ?? m.metin.length;
+  return m.metin.slice(bas, son).trim();
+}
+
+/** A whole-paragraph repeal note (not a single sentence/phrase) for paragraph `n`. */
+function fikraMulgaMi(corpus: CorpusPort, m: MaddeKaydi, n: number): boolean {
+  const f = fikraMetni(m, n);
+  if (f && /^\(\s*mülga/i.test(tl(f))) return true;
+  const notlar = corpus.degisiklikler?.(m.id) ?? [];
+  return notlar.some(
+    (d) => d.tur === "mulga" && d.fikra === n && (!d.ham || /^mülga(\s+\S+)?\s+fıkra\b|^mülga\s*[:\u2013-]/i.test(tl(d.ham))),
+  );
+}
+
 export function mulgaKanunAciklama(kanun: string): string | null {
   const k = MULGA_KANUNLAR[kanun];
   if (!k) return null;
@@ -148,8 +169,13 @@ function maddeKontrol(corpus: CorpusPort, kanun: string, no: string, fikra: stri
     if (n > 0 && Number(fikra) > n) {
       return { ham, tur: "madde", kimlik: `${m.id}/${fikra}`, durum: "YOK", aciklama: `${m.id} ${n} fıkralı; ${fikra}. fıkra yok` };
     }
+    if (fikraMulgaMi(corpus, m, Number(fikra))) {
+      return { ham, tur: "madde", kimlik: `${m.id}/${fikra}`, durum: "MULGA", aciklama: `${m.id} ${fikra}. fıkra yürürlükten kalkmış` };
+    }
   }
-  return { ham, tur: "madde", kimlik: m.id, durum: "DOGRU", aciklama: `${m.baslik ?? ""} | ${m.kaynak_url}`.trim() };
+  const son = corpus.degisiklikler?.(m.id)[0];
+  const sonNot = son ? ` | son değişiklik ${trTarih(son.tarih)}` : "";
+  return { ham, tur: "madde", kimlik: m.id, durum: "DOGRU", aciklama: `${m.baslik ?? ""} | ${m.kaynak_url}${sonNot}`.trim() };
 }
 
 function bamSlug(sehir: string): string {

@@ -138,3 +138,15 @@ CREATE TABLE IF NOT EXISTS atif (
 );
 
 CREATE INDEX IF NOT EXISTS idx_atif_hedef ON atif(hedef_id);
+
+-- Madde değişiklik notları: `degisiklik` sütunundan ve metin içi "(Değişik: ...)" notlarından.
+CREATE TABLE IF NOT EXISTS madde_degisiklik (
+  madde_id     TEXT NOT NULL,             -- madde.id
+  fikra        INTEGER,                   -- not "(n)" fıkrasına aitse n, değilse NULL (madde geneli)
+  tur          TEXT NOT NULL,             -- degisik | ek | mulga | iptal | aynen_kabul | diger
+  tarih        TEXT NOT NULL,             -- ISO YYYY-MM-DD
+  kanun_no     TEXT,                      -- '7392', 'KHK-684'; iptalde NULL
+  kanun_madde  TEXT,                      -- değiştiren kanunun madde numarası
+  ham          TEXT NOT NULL              -- notun özgün metni
+);
+CREATE INDEX IF NOT EXISTS idx_madde_degisiklik_madde ON madde_degisiklik (madde_id);

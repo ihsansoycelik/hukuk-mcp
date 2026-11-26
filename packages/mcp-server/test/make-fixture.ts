@@ -132,5 +132,23 @@ db.prepare(
   "INSERT OR REPLACE INTO kural_parametre (kural_id, anahtar, deger, gecerlilik_bas, gecerlilik_bit, kaynak_url, durum) VALUES (?,?,?,?,?,?,?)",
 ).run("ayip_zamanasimi", "genel_sure_yil", "2", "2014-05-28", null, "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm", "uzman_onayli");
 
+// legislation: two articles of 6502 with amendment notes (time-aware tests)
+db.prepare("INSERT OR REPLACE INTO mevzuat (id, tur, ad, kabul_tarihi, rg_tarih, rg_sayi, kaynak_url) VALUES (?,?,?,?,?,?,?)").run(
+  "6502", "kanun", "Tüketicinin Korunması Hakkında Kanun", "2013-11-07", "2013-11-28", 28835, "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm",
+);
+const insMadde = db.prepare(
+  "INSERT OR REPLACE INTO madde (id, mevzuat_id, madde_no, baslik, metin, degisiklik, kaynak_url, token_l1) VALUES (?,?,?,?,?,?,?,?)",
+);
+const m11 = "(1) Malın ayıplı olduğu hâllerde tüketici seçimlik haklarını kullanabilir. (2) (Mülga:1/1/2020-7000/1 md.) (3) (Değişik:24/3/2022-7392/6 md.) Üçüncü fıkra metni.";
+insMadde.run("m:6502/11", "6502", "11", "Ayıplı mal", m11, "(Değişik:24/3/2022-7392/6 md.)", "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm", tok(m11));
+const m12 = "(1) Satıcı ayıplı maldan sorumludur.";
+insMadde.run("m:6502/12", "6502", "12", "Satıcının sorumluluğu", m12, null, "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6502.htm", tok(m12));
+const insDeg = db.prepare(
+  "INSERT INTO madde_degisiklik (madde_id, fikra, tur, tarih, kanun_no, kanun_madde, ham) VALUES (?,?,?,?,?,?,?)",
+);
+insDeg.run("m:6502/11", 3, "degisik", "2022-03-24", "7392", "6", "Değişik:24/3/2022-7392/6 md.");
+insDeg.run("m:6502/11", 2, "mulga", "2020-01-01", "7000", "1", "Mülga:1/1/2020-7000/1 md.");
+insDeg.run("m:6502/11", null, "ek", "2016-06-01", "6000", "5", "Ek: 1/6/2016-6000/5 md.");
+
 db.close();
 console.log(`fixture written: ${out}`);

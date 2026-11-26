@@ -10,7 +10,7 @@ import { DatabaseSync } from "node:sqlite";
 import { Corpus } from "@hukuk/retrieval";
 import type { AraInput } from "@hukuk/schema";
 import { ftsKey } from "@hukuk/tr-text";
-import type { ArgumanSatiri, CorpusPort, DugumAday, KararOzet, KuralPort, MaddeKaydi } from "./ports.ts";
+import type { ArgumanSatiri, CorpusPort, DegisiklikKaydi, DugumAday, KararOzet, KuralPort, MaddeKaydi } from "./ports.ts";
 import type { KuralSonucu } from "@hukuk/schema";
 
 const BOS_SONUC: KuralSonucu = {
@@ -83,6 +83,19 @@ class CorpusAdaptor implements CorpusPort {
       return (this.db.prepare("SELECT madde_no FROM madde WHERE mevzuat_id = ?").all(mevzuatId) as unknown as { madde_no: string }[]).map((r) => r.madde_no);
     } catch {
       return [];
+    }
+  }
+
+  degisiklikler(maddeId: string): DegisiklikKaydi[] {
+    try {
+      return this.db
+        .prepare(
+          `SELECT fikra, tur, tarih, kanun_no, kanun_madde, ham FROM madde_degisiklik
+           WHERE madde_id = ? ORDER BY tarih DESC, rowid DESC`,
+        )
+        .all(maddeId) as unknown as DegisiklikKaydi[];
+    } catch {
+      return []; // table missing in older DBs
     }
   }
 

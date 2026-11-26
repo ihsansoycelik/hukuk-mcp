@@ -4,6 +4,7 @@
  * Deterministic by construction: no generative model runs here. Same inputs and
  * same published snapshot always produce the same bytes.
  */
+import { olaySonrasiUyarilari } from "./zaman.ts";
 import type { HukukSorCikti, HukukSorInput, KuralSonucu } from "@hukuk/schema";
 import { dugumBul, ustZinciri, yapraklar } from "@hukuk/ontology";
 import { analyze } from "@hukuk/tr-text";
@@ -386,6 +387,17 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
   const uyarilar = [...new Set(kuralSonuc.uyarilar)]
     .filter((u) => !/^Geçersiz\/eksik girdiyle|Invalid enum|Required$/i.test(u))
     .slice(0, 3);
+  // Dayanak articles amended after the event: the corpus has only today's text.
+  const tarihUyarilari = olaySonrasiUyarilari(
+    corpus,
+    [
+      ...kuralSonuc.kayitlar.flatMap((k) => k.s.dayanak),
+      ...(kart.kaynaklar ?? []),
+      ...kart.bolumler.flatMap((b) => [...b.metin.matchAll(/\[(m:[^\]\s,]+)\]/g)].map((m) => m[1]!)),
+    ],
+    input.olay_tarihi ?? null,
+  );
+  uyarilar.push(...tarihUyarilari);
   if (dikkat || uyarilar.length) {
     bolumler.push({
       etiket: "DİKKAT",
@@ -457,6 +469,7 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
     eksik_olgular: eksikler,
     atiflar,
     korpus: yayin,
+    uyarilar: tarihUyarilari,
   };
   return { metin, token: tokenSay(metin), dugum: dugumId, guven: en.skor, yapisal };
 }

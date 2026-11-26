@@ -22,6 +22,7 @@ import {
 import { dugumBul, tumDugumler, surum as ontolojiSurum } from "@hukuk/ontology";
 import { paketle, tokenSay, butceyeSikistir } from "./budget.ts";
 import { atifOzeti, atifRaporu, atiflariCikar, maddeYokAciklama, type Atif } from "./atif.ts";
+import { degisiklikSatirlari, olayTarihiBul, olaySonrasiUyarilari } from "./zaman.ts";
 import { hukukSor, yeniOturum, type Oturum } from "./hukukSor.ts";
 import type { CorpusPort, KuralPort } from "./ports.ts";
 import { bugunISO, dayanakKimlikleri, dayanakMetni, hataMetni, kararSatiri, sonucDegeri, trTarih } from "./render.ts";
@@ -113,10 +114,12 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
       if (tur === "madde") {
         const m = corpus.maddeGetir(kimlik ?? input.id, asof);
         if (!m) return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `madde bulunamadı: ${input.id}`, sonraki_adim: "kimliği dogrula ile kontrol edin" }));
+        const dg = degisiklikSatirlari(corpus.degisiklikler?.(m.id) ?? []);
         const govde = [
           `MADDE ${m.id} | ${m.baslik ?? ""}`.trim(),
+          ...dg,
           m.metin,
-          m.degisiklik ? `DEĞİŞİKLİK ${m.degisiklik}` : "",
+          dg.length === 0 && m.degisiklik ? `DEĞİŞİKLİK ${m.degisiklik}` : "",
           `KAYNAK ${m.kaynak_url}`,
         ]
           .filter(Boolean)
@@ -253,6 +256,8 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
         typeof s.sonuc === "object" && s.sonuc !== null && "tarih" in s.sonuc
           ? trTarih(String((s.sonuc as { tarih: string }).tarih))
           : String(s.sonuc);
+      const dayanakIdleri = dayanakKimlikleri(s.dayanak);
+      const tarihUyarilari = olaySonrasiUyarilari(corpus, s.dayanak, olayTarihiBul(h.girdiler));
       const govde = [
         `KURAL ${h.kural} | SONUÇ ${deger} | ${s.onay_durumu}`,
         s.kisa,
@@ -260,6 +265,7 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
         s.eksik_girdiler.length ? `EKSİK ${s.eksik_girdiler.join(", ")}` : "",
         s.varsayimlar.length ? `VARSAYIM ${s.varsayimlar.join(" | ")}` : "",
         s.uyarilar.length ? `UYARI ${s.uyarilar.join(" | ")}` : "",
+        ...tarihUyarilari,
         `PARAMETRE ${s.parametre_surumu}`,
       ]
         .filter(Boolean)
@@ -268,9 +274,10 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
         kural: h.kural,
         sonuc: sonucDegeri(s),
         ozet: s.kisa,
-        dayanak: dayanakKimlikleri(s.dayanak),
+        dayanak: dayanakIdleri,
         varsayimlar: s.varsayimlar,
         eksik: s.eksik_girdiler,
+        uyarilar: tarihUyarilari,
         parametre_surumu: s.parametre_surumu,
       });
     },

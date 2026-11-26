@@ -52,6 +52,12 @@ check "uydurma karar kimliği reddedilir"     "KIMLIK_COZULEMEDI" \
   dogrula "k:ygt-99hd-2021-1-2022-2"
 check "madde metni açılır"                   "Zamanaşımı" \
   derinles m:6502/12 --butce 300
+check "değişen madde son değişiklik tarihini gösterir" "DEĞİŞİKLİK son 24.03.2022" \
+  derinles m:6502/48 --butce 1500
+check "olaydan sonra değişen dayanak uyarılır" "olaydan sonra değişti" \
+  hesapla cayma_suresi '{"teslim_tarihi":"2021-01-10","sozlesme_turu":"mesafeli_mal"}'
+check "kart atıflı madde olaydan sonra değiştiyse uyarılır" "olaydan sonra değişti" \
+  sor "İnternetten aldığım ürünü iade etmek istiyorum, 14 gün geçmedi" --tarih 2021-01-10
 check "her yanıt disclaimer taşır"           "NOT Bilgi amaçlıdır" \
   sor "Kredi kartımdan yıllık aidat kesilmiş"
 

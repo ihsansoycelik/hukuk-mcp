@@ -263,6 +263,10 @@ def build(no_fetch: bool = False) -> dict:
     try:
         ingest.ensure_schema(conn)
         n_art = ingest.insert_laws(conn, laws, article_l1)
+        degisiklik = ingest.insert_degisiklikler(conn, laws)
+        print(f"[build] degisiklik notes: seen={degisiklik['degisiklik_not_sayisi']} "
+              f"parsed={degisiklik['degisiklik_ayristirilan']} "
+              f"({degisiklik['degisiklik_oran']}%)", flush=True)
         n_karar = ingest.insert_kararlar(conn, rows)
         n_dugum = ingest.insert_dugumler(conn, dugumler)
         n_kart = ingest.insert_kartlar(conn, kartlar)
@@ -343,6 +347,7 @@ def build(no_fetch: bool = False) -> dict:
             "fts_probe_hits_and": fts_hits,
             "fts_probe_hits_or": fts_or_hits,
             "missing_laws": missing_laws,
+            **degisiklik,
             "missing_required_articles": missing_required,
             "m6502_11_has_ayipli": int(art11_ok),
             "known_gaps": [
@@ -415,6 +420,7 @@ def build(no_fetch: bool = False) -> dict:
         "arguman": n_arguman,
         "decisions_with_dugum": routed,
         "kural_parametre": n_param,
+        **degisiklik,
         "surum": surum,
         "seconds": round(elapsed, 2),
     }

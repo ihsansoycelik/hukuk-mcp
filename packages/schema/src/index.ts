@@ -160,6 +160,8 @@ export const HukukSorCikti = nesne({
   eksik_olgular: z.array(z.string()),
   atiflar: z.array(z.string()),
   korpus: z.string(),
+  /** olaydan sonra değişen dayanak maddeler (DİKKAT satırlarının yapısal ikizi) */
+  uyarilar: z.array(z.string()).optional(),
 });
 export type HukukSorCikti = {
   durum: "yanit" | "belirsiz" | "kapsam_disi" | "hata";
@@ -170,6 +172,7 @@ export type HukukSorCikti = {
   eksik_olgular: string[];
   atiflar: string[];
   korpus: string;
+  uyarilar?: string[];
 };
 
 export const HesaplaCikti = nesne({
@@ -179,6 +182,8 @@ export const HesaplaCikti = nesne({
   dayanak: z.array(z.string()),
   varsayimlar: z.array(z.string()),
   eksik: z.array(z.string()),
+  /** olaydan sonra değişen dayanak maddeler (varsa) */
+  uyarilar: z.array(z.string()).optional(),
   parametre_surumu: z.string(),
 });
 export type HesaplaCikti = z.infer<typeof HesaplaCikti>;
