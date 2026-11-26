@@ -6,21 +6,25 @@
  * schemas and in the orchestration behind hukuk_sor, not in tool count.
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { toJsonSchemaCompat } from "@modelcontextprotocol/sdk/server/zod-json-schema-compat.js";
 import { z } from "zod";
 import {
   AraInput,
   DerinlesInput,
+  DogrulaCikti,
   DogrulaInput,
+  HesaplaCikti,
   HesaplaInput,
+  HukukSorCikti,
   HukukSorInput,
   idTuru,
 } from "@hukuk/schema";
 import { dugumBul, tumDugumler, surum as ontolojiSurum } from "@hukuk/ontology";
 import { paketle, tokenSay, butceyeSikistir } from "./budget.ts";
-import { atifRaporu, atiflariCikar } from "./atif.ts";
+import { atifOzeti, atifRaporu, atiflariCikar, maddeYokAciklama, type Atif } from "./atif.ts";
 import { hukukSor, yeniOturum, type Oturum } from "./hukukSor.ts";
 import type { CorpusPort, KuralPort } from "./ports.ts";
-import { bugunISO, dayanakMetni, hataMetni, kararSatiri, trTarih } from "./render.ts";
+import { bugunISO, dayanakKimlikleri, dayanakMetni, hataMetni, kararSatiri, sonucDegeri, trTarih } from "./render.ts";
 
 export const SURUM = "0.1.0";
 
@@ -30,6 +34,27 @@ const TALIMAT =
 
 function metin(t: string) {
   return { content: [{ type: "text" as const, text: t }] };
+}
+
+/**
+ * Every tool only reads the compiled corpus and runs deterministic rules: no
+ * writes, no network, same input gives the same output.
+ */
+const SALT_OKUNUR = {
+  readOnlyHint: true,
+  idempotentHint: true,
+  destructiveHint: false,
+  openWorldHint: false,
+} as const;
+
+/** Text stays the primary channel; structuredContent is its machine-readable twin. */
+function yapili<T extends Record<string, unknown>>(t: string, yapisal: T) {
+  return { content: [{ type: "text" as const, text: t }], structuredContent: yapisal };
+}
+
+/** Error text: no structured twin, so flag it as an error. */
+function hata(t: string) {
+  return { content: [{ type: "text" as const, text: t }], isError: true as const };
 }
 
 /** Free-text künye -> candidate id, best effort and explicitly non-authoritative. */
@@ -56,23 +81,27 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
   sunucu.registerTool(
     "hukuk_sor",
     {
+      title: "Hukuki soru (tek çağrı)",
       description:
         "Tüketici veya SGK uyuşmazlığını tek çağrıda yanıtlar.",
       inputSchema: HukukSorInput.shape,
+      annotations: SALT_OKUNUR,
     },
     async (args) => {
       const input = HukukSorInput.parse(args);
       input.ozet = input.ozet.slice(0, 400);
       const sonuc = hukukSor(input, corpus, kural, oturum);
-      return metin(sonuc.metin);
+      return yapili(sonuc.metin, sonuc.yapisal);
     },
   );
 
   sunucu.registerTool(
     "derinles",
     {
+      title: "Kimlik aç",
       description: "Bir kimliğin ayrıntısını açar.",
       inputSchema: DerinlesInput.shape,
+      annotations: SALT_OKUNUR,
     },
     async (args) => {
       const input = DerinlesInput.parse(args);
@@ -149,8 +178,10 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
   sunucu.registerTool(
     "ara",
     {
+      title: "Karar ara",
       description: "Karar ve madde metinlerinde kaynaklı arama yapar.",
       inputSchema: AraInput.shape,
+      annotations: SALT_OKUNUR,
     },
     async (args) => {
       const input = AraInput.parse(args);
@@ -159,10 +190,21 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
       // guard rails live in code so the schema can stay small (schema is paid
       // for on every model turn; a handler check is free)
       const sorgu = input.sorgu.slice(0, 200);
-      const hits = corpus.ara({ ...input, sorgu, limit });
+      const arama = corpus.araDetay
+        ? corpus.araDetay({ ...input, sorgu, limit })
+        : { hits: corpus.ara({ ...input, sorgu, limit }), strateji: "", denenen: [] as string[] };
+      const hits = arama.hits;
       const maddelerOn = corpus.maddeAra?.(sorgu, 1) ?? [];
       if (hits.length === 0 && maddelerOn.length === 0) {
-        return metin(hataMetni({ kod: "DUGUM_BULUNAMADI", mesaj: `sonuç yok: ${input.sorgu}`, sonraki_adim: "daha kısa ve genel bir sorgu deneyin" }));
+        const satirlar = [hataMetni({ kod: "DUGUM_BULUNAMADI", mesaj: `sonuç yok: ${input.sorgu}`, sonraki_adim: "daha kısa ve genel bir sorgu deneyin" })];
+        if (arama.denenen.length) {
+          const uzun = sorgu.trim().split(/\s+/).length > 3;
+          const oneri = uzun
+            ? "sorguyu 2-3 anahtar sözcüğe kısaltın, ya da olayı hukuk_sor ile anlatın"
+            : "gündelik sözcük yerine hukuki terim deneyin (ör. 'bedel iadesi', 'ayıp'), ya da olayı hukuk_sor ile anlatın";
+          satirlar.push("STRATEJİ yok", `DENENEN ${arama.denenen.join(", ")} | SONRAKİ ADIM ${oneri}`);
+        }
+        return metin(satirlar.join("\n"));
       }
       const maddeler = corpus.maddeAra?.(sorgu, 3) ?? [];
       const bolumler = [
@@ -181,8 +223,10 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
           oncelik: 20,
         });
       }
+      // the strategy line sits in the header so the budget packer never drops it
+      const stratejiSatiri = arama.strateji ? `\nSTRATEJİ ${arama.strateji}` : "";
       const paket = paketle(
-        `ARA ${hits.length} karar, ${maddeler.length} madde | sürüm ${corpus.yayinSurumu()}`,
+        `ARA ${hits.length} karar, ${maddeler.length} madde | sürüm ${corpus.yayinSurumu()}${stratejiSatiri}`,
         bolumler,
         butce,
       );
@@ -193,14 +237,16 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
   sunucu.registerTool(
     "hesapla",
     {
+      title: "Süre ve merci hesapla",
       description: "Süre, eşik, merci ve faiz hesabını yasal dayanağıyla çalıştırır.",
       inputSchema: HesaplaInput.shape,
+      annotations: SALT_OKUNUR,
     },
     async (args) => {
       const input = HesaplaInput.parse(args);
       const h = input as { kural: string; girdiler: Record<string, unknown> };
       if (!kural.varMi(h.kural)) {
-        return metin(hataMetni({ kod: "PARAMETRE_GUNCEL_DEGIL", mesaj: `bilinmeyen kural: ${h.kural}`, sonraki_adim: "geçerli kurallar: gorevli_merci, arabuluculuk_dava_sarti, ayip_zamanasimi, cayma_suresi, yetkili_yer, harc_durumu, sure_son_gun, yasal_faiz" }));
+        return hata(hataMetni({ kod: "PARAMETRE_GUNCEL_DEGIL", mesaj: `bilinmeyen kural: ${h.kural}`, sonraki_adim: "geçerli kurallar: gorevli_merci, arabuluculuk_dava_sarti, ayip_zamanasimi, cayma_suresi, yetkili_yer, harc_durumu, sure_son_gun, yasal_faiz" }));
       }
       const s = kural.calistir(h.kural, { ...h.girdiler, bugun: (h.girdiler.bugun as string) ?? bugunISO() }, (h.girdiler.bugun as string) ?? bugunISO());
       const deger =
@@ -218,59 +264,99 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
       ]
         .filter(Boolean)
         .join("\n");
-      return metin(butceyeSikistir(govde, 600));
+      return yapili(butceyeSikistir(govde, 600), {
+        kural: h.kural,
+        sonuc: sonucDegeri(s),
+        ozet: s.kisa,
+        dayanak: dayanakKimlikleri(s.dayanak),
+        varsayimlar: s.varsayimlar,
+        eksik: s.eksik_girdiler,
+        parametre_surumu: s.parametre_surumu,
+      });
     },
   );
 
   sunucu.registerTool(
     "dogrula",
     {
+      title: "Atıf denetimi",
       description: "Atıf denetimi: id, künye veya metin (taslak yanıt). Uydurma, mülga ve kapsam dışı atıfları işaretler.",
       inputSchema: DogrulaInput.shape,
+      annotations: SALT_OKUNUR,
     },
     async (args) => {
       const input = DogrulaInput.parse(args);
-      if (input.metin) return metin(butceyeSikistir(atifRaporu(atiflariCikar(input.metin, corpus)), 1200));
+      const tek = (t: string, a: Atif) => yapili(t, { atiflar: [a], ozet: atifOzeti([a]) });
+      const KAPSAM_ACIKLAMA = "korpusta yok; gerçek olabilir ama doğrulanamadı, resmî arama ile teyit edin";
+      if (input.metin) {
+        const atiflar = atiflariCikar(input.metin, corpus);
+        return yapili(butceyeSikistir(atifRaporu(atiflar), 1200), { atiflar, ozet: atifOzeti(atiflar) });
+      }
       if (input.id) {
         const [kimlik, asof] = input.id.split("@");
         const tur = idTuru(kimlik ?? input.id);
         if (tur === "karar") {
           const k = corpus.kararGetir(kimlik ?? input.id);
-          return metin(
-            k
-              ? `DOĞRU ${k.karar_id} | ${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`
-              : hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `karar yok: ${input.id}`, sonraki_adim: "ara ile künyeyi arayın" }),
-          );
+          if (!k) {
+            return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `karar yok: ${input.id}`, sonraki_adim: "ara ile künyeyi arayın" }), {
+              ham: input.id, tur: "karar", kimlik: kimlik ?? input.id, durum: "KAPSAM", aciklama: KAPSAM_ACIKLAMA,
+            });
+          }
+          return tek(`DOĞRU ${k.karar_id} | ${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`, {
+            ham: input.id, tur: "karar", kimlik: k.karar_id, durum: "DOGRU",
+            aciklama: `${k.daire || k.mahkeme} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`,
+          });
         }
         if (tur === "madde") {
           const m = corpus.maddeGetir(kimlik ?? input.id, asof);
-          return metin(
-            m
-              ? `DOĞRU ${m.id}${asof ? `@${asof}` : ""} | ${m.baslik ?? ""} | ${m.kaynak_url}`
-              : hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `madde yok: ${input.id}`, sonraki_adim: "madde numarasını kontrol edin" }),
-          );
+          if (!m) {
+            const kanun = (kimlik ?? input.id).match(/^m:([^/]+)\//)?.[1] ?? "";
+            return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `madde yok: ${input.id}`, sonraki_adim: "madde numarasını kontrol edin" }), {
+              ham: input.id, tur: "madde", kimlik: kimlik ?? input.id, durum: "YOK", aciklama: kanun ? maddeYokAciklama(corpus, kanun) : "böyle madde yok",
+            });
+          }
+          return tek(`DOĞRU ${m.id}${asof ? `@${asof}` : ""} | ${m.baslik ?? ""} | ${m.kaynak_url}`, {
+            ham: input.id, tur: "madde", kimlik: m.id, durum: "DOGRU", aciklama: `${m.baslik ?? ""} | ${m.kaynak_url}`,
+          });
         }
         if (tur === "dugum") {
           const d = dugumBul(kimlik ?? input.id);
-          if (d) return metin(`DOĞRU ${d.id} | ${d.ad} | yaprak=${d.yaprak}`);
-          return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `düğüm yok: ${input.id}`, sonraki_adim: "ontoloji://tuketici veya ontoloji://sgk kaynağına bakın" }));
+          if (d) {
+            return tek(`DOĞRU ${d.id} | ${d.ad} | yaprak=${d.yaprak}`, {
+              ham: input.id, tur: "dugum", kimlik: d.id, durum: "DOGRU", aciklama: `${d.ad} | yaprak=${d.yaprak}`,
+            });
+          }
+          return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `düğüm yok: ${input.id}`, sonraki_adim: "ontoloji://tuketici veya ontoloji://sgk kaynağına bakın" }), {
+            ham: input.id, tur: "dugum", kimlik: kimlik ?? input.id, durum: "YOK", aciklama: "böyle düğüm yok",
+          });
         }
-        return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `kimlik çözülemedi: ${input.id}`, sonraki_adim: "k:, m:, t/ veya s/ kimliği verin" }));
+        return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `kimlik çözülemedi: ${input.id}`, sonraki_adim: "k:, m:, t/ veya s/ kimliği verin" }), {
+          ham: input.id, tur: input.id.startsWith("k:") ? "karar" : "madde", kimlik: null, durum: "KAPSAM", aciklama: "kimlik biçimi tanınmadı; doğrulanamadı",
+        });
       }
 
       if (input.kunye) {
         const adaylar = kunyeToId(input.kunye);
         if (adaylar.length === 0) {
-          return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `künye ayrıştırılamadı: ${input.kunye}`, sonraki_adim: "ör. '3. Hukuk Dairesi 2021/1234 E. 2022/567 K.' biçiminde yazın" }));
+          return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `künye ayrıştırılamadı: ${input.kunye}`, sonraki_adim: "ör. '3. Hukuk Dairesi 2021/1234 E. 2022/567 K.' biçiminde yazın" }), {
+            ham: input.kunye, tur: "karar", kimlik: null, durum: "KAPSAM", aciklama: "künye ayrıştırılamadı; doğrulanamadı",
+          });
         }
         for (const ad of adaylar) {
           const k = corpus.kararGetir(ad);
-          if (k) return metin(`DOĞRU ${k.karar_id} | ${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`);
+          if (k) {
+            return tek(`DOĞRU ${k.karar_id} | ${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`, {
+              ham: input.kunye, tur: "karar", kimlik: k.karar_id, durum: "DOGRU",
+              aciklama: `${k.daire} | ${trTarih(k.tarih)} | ${k.kesinlesme} | ${k.kaynak_url}`,
+            });
+          }
         }
-        return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `bu künye korpusta yok: ${input.kunye}`, sonraki_adim: "ara aracıyla konu bazlı arayın; künye uydurmayın" }));
+        return tek(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: `bu künye korpusta yok: ${input.kunye}`, sonraki_adim: "ara aracıyla konu bazlı arayın; künye uydurmayın" }), {
+          ham: input.kunye, tur: "karar", kimlik: adaylar[0] ?? null, durum: "KAPSAM", aciklama: KAPSAM_ACIKLAMA,
+        });
       }
 
-      return metin(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: "kunye veya id gerekli", sonraki_adim: "id ya da künye metni verin" }));
+      return hata(hataMetni({ kod: "KIMLIK_COZULEMEDI", mesaj: "kunye veya id gerekli", sonraki_adim: "id ya da künye metni verin" }));
     },
   );
 
@@ -355,6 +441,27 @@ export function olusturSunucu(corpus: CorpusPort, kural: KuralPort): McpServer {
       };
     });
   };
+
+  // Output schemas are not advertised in tools/list (they cost tokens on every
+  // turn); structuredContent is still returned and its JSON Schemas live here.
+  sunucu.registerResource(
+    "cikti-semalari",
+    "sema://cikti",
+    { title: "Çıktı şemaları", description: "hukuk_sor, hesapla ve dogrula structuredContent JSON Schema'ları.", mimeType: "application/json" },
+    async () => ({
+      contents: [
+        {
+          uri: "sema://cikti",
+          mimeType: "application/json",
+          text: JSON.stringify({
+            hukuk_sor: toJsonSchemaCompat(HukukSorCikti),
+            hesapla: toJsonSchemaCompat(HesaplaCikti),
+            dogrula: toJsonSchemaCompat(DogrulaCikti),
+          }),
+        },
+      ],
+    }),
+  );
 
   ontolojiKaynagi(
     "ontoloji-tuketici",

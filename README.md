@@ -68,6 +68,12 @@ Kurulumdan sonra modele olayı anlatmanız yeterli: *"hukuk aracına sor: …"*.
 | `hesapla` | Süre, eşik ve merci kuralı | `hesapla(kural="ayip_zamanasimi", girdiler={teslim_tarihi:"2025-03-10"})` |
 | `dogrula` | Atıf denetimi: kimlik, künye ya da serbest metin | `dogrula(metin="TKHK m.11 ve aynı Kanunun 99. maddesi…")` |
 
+Beş araç da salt okunurdur ve metnin yanında yapılandırılmış çıktı da döner (`hukuk_sor`, `hesapla`
+ve `dogrula` için `structuredContent`; JSON Schema'ları `sema://cikti` kaynağında). Metin birincil kanaldır. `hukuk_sor` yanıtının başlığındaki
+`NEDEN tetik: ...` satırı konunun hangi tetikleyici ifadelerle seçildiğini, `ara` yanıtındaki
+`STRATEJİ ...` satırı sonucun hangi arama adımından geldiğini gösterir; sonuç yoksa `DENENEN` satırı
+denenen adımları ve sonraki öneriyi verir.
+
 ### `hukuk_sor` örneği
 
 Girdi: *"Bayiden aldığım sıfır arabanın şanzımanı 3 ayda 4 kez arıza yaptı, paramı geri alabilir

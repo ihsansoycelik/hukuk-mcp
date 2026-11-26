@@ -28,6 +28,8 @@ export interface DugumAday {
   skor: number;
   aciklama: string;
   ornek?: string[];
+  /** matched trigger phrases (routing reason), max 3 */
+  tetikler?: string[];
 }
 
 export interface MaddeKaydi {
@@ -55,6 +57,8 @@ export interface CorpusPort {
   dugumGetir(id: string): DugumKaydi | null;
   kartGetir(dugumId: string): Kart | null;
   ara(input: AraInput): KararOzet[];
+  /** Search plus the strategy that produced the hits. Optional for minimal corpora. */
+  araDetay?(input: AraInput): { hits: KararOzet[]; strateji: string; denenen: string[] };
   kararGetir(id: string): KararOzet | null;
   maddeGetir(id: string, tarih?: string): MaddeKaydi | null;
   /** Full-text search over the compiled legislation. Optional for minimal corpora. */

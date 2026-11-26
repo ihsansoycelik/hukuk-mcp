@@ -28,6 +28,8 @@ export interface DugumAday {
   aciklama: string;
   /** up to two example phrasings, for the server's disambiguation prompt (~150 tokens) */
   ornek: string[];
+  /** up to three trigger phrases of this node that the query matched (routing reason) */
+  tetikler?: string[];
 }
 
 export interface MaddeKaydi {

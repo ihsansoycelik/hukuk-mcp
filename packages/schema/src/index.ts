@@ -135,3 +135,70 @@ export function idTuru(id: string): "madde" | "karar" | "dugum" | "arguman" | "b
   if (ID_PATTERNS.arguman.test(id)) return "arguman";
   return "bilinmiyor";
 }
+
+/* ------------------------- structured output ------------------------ */
+/*
+ * Kept small and stable: these schemas are paid for in tools/list on every turn.
+ */
+
+const nesne = <T extends z.ZodRawShape>(shape: T) => z.object(shape);
+
+const KuralSatiriCikti = nesne({
+  kural: z.string(),
+  sonuc: z.string().nullable(),
+  ozet: z.string(),
+  dayanak: z.array(z.string()),
+  eksik: z.array(z.string()),
+});
+
+export const HukukSorCikti = nesne({
+  durum: z.enum(["yanit", "belirsiz", "kapsam_disi", "hata"]),
+  dugum: z.string().optional(),
+  guven: z.number().optional(),
+  diger_olasilik: z.string().optional(),
+  kurallar: z.array(KuralSatiriCikti),
+  eksik_olgular: z.array(z.string()),
+  atiflar: z.array(z.string()),
+  korpus: z.string(),
+});
+export type HukukSorCikti = {
+  durum: "yanit" | "belirsiz" | "kapsam_disi" | "hata";
+  dugum?: string;
+  guven?: number;
+  diger_olasilik?: string;
+  kurallar: Array<{ kural: string; sonuc: string | null; ozet: string; dayanak: string[]; eksik: string[] }>;
+  eksik_olgular: string[];
+  atiflar: string[];
+  korpus: string;
+};
+
+export const HesaplaCikti = nesne({
+  kural: z.string(),
+  sonuc: z.union([z.string(), z.number(), z.boolean()]).nullable(),
+  ozet: z.string(),
+  dayanak: z.array(z.string()),
+  varsayimlar: z.array(z.string()),
+  eksik: z.array(z.string()),
+  parametre_surumu: z.string(),
+});
+export type HesaplaCikti = z.infer<typeof HesaplaCikti>;
+
+export const DogrulaCikti = nesne({
+  atiflar: z.array(
+    nesne({
+      ham: z.string(),
+      tur: z.enum(["madde", "karar", "kanun", "dugum"]),
+      kimlik: z.string().nullable(),
+      durum: z.enum(["DOGRU", "MULGA", "YOK", "KAPSAM", "MULGA_KANUN"]),
+      aciklama: z.string(),
+    }),
+  ),
+  ozet: nesne({
+    dogru: z.number(),
+    mulga: z.number(),
+    yok: z.number(),
+    kapsam: z.number(),
+    mulga_kanun: z.number(),
+  }),
+});
+export type DogrulaCikti = z.infer<typeof DogrulaCikti>;

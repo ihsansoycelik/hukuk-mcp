@@ -46,6 +46,9 @@ class CorpusAdaptor implements CorpusPort {
   ara(input: AraInput): KararOzet[] {
     return this.c.ara(input) as unknown as KararOzet[];
   }
+  araDetay(input: AraInput): { hits: KararOzet[]; strateji: string; denenen: string[] } {
+    return this.c.araDetay(input) as unknown as { hits: KararOzet[]; strateji: string; denenen: string[] };
+  }
   kararGetir(id: string): KararOzet | null {
     return this.c.kararGetir(id) as unknown as KararOzet | null;
   }

@@ -35,11 +35,45 @@ export const KANUN_TAKMA_ADLARI: Record<string, { ad: string; takma: string[] }>
   "4447": { ad: "İşsizlik Sigortası Kanunu", takma: ["işsizlik sigortası kanunu"] },
 };
 
-export type AtifDurum = "DOGRU" | "MULGA" | "YOK" | "KAPSAM";
+/**
+ * Repealed statutes and the statute that replaced them. Only the statute level is
+ * stated: no article mapping is given, because an invented mapping would be worse
+ * than none.
+ */
+export const MULGA_KANUNLAR: Record<string, { ad: string; yeni: string }> = {
+  "818": { ad: "Borçlar Kanunu", yeni: "6098" },
+  "4077": { ad: "Tüketicinin Korunması Hakkında Kanun", yeni: "6502" },
+  "1086": { ad: "Hukuk Usulü Muhakemeleri Kanunu", yeni: "6100" },
+  "743": { ad: "Türk Kanunu Medenisi", yeni: "4721" },
+  "506": { ad: "Sosyal Sigortalar Kanunu", yeni: "5510" },
+  "1479": { ad: "Bağ-Kur Kanunu", yeni: "5510" },
+  "5434": { ad: "Emekli Sandığı Kanunu", yeni: "5510" },
+  "6762": { ad: "Türk Ticaret Kanunu (eski)", yeni: "6102" },
+  "765": { ad: "Türk Ceza Kanunu (eski)", yeni: "5237" },
+};
+
+/**
+ * Aliases people write for a repealed statute. Where the short form is also the
+ * name of the current statute (bk, ttk, tck, tmk, tkhk), it only counts as the old
+ * one when the number or "eski" precedes it; a bare "TTK" stays 6102.
+ */
+const MULGA_TAKMA: Array<{ no: string; desen: string }> = [
+  { no: "818", desen: "(?:818\\s*(?:sayılı\\s*)?|eski\\s+)(?:bk|borçlar\\s+kanunu)" },
+  { no: "1086", desen: "hukmk|humk|(?:1086\\s*(?:sayılı\\s*)?|eski\\s+)(?:hmk|hukuk\\s+usulü\\s+muhakemeleri\\s+kanunu)" },
+  { no: "743", desen: "(?:743\\s*(?:sayılı\\s*)?|eski\\s+)(?:tmk|(?:türk\\s+)?(?:kanunu\\s+)?medeni(?:\\s+kanun)?\\w*)" },
+  { no: "4077", desen: "(?:4077\\s*(?:sayılı\\s*)?|eski\\s+)(?:tkhk|tüketicinin\\s+korunması\\s+(?:hakkında\\s+)?kanun\\w*)" },
+  { no: "506", desen: "(?:506\\s*(?:sayılı\\s*)?|eski\\s+)(?:ssk|sosyal\\s+sigortalar\\s+kanun\\w*)" },
+  { no: "1479", desen: "(?:1479\\s*(?:sayılı\\s*)?|eski\\s+)bağ-?kur(?:\\s+kanun\\w*)?" },
+  { no: "5434", desen: "(?:5434\\s*(?:sayılı\\s*)?|eski\\s+)emekli\\s+sandığı(?:\\s+kanun\\w*)?" },
+  { no: "6762", desen: "(?:6762\\s*(?:sayılı\\s*)?|eski\\s+)(?:ttk|(?:türk\\s+)?ticaret\\s+kanun\\w*)" },
+  { no: "765", desen: "(?:765\\s*(?:sayılı\\s*)?|eski\\s+)(?:tck|(?:türk\\s+)?ceza\\s+kanun\\w*)" },
+];
+
+export type AtifDurum = "DOGRU" | "MULGA" | "YOK" | "KAPSAM" | "MULGA_KANUN";
 
 export interface Atif {
   ham: string;
-  tur: "madde" | "karar";
+  tur: "madde" | "karar" | "kanun" | "dugum";
   kimlik: string | null;
   durum: AtifDurum;
   aciklama: string;
@@ -64,6 +98,11 @@ const MADDE_ONCE = `(?:m\\.?|md\\.?|mad\\.?|madde(?:si)?)\\s*(?<no1>\\d+(?:/[a-z
 const MADDE_SONRA = `(?<no2>\\d+[a-z]?)\\s*(?:\\.|['’]?\\s*(?:inci|ıncı|nci|ncı|üncü|uncu|ncü|ncu))?\\s*madde\\w*(?:\\s*(?<f2>\\d+)\\s*(?:\\.|['’]?\\s*\\w*)\\s*fıkra\\w*)?`;
 
 const MADDE_RE = new RegExp(`${KANUN_KALIP}[\\s,'’]*(?:${MADDE_ONCE}|${MADDE_SONRA})`, "giu");
+// Repealed statute: one regex per number so the number is known without a lookup.
+const MULGA_RE = MULGA_TAKMA.map((t) => ({
+  no: t.no,
+  re: new RegExp(`(?<![\\p{L}\\d])(?:${t.desen})[\\s,'’]*(?:${MADDE_ONCE}|${MADDE_SONRA})`, "giu"),
+}));
 // A bare article that follows a statute mention in the same text: "…; m. 12 ise…"
 const YALIN_MADDE_RE = /(?<![\p{L}\d])(?:m\.|md\.)\s*(\d+[a-z]?)(?:\s*\/\s*(\d+))?/giu;
 // Court decision: "<court> E. 2021/123, K. 2022/456" in either order of E/K.
@@ -75,17 +114,31 @@ function fikraSayisi(m: MaddeKaydi): number {
   return enBuyuk;
 }
 
+export function mulgaKanunAciklama(kanun: string): string | null {
+  const k = MULGA_KANUNLAR[kanun];
+  if (!k) return null;
+  const yeni = KANUN_TAKMA_ADLARI[k.yeni]?.ad ?? `${k.yeni} sayılı kanun`;
+  return `${kanun} sayılı ${k.ad} mülga; yerini ${k.yeni} sayılı ${yeni} aldı. Madde karşılığını kendiniz eşleştirin.`;
+}
+
+/** "böyle madde yok" text, with the last article number when the corpus can list them. */
+export function maddeYokAciklama(corpus: CorpusPort, kanun: string): string {
+  const nos = corpus.maddeNumaralari?.(kanun) ?? [];
+  const sayisal = nos.map((x) => parseInt(x, 10)).filter((n) => Number.isFinite(n));
+  const son = sayisal.length ? Math.max(...sayisal) : null;
+  return son ? `${kanun}'de böyle madde yok (son madde ${son})` : `${kanun}'de böyle madde yok`;
+}
+
 function maddeKontrol(corpus: CorpusPort, kanun: string, no: string, fikra: string | undefined, ham: string): Atif {
+  const mulga = mulgaKanunAciklama(kanun);
+  if (mulga) return { ham, tur: "kanun", kimlik: null, durum: "MULGA_KANUN", aciklama: mulga };
   if (!KANUN_TAKMA_ADLARI[kanun]) {
     return { ham, tur: "madde", kimlik: `m:${kanun}/${no}`, durum: "KAPSAM", aciklama: `${kanun} sayılı kanun korpusta yok; doğrulanamadı` };
   }
   const id = `m:${kanun}/${no.toUpperCase().replace(/^(\d+)([A-Z])$/, "$1$2")}`;
   const m = corpus.maddeGetir(id) ?? corpus.maddeGetir(`m:${kanun}/${no}`);
   if (!m) {
-    const nos = corpus.maddeNumaralari?.(kanun) ?? [];
-    const sayisal = nos.map((x) => parseInt(x, 10)).filter((n) => Number.isFinite(n));
-    const son = sayisal.length ? Math.max(...sayisal) : null;
-    return { ham, tur: "madde", kimlik: id, durum: "YOK", aciklama: son ? `${kanun}'de böyle madde yok (son madde ${son})` : `${kanun}'de böyle madde yok` };
+    return { ham, tur: "madde", kimlik: id, durum: "YOK", aciklama: maddeYokAciklama(corpus, kanun) };
   }
   if (/^\s*\(\s*mülga/i.test(tl(m.metin))) {
     return { ham, tur: "madde", kimlik: m.id, durum: "MULGA", aciklama: `madde yürürlükten kalkmış: ${m.metin.slice(0, 60)}` };
@@ -136,15 +189,35 @@ export function atiflariCikar(metin: string, corpus: CorpusPort): Atif[] {
     return null;
   };
 
+  // Both passes feed one ordered list, so "aynı Kanun" resolves against whichever
+  // statute (current or repealed) was named last. Repealed-statute matches claim
+  // their span first: otherwise "6762 sayılı TTK m.5" would be read as plain TTK.
+  type Bulgu = { i: number; son: number; g: Record<string, string | undefined>; ham: string };
+  const bulgular: Bulgu[] = [];
+  for (const { no, re } of MULGA_RE) {
+    for (const m of metin.matchAll(re)) {
+      const g = (m.groups ?? {}) as Record<string, string | undefined>;
+      bulgular.push({ i: m.index!, son: m.index! + m[0].length, g: { ...g, sayi: no }, ham: m[0].trim() });
+    }
+  }
+  const mulgaAraliklari = bulgular.map((b) => [b.i, b.son] as const);
   for (const m of metin.matchAll(MADDE_RE)) {
-    const g = (m.groups ?? {}) as Record<string, string | undefined>;
+    const bas = m.index!;
+    const son = bas + m[0].length;
+    if (mulgaAraliklari.some(([a, b]) => bas < b && son > a)) continue;
+    bulgular.push({ i: bas, son, g: (m.groups ?? {}) as Record<string, string | undefined>, ham: m[0].trim() });
+  }
+  bulgular.sort((a, b) => a.i - b.i);
+
+  for (const b of bulgular) {
+    const g = b.g;
     const kanun = kanunNo(g);
     const no = g.no1 ?? g.no2;
     if (!kanun || !no) continue;
     sonKanun = kanun;
-    kanunAnlari.push({ i: m.index!, no: kanun });
-    kapsananAraliklar.push([m.index!, m.index! + m[0].length]);
-    out.push(maddeKontrol(corpus, kanun, tl(no), g.f1 ?? g.f2, m[0].trim()));
+    kanunAnlari.push({ i: b.i, no: kanun });
+    kapsananAraliklar.push([b.i, b.son]);
+    out.push(maddeKontrol(corpus, kanun, tl(no), g.f1 ?? g.f2, b.ham));
   }
 
   // Bare "m. 12" after a statute was mentioned: resolve to the last statute.
@@ -177,16 +250,35 @@ export function atiflariCikar(metin: string, corpus: CorpusPort): Atif[] {
   return out;
 }
 
-const ISARET: Record<AtifDurum, string> = { DOGRU: "✓ DOĞRU", MULGA: "⚠ MÜLGA", YOK: "✗ YOK", KAPSAM: "? KAPSAM DIŞI" };
+const ISARET: Record<AtifDurum, string> = {
+  DOGRU: "✓ DOĞRU",
+  MULGA: "⚠ MÜLGA",
+  YOK: "✗ YOK",
+  KAPSAM: "? KAPSAM DIŞI",
+  MULGA_KANUN: "⚠ MÜLGA KANUN",
+};
+
+export interface AtifOzeti {
+  dogru: number;
+  mulga: number;
+  yok: number;
+  kapsam: number;
+  mulga_kanun: number;
+}
+
+export function atifOzeti(atiflar: Atif[]): AtifOzeti {
+  const say = (d: AtifDurum) => atiflar.filter((a) => a.durum === d).length;
+  return { dogru: say("DOGRU"), mulga: say("MULGA"), yok: say("YOK"), kapsam: say("KAPSAM"), mulga_kanun: say("MULGA_KANUN") };
+}
 
 export function atifRaporu(atiflar: Atif[]): string {
   if (atiflar.length === 0) {
     return "ATIF YOK metinde tanınan kanun maddesi veya karar künyesi bulunamadı. Örnek biçimler: 'TKHK m.11', '6502 sayılı Kanunun 12. maddesi', '3. Hukuk Dairesi 2021/1234 E. 2022/567 K.'";
   }
-  const say = (d: AtifDurum) => atiflar.filter((a) => a.durum === d).length;
+  const o = atifOzeti(atiflar);
   const satirlar = atiflar.map((a) => `${ISARET[a.durum]} ${a.kimlik ?? "-"} | "${a.ham}" | ${a.aciklama}`);
   return [
-    `ATIF DENETİMİ ${atiflar.length} atıf: ${say("DOGRU")} doğru, ${say("MULGA")} mülga, ${say("YOK")} yok, ${say("KAPSAM")} kapsam dışı`,
+    `ATIF DENETİMİ ${atiflar.length} atıf: ${o.dogru} doğru, ${o.mulga} mülga, ${o.yok} yok, ${o.kapsam} kapsam dışı, ${o.mulga_kanun} mülga kanun`,
     ...satirlar,
     "NOT Varlık denetimidir: maddenin/kararın içeriğinin doğru aktarıldığını kontrol etmez. İçerik için derinles ile metni açın.",
   ].join("\n");

@@ -179,3 +179,38 @@ test("aynı sorgu deterministik", () => {
     b.map((h) => [h.karar_id, h.skor]),
   );
 });
+
+test("araDetay: strateji ve denenen adımlar bildirilir, ara() ile aynı sonuç", () => {
+  const sorgu = { sorgu: "şanzıman zzzzolmayankelime", limit: 5 };
+  const d = c.araDetay(sorgu);
+  assert.deepEqual(
+    d.hits.map((h) => h.karar_id),
+    c.ara(sorgu).map((h) => h.karar_id),
+  );
+  assert.ok(d.hits.length > 0);
+  assert.match(d.strateji, /^(altkume|or)(\+esanlam)?$|^esanlam$/);
+  assert.equal(d.denenen[0], "and");
+  assert.ok(d.denenen.includes("altkume"), `altkume denenmeli: ${d.denenen.join(",")}`);
+});
+
+test("araDetay: sonuç yoksa strateji 'yok' ve denenen adımlar dolu", () => {
+  const d = c.araDetay({ sorgu: "qqqzzzxxx wwwvvvuuu", limit: 5 });
+  assert.equal(d.hits.length, 0);
+  assert.equal(d.strateji, "yok");
+  assert.ok(d.denenen.length >= 1);
+  assert.equal(d.denenen[0], "and");
+});
+
+test("araDetay: katı AND sonucu 'and' stratejisi sayılır", () => {
+  const d = c.araDetay({ sorgu: "şanzıman", limit: 5 });
+  assert.ok(d.hits.length > 0);
+  assert.match(d.strateji, /^and(\+esanlam)?$/);
+});
+
+test("düğüm yönlendirme: eşleşen tetikleyiciler en fazla üç, ontolojiden", () => {
+  const [en] = c.dugumAra("Bayiden aldığım aracın şanzımanı arıza yaptı", undefined, 3);
+  assert.ok(en);
+  assert.ok(en.tetikler && en.tetikler.length >= 1 && en.tetikler.length <= 3, JSON.stringify(en.tetikler));
+  const kayit = c.dugumGetir(en.id)!;
+  for (const t of en.tetikler!) assert.ok(kayit.tetikleyiciler.includes(t), `${t} ontolojide yok`);
+});

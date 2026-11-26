@@ -102,6 +102,21 @@ export function dayanakMetni(ids: string[]): string {
   return ` [${cozulen.join(", ")}]${ek}`;
 }
 
+/** Same filter as `dayanakMetni`, as a list: only ids the corpus can resolve. */
+export function dayanakKimlikleri(ids: string[]): string[] {
+  return [...new Set(ids.map(kimlikNormalize).filter((k) => /^(m:|k:)/.test(k)))];
+}
+
+/**
+ * Machine-readable rule result. "belirsiz" (not enough input) becomes null, a
+ * date result becomes its ISO date; the text channel keeps the Turkish form.
+ */
+export function sonucDegeri(s: KuralSonucu): string | number | boolean | null {
+  if (s.sonuc === "belirsiz" || s.sonuc === null || s.sonuc === undefined) return null;
+  if (typeof s.sonuc === "object") return "tarih" in s.sonuc ? String(s.sonuc.tarih) : null;
+  return s.sonuc;
+}
+
 /** One compact line per rule. Missing inputs are surfaced, never guessed. */
 export function kuralSatiri(s: KuralSonucu, kuralId: string): string {
   const durum = ONAY_ETIKET[s.onay_durumu] ?? "";

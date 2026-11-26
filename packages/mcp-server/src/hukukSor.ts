@@ -4,7 +4,7 @@
  * Deterministic by construction: no generative model runs here. Same inputs and
  * same published snapshot always produce the same bytes.
  */
-import type { HukukSorInput, KuralSonucu } from "@hukuk/schema";
+import type { HukukSorCikti, HukukSorInput, KuralSonucu } from "@hukuk/schema";
 import { dugumBul, ustZinciri, yapraklar } from "@hukuk/ontology";
 import { analyze } from "@hukuk/tr-text";
 import { paketle, tokenSay, butceyeSikistir, type Bolum } from "./budget.ts";
@@ -12,10 +12,12 @@ import type { CorpusPort, DugumAday, KuralPort } from "./ports.ts";
 import {
   argumanSatiri,
   bugunISO,
+  dayanakKimlikleri,
   eksikEtiket,
   hataMetni,
   kararSatiri,
   kuralSatiri,
+  sonucDegeri,
   trTarih,
   type HukukHatasi,
 } from "./render.ts";
@@ -103,6 +105,12 @@ export interface SoruSonucu {
   dugum?: string;
   guven?: number;
   hata?: string;
+  /** structured twin of `metin`, returned as MCP structuredContent */
+  yapisal: HukukSorCikti;
+}
+
+function bosYapisal(durum: HukukSorCikti["durum"], korpus: string): HukukSorCikti {
+  return { durum, kurallar: [], eksik_olgular: [], atiflar: [], korpus };
 }
 
 const NOT =
@@ -171,19 +179,21 @@ function kurallariCalistir(
   input: HukukSorInput,
   corpus: CorpusPort,
   kural: KuralPort,
-): { satirlar: string[]; eksik: string[]; uyarilar: string[]; sonuclar: KuralSonucu[] } {
+): { satirlar: string[]; eksik: string[]; uyarilar: string[]; sonuclar: KuralSonucu[]; kayitlar: Array<{ kural: string; s: KuralSonucu }> } {
   const dugum = dugumBul(dugumId);
   const girdiler = kuralGirdileri(input, dugumId);
   const satirlar: string[] = [];
   const eksik = new Set<string>();
   const uyarilar = new Set<string>();
   const sonuclar: KuralSonucu[] = [];
+  const kayitlar: Array<{ kural: string; s: KuralSonucu }> = [];
   const kuralIdleri = (dugum?.kurallar ?? []).filter((k) => kural.varMi(k));
 
   const calistir = (kuralId: string): KuralSonucu | null => {
     try {
       const s = kural.calistir(kuralId, girdiler, String(girdiler.bugun));
       sonuclar.push(s);
+      kayitlar.push({ kural: kuralId, s });
       satirlar.push(kuralSatiri(s, kuralId));
       for (const e of s.eksik_girdiler) eksik.add(e);
       for (const u of s.uyarilar) uyarilar.add(u);
@@ -212,7 +222,7 @@ function kurallariCalistir(
     }
     calistir(kuralId);
   }
-  return { satirlar, eksik: [...eksik], uyarilar: [...uyarilar], sonuclar };
+  return { satirlar, eksik: [...eksik], uyarilar: [...uyarilar], sonuclar, kayitlar };
 }
 
 /** Out-of-scope answer: says what we cover instead of inventing options. */
@@ -224,7 +234,7 @@ function kapsamDisiYanit(yayin: string): SoruSonucu {
     "KAPSAM DIŞI: iş hukuku (kıdem/ihbar), kira, vergi, ceza, aile.",
     "SONRAKI ADIM: tüketici işlemi veya SGK işlemi olduğunu düşünüyorsanız ürün/hizmeti ya da SGK işlemini ve talebi bir cümleyle yazın.",
   ].join("\n");
-  return { metin: butceyeSikistir(metin, 260), token: tokenSay(metin), hata: "KAPSAM_DISI" };
+  return { metin: butceyeSikistir(metin, 260), token: tokenSay(metin), hata: "KAPSAM_DISI", yapisal: bosYapisal("kapsam_disi", yayin) };
 }
 
 /** Ambiguity protocol: at most three candidates, each one line, ~150 tokens. */
@@ -240,7 +250,7 @@ function belirsizYanit(adaylar: DugumAday[], yayin: string): SoruSonucu {
     "DAHA İYİ YANIT İÇİN: ürün/hizmeti ya da SGK işlemini ve talebi bir cümleyle belirtip tekrar sorun (ör. 'araçta gizli ayıp, bedel iadesi' veya 'işten çıkış sonrası sağlık hakkı').",
   ].join("\n");
   const metin = butceyeSikistir(govde, 260);
-  return { metin, token: tokenSay(metin), hata: "BELIRSIZ_DUGUM" };
+  return { metin, token: tokenSay(metin), hata: "BELIRSIZ_DUGUM", yapisal: bosYapisal("belirsiz", yayin) };
 }
 
 export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralPort, oturum: Oturum): SoruSonucu {
@@ -270,7 +280,7 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
       mesaj: "bu anlatım bilinen bir tüketici veya SGK uyuşmazlığına eşlenemedi",
       sonraki_adim: "ürün/hizmeti ya da SGK işlemini ve talebi belirtin; ya da 'ara' aracıyla içtihatta arayın",
     };
-    return { metin: hataMetni(h), token: tokenSay(hataMetni(h)), hata: h.kod };
+    return { metin: hataMetni(h), token: tokenSay(hataMetni(h)), hata: h.kod, yapisal: bosYapisal("hata", yayin) };
   }
 
   const en = adaylar[0]!;
@@ -292,7 +302,7 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
       mesaj: `düğüm var ama kart yayınlanmamış: ${dugumId}`,
       sonraki_adim: "genel 'ara' aracını kullanın veya başka bir konu belirtin",
     };
-    return { metin: hataMetni(h), token: tokenSay(hataMetni(h)), hata: h.kod };
+    return { metin: hataMetni(h), token: tokenSay(hataMetni(h)), hata: h.kod, yapisal: bosYapisal("hata", yayin) };
   }
 
   // 2. rules
@@ -410,7 +420,11 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
   });
 
   // 5. package
-  const bas = baslik(dugumId, en.skor, kart.surum, kart.durum, yayin);
+  // Routing reason: which of the node's own trigger phrases the question hit.
+  // It sits in the header, so it is never dropped by the budget packer.
+  const tetikler = (en.tetikler ?? []).slice(0, 3);
+  const neden = tetikler.length ? `\nNEDEN tetik: ${tetikler.map((t) => `"${t}"`).join(", ")}` : "";
+  const bas = baslik(dugumId, en.skor, kart.surum, kart.durum, yayin) + neden;
   const rezerve = oturum.notGonderildi ? 0 : tokenSay(NOT) + 1;
   const paket = paketle(bas, bolumler, butce, rezerve);
 
@@ -421,7 +435,30 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
   }
   if (tokenSay(metin) > butce) metin = butceyeSikistir(metin, butce);
 
-  return { metin, token: tokenSay(metin), dugum: dugumId, guven: en.skor };
+  const digerOlasilik = ikinci && en.skor - ikinci.skor < YONLENDIRME.yakinFark ? ikinci.id : undefined;
+  const atiflar = [
+    ...new Set([
+      ...derinlesIdleri,
+      ...kuralSonuc.kayitlar.flatMap((k) => dayanakKimlikleri(k.s.dayanak)),
+    ]),
+  ];
+  const yapisal: HukukSorCikti = {
+    durum: "yanit",
+    dugum: dugumId,
+    guven: Math.round(en.skor * 100) / 100,
+    ...(digerOlasilik ? { diger_olasilik: digerOlasilik } : {}),
+    kurallar: kuralSonuc.kayitlar.map(({ kural: kuralId, s }) => ({
+      kural: kuralId,
+      sonuc: sonucDegeri(s) === null ? null : String(sonucDegeri(s)),
+      ozet: s.kisa,
+      dayanak: dayanakKimlikleri(s.dayanak),
+      eksik: s.eksik_girdiler,
+    })),
+    eksik_olgular: eksikler,
+    atiflar,
+    korpus: yayin,
+  };
+  return { metin, token: tokenSay(metin), dugum: dugumId, guven: en.skor, yapisal };
 }
 
 function extraEksik(kart: { bolumler: { etiket: string; metin: string }[] }): string[] {

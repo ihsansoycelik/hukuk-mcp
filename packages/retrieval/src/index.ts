@@ -4,7 +4,7 @@
  * The MCP server imports `Corpus` and the three public types below. Everything
  * else is exported for the evaluation harness and for tuning.
  */
-export { Corpus, VARSAYILAN_DB, type AraSorgusu } from "./corpus.ts";
+export { Corpus, VARSAYILAN_DB, type AraSorgusu, type AramaDetayi } from "./corpus.ts";
 export type { SearchHit, DugumAday, MaddeKaydi, YonlendirmeSonucu } from "./types.ts";
 export {
   ARAMA_AYARLARI,

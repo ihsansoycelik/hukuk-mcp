@@ -23,6 +23,13 @@ import { ARAMA_AYARLARI, ARAMA_ESIKLERI } from "./config.ts";
 import { ftsSorgulari, guvenliFtsToken } from "./fts.ts";
 import { DugumYonlendirici, alanOneki } from "./router.ts";
 
+/** Result of `araDetay`: hits plus the strategy that produced them. */
+export interface AramaDetayi {
+  hits: SearchHit[];
+  strateji: string;
+  denenen: string[];
+}
+
 export const VARSAYILAN_DB = "data/build/hukuk.db";
 
 /** AraInput plus the defaulted fields; callers may omit butce/limit. */
@@ -140,27 +147,51 @@ export class Corpus {
    * "bedel iadesi", without letting the expansion drown the literal match.
    */
   ara(input: AraSorgusu): SearchHit[] {
+    return this.araDetay(input).hits;
+  }
+
+  /**
+   * Same search as `ara`, plus which strategy produced the hits and which steps
+   * were tried. `strateji` is "and" | "altkume" | "or" | "esanlam", with
+   * "+esanlam" appended when the expansion terms contributed to a base strategy;
+   * "yok" when nothing was found.
+   */
+  araDetay(input: AraSorgusu): AramaDetayi {
     const limit = clamp(Math.trunc(input.limit ?? ARAMA_AYARLARI.varsayilanLimit), 1, 10);
     const ek = process.env.HUKUK_ESANLAM === "0" ? "" : hukukTerimleri(input.sorgu);
-    if (!ek) return this.araTek(input, limit);
+    if (!ek) {
+      const t = this.araTek(input, limit);
+      return { hits: t.hits, strateji: t.hits.length ? t.strateji : "yok", denenen: t.denenen };
+    }
     // route once; both probes share the citizen's topic
     const _hedef = this.dugumAraDetay(input.sorgu, input.alan, 1).adaylar[0]?.id ?? null;
     const asil = this.araTek({ ...input, _hedef }, limit * 2);
     const hukuki = this.araTek({ ...input, sorgu: ek, _hedef, _basit: true }, limit * 2);
-    return rrfBirlestir([asil, hukuki], limit);
+    const hits = rrfBirlestir([asil.hits, hukuki.hits], limit);
+    const denenen = [...asil.denenen, "esanlam"];
+    if (hits.length === 0) return { hits, strateji: "yok", denenen };
+    const kullanildi = hukuki.hits.length > 0;
+    const strateji = asil.hits.length === 0 ? "esanlam" : kullanildi ? `${asil.strateji}+esanlam` : asil.strateji;
+    return { hits, strateji, denenen };
   }
 
-  private araTek(input: AraSorgusu & { _hedef?: string | null; _basit?: boolean }, limit: number): SearchHit[] {
+  private araTek(
+    input: AraSorgusu & { _hedef?: string | null; _basit?: boolean },
+    limit: number,
+  ): { hits: SearchHit[]; strateji: string; denenen: string[] } {
     const sorgular = ftsSorgulari(input.sorgu);
-    if (!sorgular.and) return [];
+    const denenen: string[] = [];
+    if (!sorgular.and) return { hits: [], strateji: "yok", denenen };
 
     let gevsekTuru: "altkume" | "or" | null = null;
+    denenen.push("and");
     let satirlar = this.adaylar(sorgular.and, input);
 
     if ((input as { _basit?: boolean })._basit) {
       // cheap probe for the expansion terms: strict AND only (OR over
       // generic legal words is the expensive path on large corpora)
     } else if (satirlar.length === 0 && ARAMA_AYARLARI.yedekOr) {
+      denenen.push("altkume");
       // Strict AND fails on almost every real phrasing because morphology
       // differs between the query and the indexed keys. Probe AND subsets of
       // the rarest tokens and UNION them: one subset often describes a sibling
@@ -186,20 +217,22 @@ export class Corpus {
       }
     }
 
-    if (satirlar.length === 0) return [];
+    if (satirlar.length === 0) return { hits: [], strateji: "yok", denenen };
 
     let hits = this.puanla(satirlar, input, gevsekTuru);
     // Subset probes use exact FTS tokens, so a stem mismatch ("kart" vs
     // "karti") can hide every relevant document. Only when nothing survived
     // the coverage/score floor do we pay for the OR-everything rescue.
     if (hits.length === 0 && sorgular.or && ARAMA_AYARLARI.yedekOr) {
+      denenen.push("or");
       const orSatirlar = this.adaylar(sorgular.or, input);
       if (orSatirlar.length > 0) {
         gevsekTuru = "or";
         hits = this.puanla(orSatirlar, input, gevsekTuru);
       }
     }
-    return hits.slice(0, limit);
+    const kes = hits.slice(0, limit);
+    return { hits: kes, strateji: gevsekTuru ?? "and", denenen };
   }
 
   private puanla(satirlar: AdaySatiri[], input: AraSorgusu, gevsekTuru: "altkume" | "or" | null): SearchHit[] {

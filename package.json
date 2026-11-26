@@ -6,7 +6,7 @@
   "packageManager": "pnpm@12.6.0",
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "node --test packages/*/test/*.test.ts",
+    "test": "node --no-warnings --test --test-concurrency=1 packages/*/test/*.test.ts",
     "mcp": "node packages/mcp-server/src/index.ts",
     "build:data": "python3 pipeline/build.py",
     "bench": "node bench/bench.ts",

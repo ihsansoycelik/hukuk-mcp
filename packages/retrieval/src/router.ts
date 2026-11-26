@@ -24,6 +24,8 @@ import type { DugumAday, YonlendirmeSonucu } from "./types.ts";
 import { YONLENDIRME_AGIRLIKLARI, YONLENDIRME_ESIKLERI } from "./config.ts";
 
 interface HazirTetik {
+  /** original phrase; empty for inherited branch vocabulary (never shown as a reason) */
+  metin: string;
   tokens: string[];
   /** IDF weight per token, same order as tokens. */
   agirliklar: number[];
@@ -114,7 +116,7 @@ export class DugumYonlendirici {
         kayit,
         vektor,
         dalVektor: null,
-        tetikler: kayit.tetikleyiciler.map((t) => this.tetikHazirla(t)),
+        tetikler: kayit.tetikleyiciler.map((t) => this.tetikHazirla(t, t)),
         ornekVektorler: kayit.ornek_sorgular.map((o) => ngramVector(o)),
       };
     });
@@ -175,11 +177,11 @@ export class DugumYonlendirici {
     return this.idf.get(t) ?? this.maxIdf;
   }
 
-  private tetikHazirla(tetik: string): HazirTetik {
+  private tetikHazirla(tetik: string, gosterim = ""): HazirTetik {
     const tokens = analyze(tetik).tokens;
     const agirliklar = tokens.map((t) => this.tokenIdf(t));
     const toplamAgirlik = agirliklar.reduce((a, b) => a + b, 0);
-    return { tokens, agirliklar, toplamAgirlik };
+    return { metin: gosterim, tokens, agirliklar, toplamAgirlik };
   }
 
   private tetikSkoru(queryTokens: Set<string>, dugum: HazirDugum): number {
@@ -198,6 +200,27 @@ export class DugumYonlendirici {
       kalan *= 1 - s;
     }
     return clamp01(1 - kalan);
+  }
+
+  /**
+   * Trigger phrases of one node that the query actually matched (at least half
+   * of the phrase's IDF weight), strongest first. This is the routing reason
+   * shown to the user; it never invents a phrase the ontology does not have.
+   */
+  eslesenTetikler(queryTokens: Set<string>, dugum: HazirDugum, enFazla = 3): string[] {
+    const puanli: Array<{ metin: string; s: number }> = [];
+    for (const t of dugum.tetikler) {
+      if (!t.metin || t.tokens.length === 0 || t.toplamAgirlik === 0) continue;
+      let eslesen = 0;
+      for (let i = 0; i < t.tokens.length; i++) {
+        if (queryTokens.has(t.tokens[i]!)) eslesen += t.agirliklar[i]!;
+      }
+      const kapsam = eslesen / t.toplamAgirlik;
+      if (kapsam < 0.5) continue;
+      puanli.push({ metin: t.metin, s: kapsam * (t.toplamAgirlik / t.tokens.length) });
+    }
+    puanli.sort((a, b) => b.s - a.s || (a.metin < b.metin ? -1 : a.metin > b.metin ? 1 : 0));
+    return puanli.slice(0, enFazla).map((x) => x.metin);
   }
 
   private hamSkor(metin: string): Map<string, number> {
@@ -241,7 +264,13 @@ export class DugumYonlendirici {
       });
     }
     secili.sort((a, b) => (b.skor - a.skor) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-    return secili.slice(0, Math.max(1, limit));
+    const kes = secili.slice(0, Math.max(1, limit));
+    const qTokens = new Set(analyze(metin).tokens);
+    for (const a of kes) {
+      const tt = this.eslesenTetikler(qTokens, byId.get(a.id)!);
+      if (tt.length) a.tetikler = tt;
+    }
+    return kes;
   }
 
   ara(metin: string, alan?: string, limit?: number): DugumAday[] {
