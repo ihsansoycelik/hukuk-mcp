@@ -1,5 +1,7 @@
 # hukuk-mcp
 
+[![npm](https://img.shields.io/npm/v/hukuk-mcp)](https://www.npmjs.com/package/hukuk-mcp) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 Türk tüketici hukuku ve SGK için MCP sunucusu. "Başıma şu geldi, ne yapabilirim?" sorusunu tek
 çağrıda yanıtlar. Yanıtta haklar, süreler, başvurulacak merci ve yol haritası yer alır. Her
 cümle doğrulanabilir bir kanun maddesine veya karar kimliğine bağlıdır.
@@ -26,9 +28,7 @@ ceza ve aile hukuku kapsam dışıdır; sunucu bunu söyler ve konu uydurmaz.
 
 Gereken tek şey Node.js 22.13 veya üstü.
 
-> npm kaydı yayımlanana kadar `hukuk-mcp` yerine sürüm dosyasını kullanın:
-> `npx -y https://github.com/ihsansoycelik/hukuk-mcp/releases/download/v0.2.0/hukuk-mcp-0.2.0.tgz`
-> (aşağıdaki tüm yapılandırmalarda `"hukuk-mcp"` argümanının yerine bu adres yazılabilir).
+npm: [hukuk-mcp](https://www.npmjs.com/package/hukuk-mcp). MCP Registry: `io.github.ihsansoycelik/hukuk-mcp`.
 
 | İstemci | Nasıl |
 | --- | --- |
