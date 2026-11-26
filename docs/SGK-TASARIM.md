@@ -187,8 +187,6 @@ DB kopyası `scripts/export-parametreler.ts` ile üretilir; `pipeline/build.py`
   `bench/results/` altında korunur; not alanına "SGK alanı eklendi" yazılır.
 - `bench/scenarios.jsonl`: 3 SGK senaryosu (10+90 gün, GSS borcu, işsizlik).
   Toplam senaryo sayısı raporda dinamik okunur; README sayıları yeniden ölçülür.
-- `eval/case-study/cases.json`: `sgk` ve `sgk-geri-alim` artık `kapsam: "ic"`,
-  beklenen düğüm `s/saglik/...`.
 - Kapılar: `pnpm typecheck`, `pnpm test`, `node bench/bench.ts`,
   atıf çözümlenebilirliği N/N, bütçe uyumu tüm senaryolar.
 
@@ -200,7 +198,7 @@ DB kopyası `scripts/export-parametreler.ts` ile üretilir; `pipeline/build.py`
 | Derleme hattı | `pipeline/ontology.py`, `pipeline/collect/laws.py`, `pipeline/build.py`, `packages/ontology/src/*.ts`, `pipeline/test/test_ontology.test.py`, `packages/ontology/test/*.ts` |
 | Kural motoru | `packages/rules/src/kurallar/sgk_*.ts`, `packages/rules/src/index.ts`, `packages/rules/src/parametreler.ts`, `packages/rules/test/sgk.test.ts` |
 | Sunucu/retrieval | `packages/schema/src/index.ts`, `packages/retrieval/src/router.ts`, `packages/mcp-server/src/{server,hukukSor,render}.ts`, `packages/mcp-server/test/{hukukSor,e2e}.test.ts`, `bench/measure.ts`, `bench/report.ts` |
-| Eval/docs | `eval/golden/routing.jsonl`, `eval/case-study/*`, `bench/scenarios.jsonl`, `docs/adr/ADR-005-*`, `README.md`, `docs/KALITE.md`, `docs/PLAN.md` |
+| Eval/docs | `eval/golden/routing.jsonl`, `bench/scenarios.jsonl`, `docs/adr/ADR-005-*`, `README.md`, `docs/KALITE.md`, `docs/PLAN.md` |
 
 Çakışan dosya yoktur; her ekip yalnızca kendi kapsamına yazar. Lead son diff'i
 inceler ve tüm kapıları çalıştırır.

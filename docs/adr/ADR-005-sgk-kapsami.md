@@ -176,10 +176,6 @@ hepsi ÖLÇÜLDÜ). SGK senaryoları: `sgk-10-90-gun` 720 token, `gss-prim-borcu
 `issizlik-odenegi-700` 682 token; işsizlik senaryosu 700 prim gününe karşılık **180 gün**
 öderek döndürür (ÖLÇÜLDÜ).
 
-**Vaka değerlendirmesi** (`node eval/case-study/run.ts`): 3 vaka, hepsi kapsam içi,
-**3/3 vaka · 18/18 kontrol** geçti; `sgk` → `s/saglik/isten-ayrilma-sonrasi-hak`,
-`sgk-geri-alim` → `s/saglik/katilim-payi-iadesi`.
-
 **Arama Recall@5 %50,1 ile FAIL** — bu SGK genişlemesinden bağımsız, bilinen ve belgelenmiş
 bir açıktır (KALITE.md). SGK korpusu karar sayısını artırmadı; sayı değişmedi.
 
