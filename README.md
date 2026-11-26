@@ -140,19 +140,46 @@ Korpus `v20261126.168861017`, 26 Kasım 2026. Ölçüm makinesi 2 vCPU, başka i
 | Konu yönlendirme, ilk sıra / ilk 3 (156 pozitif soru) | %97,4 (152/156) / %99,4 (155/156) |
 | Kapsam dışı tuzak sorular belirsiz döndü | 26/26 |
 | Atıf bütünlüğü (yanıtlardaki her kimlik korpusta var) | %100 |
-| Halk dili arama, geliştirme seti (27 sorgu): Hit@5 / MRR | %85,2 (23/27) / 0,716 |
-| Halk dili arama, ayrı set (20 sorgu, tabloya bakılmadan yazıldı): Hit@5 / MRR | %90,0 (18/20) / 0,641 |
 | Gecikme p95, gerçek korpus, tüm araçlar | 163 ms |
 | npm paketi (sıkıştırılmış / açılmış) | 19,8 MB / 60,8 MB |
 | Birim + e2e testleri / kabul testi | 118/118 / 15/15 |
 
-Halk dili arama ölçümü şöyle kuruldu. Her sorgu gündelik Türkçeyle yazıldı ve hukuk terimini
-bilerek içermez ("paramı geri vermiyorlar", "bedel iadesi" değil). Bir karar, Adalet
-Bakanlığı veritabanının kendi ifade aramasında o kavram için döndüyse ve tam metninde o ifade
-geçiyorsa ilgili sayılır. Yani ilgililiği bizim sıralamamız ya da sorgunun kelimeleri değil, kaynak
-belirler. Halk dili ile hukuk dili arasındaki köprü ([`esanlam.ts`](packages/retrieval/src/esanlam.ts))
-geliştirme setine bakılarak yazıldı. Bu yüzden genellemeyi gösteren sayı ayrı settekidir.
-Köprü kapalıyken (`HUKUK_ESANLAM=0`) ayrı sette Hit@5 %80,0 (16/20), MRR 0,545 idi.
+Aşağıdaki tablo `node eval/variants.ts` çıktısından üretilir (`node eval/variants.ts --readme`), elle
+düzenlenmez.
+
+<!-- eval:start -->
+| Ölçüm | yalın FTS | + köprü |
+| --- | --- | --- |
+| Madde getirme, küme A (250 karar): Recall@5 | 1.3% | 1.3% |
+| Madde getirme, küme A: Recall@10 | 2.1% | 2.1% |
+| Madde getirme, küme A: MRR@10 | 0.013 | 0.013 |
+| Halk dili karar arama, geliştirme (27 sorgu): Hit@5 | 59.3% | 85.2% |
+| geliştirme: P@5 | 36.3% | 48.1% |
+| geliştirme: MRR@10 | 0.442 | 0.640 |
+| geliştirme: nDCG@10 | 0.307 | 0.470 |
+| Halk dili karar arama, ayrı set 1 (20 sorgu): Hit@5 | 80.0% | 90.0% |
+| ayrı set 1: P@5 | 38.0% | 41.0% |
+| ayrı set 1: MRR@10 | 0.553 | 0.653 |
+| ayrı set 1: nDCG@10 | 0.346 | 0.406 |
+| Halk dili karar arama, ayrı set 2 (38 sorgu): Hit@5 | 55.3% | 60.5% |
+| ayrı set 2: P@5 | 26.3% | 35.3% |
+| ayrı set 2: MRR@10 | 0.436 | 0.522 |
+| ayrı set 2: nDCG@10 | 0.260 | 0.351 |
+| Ayrı setler birleşik (58 sorgu): Hit@5 | 63.8% | 70.7% |
+| Gecikme `ara`: p50 | 53.6 ms | 65.4 ms |
+| Gecikme `ara`: p95 | 132.3 ms | 140.3 ms |
+
+Kapı: ayrı setler birleşik Hit@5 en az %6500 (varsayılan varyant "+ köprü": 70.7%, geçti). Üretildi: 2026-11-26, `node eval/variants.ts`.
+<!-- eval:end -->
+
+İki küme var. Küme A madde getirmeyi ölçer: bir kararın özeti (atıflar ve rakamlar silinmiş) sorgu,
+kararın kendi metninde andığı madde de ilgili madde sayılır. Halk dili karar aramada her sorgu
+gündelik Türkçeyle yazıldı ve hukuk terimini bilerek içermez ("paramı geri vermiyorlar", "bedel
+iadesi" değil). Bir karar, Adalet Bakanlığı veritabanının kendi ifade aramasında o kavram için
+döndüyse ve tam metninde o ifade geçiyorsa ilgili sayılır. Yani ilgililiği bizim sıralamamız ya da
+sorgunun kelimeleri değil, kaynak belirler. Halk dili ile hukuk dili arasındaki köprü
+([`esanlam.ts`](packages/retrieval/src/esanlam.ts)) yalnız geliştirme setine bakılarak yazıldı; genellemeyi
+gösteren sayı ayrı setlerdekidir. Ayrıntı: [`eval/README.md`](eval/README.md).
 
 Eski mekanik altın set (`eval/golden/search-real.jsonl`) bir kararı, sorgunun kendi köklerini
 içeriyorsa ilgili sayar. Sorguyu hukuk diline çeviren her iyileştirmeyi cezalandırdığı için artık
@@ -163,8 +190,8 @@ Yeniden üretmek için:
 
 ```bash
 node eval/run.ts --db data/build/hukuk.db         # yönlendirme, kurallar, atıf, gecikme
+node eval/variants.ts                              # tüm varyantlar, kümeler ve kapı
 node eval/lay-search.ts                            # halk dili, geliştirme seti
-node eval/lay-search.ts --golden eval/golden/search-lay-holdout.jsonl
 ./scripts/kabul-testi.sh                           # uçtan uca, gerçek stdio
 ```
 
