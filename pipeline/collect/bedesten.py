@@ -187,6 +187,8 @@ def main() -> int:
                         rid = str(row.get("documentId") or "")
                         if not rid or rid in seen:
                             continue
+                        if "ceza" in (row.get("birimAdi") or "").lower():
+                            continue  # criminal chambers are out of scope
                         try:
                             text = html_to_text(detail(rid))
                         except RuntimeError as exc:

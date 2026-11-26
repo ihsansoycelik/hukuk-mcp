@@ -249,6 +249,10 @@ def normalize(rec: dict) -> Karar:
         raise MalformedDecision("unknown-source")
 
     daire = (rec.get("daire") or "").strip()
+    # The corpus serves consumer and social-security (civil) questions. Criminal
+    # chambers match phrases like "ayıplı mal" through fraud cases; drop them.
+    if re.search(r"ceza\s+(dairesi|genel\s+kurulu)", tr_lower(daire)):
+        raise MalformedDecision("criminal-chamber")
     mahkeme, dslug = court_slug(daire, src)
 
     esas_yil, esas_no = parse_case_no(rec.get("esas") or "")

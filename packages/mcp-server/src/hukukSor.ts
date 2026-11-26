@@ -59,6 +59,8 @@ export function tetikleyiciVar(sorgu: string): boolean {
 }
 
 export const YONLENDIRME = {
+  /** runner-up within this score gap is named in a DİĞER OLASILIK line */
+  yakinFark: 0.06,
   /**
    * Calibrated against the retrieval team's 138-row routing golden set:
    * positive top-1 scores p10=0.334 / p50=0.582; out-of-domain traps median
@@ -380,6 +382,18 @@ export function hukukSor(input: HukukSorInput, corpus: CorpusPort, kural: KuralP
       metin: [dikkat, ...uyarilar.map((u) => `- ${u}`)].filter(Boolean).join("\n"),
       oncelik: ONCELIK.dikkat,
       kisaltma: uyarilar[0] ?? "dikkat notu kısaltıldı",
+    });
+  }
+
+  // Close runner-up (but still above the ambiguity margin): name it, so the
+  // model can switch with one derinles call instead of re-asking the user.
+  if (ikinci && en.skor - ikinci.skor < YONLENDIRME.yakinFark) {
+    const ad = dugumBul(ikinci.id)?.ad ?? ikinci.id;
+    bolumler.push({
+      etiket: "DİĞER OLASILIK",
+      metin: `${ikinci.id} — ${ad} (güven ${guven(ikinci.skor)}). Olay buna uyuyorsa derinles(id="${ikinci.id}").`,
+      oncelik: ONCELIK.eksik + 5,
+      kisaltma: ikinci.id,
     });
   }
 

@@ -39,6 +39,8 @@ check "sınır altı tutar hakem heyetine gider" "tuketici_hakem_heyeti" \
 check "ilgisiz anlatım reddedilir"           "DUGUM_BULUNAMADI" \
   sor "bir sorunum var ne yapmalıyım"
 check "gerçek belirsizlik soru sorar"        "BELİRSİZ" \
+  sor "ürün bozuk geldi parası iade edilmedi"
+check "yakın ikinci konu adlandırılır"       "DİĞER OLASILIK" \
   sor "ürün gelmedi ve ücret iadesi yapılmıyor"
 check "zamanaşımı hesaplanır"                "10.03.2027" \
   hesapla ayip_zamanasimi '{"teslim_tarihi":"2025-03-10"}'
