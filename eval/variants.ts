@@ -2,7 +2,7 @@
  * Variant runner: one command, one table.
  *
  *   node eval/variants.ts            run every variant, write eval/results/latest.{json,md}
- *   node eval/variants.ts --readme   rewrite the README block from eval/results/latest.json (no run)
+ *   node eval/variants.ts --readme   rewrite the eval/README.md block from eval/results/latest.json (no run)
  *
  * Each variant runs in its own child process (`--child <ad>`) so its env is
  * isolated. Measures per variant:
@@ -165,19 +165,19 @@ function readmeYaz(): void {
     process.exit(2);
   }
   const r = JSON.parse(readFileSync(SONUC_JSON, "utf8")) as Rapor;
-  const yol = resolve(KOK, "README.md");
+  const yol = resolve(KOK, "eval", "README.md");
   const metin = readFileSync(yol, "utf8");
   const bas = "<!-- eval:start -->";
   const son = "<!-- eval:end -->";
   const i = metin.indexOf(bas);
   const j = metin.indexOf(son);
   if (i < 0 || j < i) {
-    console.error("README.md içinde eval:start / eval:end işaretleri yok.");
+    console.error("eval/README.md içinde eval:start / eval:end işaretleri yok.");
     process.exit(2);
   }
-  const blok = `${bas}\n${markdownTablo(r)}\n\nKapı: ayrı setler birleşik Hit@5 en az %${r.gate.esik * 100} (varsayılan varyant "${r.gate.varyant}": ${pct(r.gate.hit5)}, ${r.gate.gecti ? "geçti" : "kaldı"}). Üretildi: ${r.tarih.slice(0, 10)}, \`node eval/variants.ts\`.\n${son}`;
+  const blok = `${bas}\n${markdownTablo(r)}\n\nKapı: ayrı setler birleşik Hit@5 en az %${r.gate.esik} (varsayılan varyant "${r.gate.varyant}": ${pct(r.gate.hit5)}, ${r.gate.gecti ? "geçti" : "kaldı"}). Üretildi: ${r.tarih.slice(0, 10)}, \`node eval/variants.ts\`.\n${son}`;
   writeFileSync(yol, metin.slice(0, i) + blok + metin.slice(j + son.length));
-  console.log("README.md eval bloğu yenilendi.");
+  console.log("eval/README.md eval bloğu yenilendi.");
 }
 
 function ana(): void {

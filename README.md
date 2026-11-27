@@ -2,41 +2,26 @@
 
 [![npm](https://img.shields.io/npm/v/hukuk-mcp)](https://www.npmjs.com/package/hukuk-mcp) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Türk tüketici hukuku ve SGK için MCP sunucusu. "Başıma şu geldi, ne yapabilirim?" sorusunu tek
-çağrıda yanıtlar. Yanıtta haklar, süreler, başvurulacak merci ve yol haritası yer alır. Her
-cümle doğrulanabilir bir kanun maddesine veya karar kimliğine bağlıdır.
+Türk tüketici hukuku ve SGK için MCP sunucusu. Olayı anlatırsınız; haklarınızı, sürelerinizi,
+başvurulacak merciyi ve kaynak maddeleri tek yanıtta döner.
+
+Çevrimdışı çalışır, sorgu sırasında LLM çağırmaz. Süreler ve parasal sınırlar kural motoruyla
+hesaplanır. Korpus pakete gömülüdür: 14 kanun, 5.266 madde, 3.018 Yargıtay ve BAM kararı
+(26 Kasım 2026).
 
 ```bash
 npx -y hukuk-mcp
 ```
 
-- Avukatlar için değil, tüketici ve sigortalı için yazıldı. Dil sadedir: "şu hakkın var, şu süre
-  içinde şuraya başvur".
-- Sorgu anında internete çıkmaz, üretken model çağırmaz. Süreleri ve parasal sınırları kural
-  motoru hesaplar, model tahmin etmez.
-- Korpus pakete gömülüdür: 14 kanun, 5.266 madde, 3.018 Yargıtay ve Bölge Adliye
-  Mahkemesi kararı (korpus tarihi 26 Kasım 2026).
-- 5 araç. Araç tanımlarının her turdaki maliyeti 964 token.
-
-Kapsam: tüketici hukuku (6502 sayılı Kanun ve bağlantılı TBK, HMK, HAUK, İİK hükümleri) ve sosyal
-güvenlik (5510, 4447): ayıplı mal ve hizmet, iade, cayma, mesafeli satış, abonelik, kredi kartı
-aidatı, kredi masrafları, paket tur, devre tatil, ön ödemeli konut, işsizlik ödeneği, GSS prim
-borcu, iş kazası bildirimi, hizmet tespiti, SGK kararına itiraz. Kira, iş hukuku (kıdem, ihbar),
-ceza ve aile hukuku kapsam dışıdır; sunucu bunu söyler ve konu uydurmaz.
-
 ## Kurulum
 
-Gereken tek şey Node.js 22.13 veya üstü.
+Node.js 22.13 veya üstü gerekir.
 
-npm: [hukuk-mcp](https://www.npmjs.com/package/hukuk-mcp). MCP Registry: `io.github.ihsansoycelik/hukuk-mcp`.
+```bash
+claude mcp add hukuk -- npx -y hukuk-mcp
+```
 
-| İstemci | Nasıl |
-| --- | --- |
-| Claude Code | `claude mcp add hukuk -- npx -y hukuk-mcp` |
-| Claude Code (eklenti + beceri) | `/plugin marketplace add ihsansoycelik/hukuk-mcp` sonra `/plugin install hukuk@hukuk-mcp` |
-| Claude Desktop | Sürümler sayfasındaki `hukuk-mcp.mcpb` dosyasını çift tıklayın, ya da aşağıdaki JSON |
-| Cursor, Windsurf, VS Code | aşağıdaki JSON (`~/.cursor/mcp.json`, VS Code'da anahtar `servers`) |
-| Codex | `~/.codex/config.toml` içine aşağıdaki TOML |
+Diğer istemciler (Claude Desktop, Cursor, VS Code, Windsurf):
 
 ```json
 {
@@ -46,215 +31,99 @@ npm: [hukuk-mcp](https://www.npmjs.com/package/hukuk-mcp). MCP Registry: `io.git
 }
 ```
 
+Codex (`~/.codex/config.toml`):
+
 ```toml
 [mcp_servers.hukuk]
 command = "npx"
 args = ["-y", "hukuk-mcp"]
 ```
 
-Uzak istemciler için `npx -y hukuk-mcp --http 8787` Streamable HTTP sunucusunu
-`http://127.0.0.1:8787/mcp` adresinde açar (durumsuz, yalnız POST, `/health` sağlık kontrolü).
-Dışarı açacaksanız önüne kendi TLS ve erişim katmanınızı koyun.
+Claude Desktop için [Sürümler](https://github.com/ihsansoycelik/hukuk-mcp/releases) sayfasında
+`hukuk-mcp.mcpb` paketi de var. Claude Code eklentisi:
+`/plugin marketplace add ihsansoycelik/hukuk-mcp`, ardından `/plugin install hukuk@hukuk-mcp`.
 
-Kurulumdan sonra modele olayı anlatmanız yeterli: *"hukuk aracına sor: …"*.
+HTTP üzerinden: `npx -y hukuk-mcp --http 8787` (`http://127.0.0.1:8787/mcp`, durumsuz, yalnız POST).
+Dışarı açacaksanız önüne TLS ve erişim katmanı koyun.
 
 ## Araçlar
 
-| Araç | Ne yapar | Örnek |
-| --- | --- | --- |
-| `hukuk_sor` | Tek çağrıda yanıt: özet, kurallar, haklar, yol, eksik bilgiler, kararlar | olayın kendisi, varsa tarih ve tutar |
-| `derinles` | Bir madde, karar veya konuyu kimliğiyle açar | `derinles(id="m:6502/11")` |
-| `ara` | Yargıtay ve BAM kararlarında arama, mahkeme ve yıl süzgeciyle | `ara(sorgu="paramı geri vermiyorlar")` |
-| `hesapla` | Süre, eşik ve merci kuralı | `hesapla(kural="ayip_zamanasimi", girdiler={teslim_tarihi:"2025-03-10"})` |
-| `dogrula` | Atıf denetimi: kimlik, künye ya da serbest metin | `dogrula(metin="TKHK m.11 ve aynı Kanunun 99. maddesi…")` |
+| Araç | Ne yapar |
+| --- | --- |
+| `hukuk_sor` | Olayı alır; özet, kurallar, haklar, yol haritası, eksik bilgiler ve örnek kararları döner |
+| `derinles` | Madde, karar ya da konuyu kimliğiyle açar, ör. `m:6502/11` |
+| `ara` | Yargıtay ve BAM kararlarında arama (mahkeme ve yıl süzgeci) |
+| `hesapla` | Tek bir süre, eşik ya da merci kuralını hesaplar |
+| `dogrula` | Metindeki kanun ve karar atıflarının korpusta olup olmadığını denetler |
 
-Beş araç da salt okunurdur ve metnin yanında yapılandırılmış çıktı da döner (`hukuk_sor`, `hesapla`
-ve `dogrula` için `structuredContent`; JSON Schema'ları `sema://cikti` kaynağında). Metin birincil kanaldır. `hukuk_sor` yanıtının başlığındaki
-`NEDEN tetik: ...` satırı konunun hangi tetikleyici ifadelerle seçildiğini, `ara` yanıtındaki
-`STRATEJİ ...` satırı sonucun hangi arama adımından geldiğini gösterir; sonuç yoksa `DENENEN` satırı
-denenen adımları ve sonraki öneriyi verir.
+Hepsi salt okunurdur. `hukuk_sor`, `hesapla` ve `dogrula` metnin yanında `structuredContent` da döner.
 
-### `hukuk_sor` örneği
+## Örnek
 
-Girdi: *"Bayiden aldığım sıfır arabanın şanzımanı 3 ayda 4 kez arıza yaptı, paramı geri alabilir
-miyim?"*, tutar 250.000 TL, teslim 1 Haziran 2026. Gerçek çıktıdan kısaltılmıştır:
+*"Bayiden aldığım sıfır arabanın şanzımanı 3 ayda 4 kez arıza yaptı, paramı geri alabilir
+miyim?"* (tutar 250.000 TL, teslim 1 Haziran 2026). Kısaltılmış çıktı:
 
 ```text
-DÜĞÜM t/ayipli-mal/arac (güven 0.51) | kart v1 taslak | sürüm …
 ÖZET
 Satın aldığınız araçta teslimden sonra ortaya çıkan arıza ayıplı mal sayılabilir; bu durumda
 satıcıya karşı dört seçimlik haktan birini kullanabilirsiniz [m:6502/11]. …
 KURALLAR
-- gorevli_merci: tuketici_mahkemesi — 250.000,00 TL değerindeki uyuşmazlık için 26 Kasım 2026
-  Perşembe tarihinde geçerli sınır 186.000,00 TL: görevli merci tüketici mahkemesi. […]
-- arabuluculuk_dava_sarti: gerekli — … dava açmadan önce arabuluculuk dava şartıdır (m.73/A). […]
-- ayip_zamanasimi: 01.06.2028 — Teslim 1 Haziran 2026 Pazartesi; ayıplı maldan sorumlulukta son
-  gün 1 Haziran 2028 Perşembe (m.12/1 süresi). […]
-- harc_durumu: muaf — davacı tüketici olduğu için m.73/2 uyarınca harçtan muaf. […]
-HAKLAR
-- Sözleşmeden dönme: aracı geri verip ödediğiniz bedeli isteme [m:6502/11]
-- …
+- gorevli_merci: tuketici_mahkemesi (sınır 186.000,00 TL)
+- arabuluculuk_dava_sarti: gerekli (m.73/A)
+- ayip_zamanasimi: 01.06.2028 (m.12/1)
+- harc_durumu: muaf (m.73/2)
 YOL
 1) Satıcıya yazılı bildirim yapın ve dört haktan hangisini seçtiğinizi açıkça yazın [m:6502/11]
 …
-EKSİK OLGULAR
-satıcının yerleşim yeri, tüketicinin yerleşim yeri
 KARARLAR
-- k:ygt-3hd-2025-3587-2026-1707 (3. Hukuk Dairesi, 30.03.2026, onama) — …
-DERINLES
-t/ayipli-mal/arac | m:6502/11 | m:6502/12 | k:ygt-3hd-2025-3587-2026-1707
-NOT Bilgi amaçlıdır, hukuki danışmanlık değildir; somut olayınız için bir avukata danışın.
+- k:ygt-3hd-2025-3587-2026-1707 (3. Hukuk Dairesi, 30.03.2026, onama)
 ```
 
-Bu yanıt 1.174 token tuttu ve tek çağrıdır. Yanıtın bir token bütçesi vardır (`butce`,
-varsayılan 1500, en fazla 4000). İki konu birbirine yakınsa yanıt `DİĞER OLASILIK` satırıyla
-ikinci konuyu adlandırır. Konu belirsizse sunucu tahmin etmez, `BELİRSİZ DÜĞÜM` ile seçenek sunar.
+## Kapsam
 
-### `dogrula` ile atıf denetimi
+Tüketici hukuku (6502 ve bağlantılı TBK, HMK, HAUK, İİK hükümleri) ve sosyal güvenlik (5510, 4447):
+ayıplı mal ve hizmet, cayma, mesafeli satış, abonelik, kredi kartı aidatı, paket tur, devre tatil,
+işsizlik ödeneği, GSS prim borcu, iş kazası, hizmet tespiti, SGK kararına itiraz.
 
-Model kullanıcıya yanıt göndermeden önce taslağını `dogrula(metin=…)` ile denetleyebilir. Kanun
-kısaltmaları (TKHK, TBK, HMK, TMK, İİK…), "6502 sayılı Kanunun 12. maddesi" gibi yazımlar,
-"aynı Kanun" ve tek başına geçen "m. 73" gibi geri göndermeler çözülür. Gerçek çıktı:
-
-```text
-ATIF DENETİMİ 10 atıf: 5 doğru, 1 mülga, 1 yok, 3 kapsam dışı
-✓ DOĞRU m:6502/11 | "TKHK m.11" | Tüketicinin seçimlik hakları | https://www.mevzuat.gov.tr/…
-✓ DOĞRU m:6502/12 | "6502 sayılı Kanunun 12. maddesinde" | Zamanaşımı | …
-✗ YOK m:6502/99 | "aynı Kanunun 99. maddesi" | 6502'de böyle madde yok (son madde 88)
-⚠ MÜLGA m:6100/107 | "HMK m.107" | madde yürürlükten kalkmış: (Mülga:16/7/2026-7589/19 md.)
-? KAPSAM DIŞI m:4857/17 | "4857 sayılı İş Kanunu m.17" | 4857 sayılı kanun korpusta yok; doğrulanamadı
-✓ DOĞRU k:ygt-3hd-2026-5450-2026-4405 | "Yargıtay 3. Hukuk Dairesi 2026/5450 E., 2026/4405 K." | …
-? KAPSAM DIŞI k:ygt-3hd-2019-1111-2020-2222 | "Yargıtay 3. Hukuk Dairesi 2019/1111 E. 2020/2222 K." | korpusta yok; …
-NOT Varlık denetimidir: maddenin/kararın içeriğinin doğru aktarıldığını kontrol etmez.
-```
-
-Bu bir varlık denetimidir. Gerçek bir karar numarasının altına uydurulmuş bir hüküm yazılırsa
-denetim bunu yakalamaz; içerik için `derinles` ile metni açın.
-
-## Ölçülen sayılar
-
-Korpus `v20261126.168861017`, 26 Kasım 2026. Ölçüm makinesi 2 vCPU, başka işlerle paylaşılan bir sunucu.
-
-| Ölçüm | Sonuç |
-| --- | --- |
-| Konu yönlendirme, ilk sıra / ilk 3 (156 pozitif soru) | %97,4 (152/156) / %99,4 (155/156) |
-| Kapsam dışı tuzak sorular belirsiz döndü | 26/26 |
-| Atıf bütünlüğü (yanıtlardaki her kimlik korpusta var) | %100 |
-| Gecikme p95, gerçek korpus, tüm araçlar | 163 ms |
-| npm paketi (sıkıştırılmış / açılmış) | 19,8 MB / 60,8 MB |
-| Birim + e2e testleri / kabul testi | 118/118 / 15/15 |
-
-Aşağıdaki tablo `node eval/variants.ts` çıktısından üretilir (`node eval/variants.ts --readme`), elle
-düzenlenmez.
-
-<!-- eval:start -->
-| Ölçüm | yalın FTS | + köprü | + köprü + atıf sinyali |
-| --- | --- | --- | --- |
-| Madde getirme, küme A (250 karar): Recall@5 | 1.3% | 1.3% | 1.3% |
-| Madde getirme, küme A: Recall@10 | 2.1% | 2.1% | 2.1% |
-| Madde getirme, küme A: MRR@10 | 0.013 | 0.013 | 0.013 |
-| Halk dili karar arama, geliştirme (27 sorgu): Hit@5 | 59.3% | 85.2% | 85.2% |
-| geliştirme: P@5 | 36.3% | 48.1% | 47.4% |
-| geliştirme: MRR@10 | 0.442 | 0.640 | 0.631 |
-| geliştirme: nDCG@10 | 0.307 | 0.470 | 0.471 |
-| Halk dili karar arama, ayrı set 1 (20 sorgu): Hit@5 | 80.0% | 90.0% | 85.0% |
-| ayrı set 1: P@5 | 38.0% | 41.0% | 39.0% |
-| ayrı set 1: MRR@10 | 0.553 | 0.653 | 0.594 |
-| ayrı set 1: nDCG@10 | 0.346 | 0.406 | 0.394 |
-| Halk dili karar arama, ayrı set 2 (38 sorgu): Hit@5 | 55.3% | 60.5% | 63.2% |
-| ayrı set 2: P@5 | 26.3% | 35.3% | 34.7% |
-| ayrı set 2: MRR@10 | 0.436 | 0.522 | 0.514 |
-| ayrı set 2: nDCG@10 | 0.260 | 0.351 | 0.353 |
-| Ayrı setler birleşik (58 sorgu): Hit@5 | 63.8% | 70.7% | 70.7% |
-| Gecikme `ara`: p50 | 68.6 ms | 86.9 ms | 65.3 ms |
-| Gecikme `ara`: p95 | 177.4 ms | 244.9 ms | 157.8 ms |
-
-Kapı: ayrı setler birleşik Hit@5 en az %6500 (varsayılan varyant "+ köprü": 70.7%, geçti). Üretildi: 2026-11-26, `node eval/variants.ts`.
-<!-- eval:end -->
-
-İki küme var. Küme A madde getirmeyi ölçer: bir kararın özeti (atıflar ve rakamlar silinmiş) sorgu,
-kararın kendi metninde andığı madde de ilgili madde sayılır. Halk dili karar aramada her sorgu
-gündelik Türkçeyle yazıldı ve hukuk terimini bilerek içermez ("paramı geri vermiyorlar", "bedel
-iadesi" değil). Bir karar, Adalet Bakanlığı veritabanının kendi ifade aramasında o kavram için
-döndüyse ve tam metninde o ifade geçiyorsa ilgili sayılır. Yani ilgililiği bizim sıralamamız ya da
-sorgunun kelimeleri değil, kaynak belirler. Halk dili ile hukuk dili arasındaki köprü
-([`esanlam.ts`](packages/retrieval/src/esanlam.ts)) yalnız geliştirme setine bakılarak yazıldı; genellemeyi
-gösteren sayı ayrı setlerdekidir. Ayrıntı: [`eval/README.md`](eval/README.md).
-
-Eski mekanik altın set (`eval/golden/search-real.jsonl`) bir kararı, sorgunun kendi köklerini
-içeriyorsa ilgili sayar. Sorguyu hukuk diline çeviren her iyileştirmeyi cezalandırdığı için artık
-kapı olarak kullanılmıyor; sayısı (%17,0; köprü kapalıyken %21,0) bilgi için `node eval/run.ts --db data/build/hukuk.db`
-çıktısında duruyor.
-
-Yeniden üretmek için:
-
-```bash
-node eval/run.ts --db data/build/hukuk.db         # yönlendirme, kurallar, atıf, gecikme
-node eval/variants.ts                              # tüm varyantlar, kümeler ve kapı
-node eval/lay-search.ts                            # halk dili, geliştirme seti
-./scripts/kabul-testi.sh                           # uçtan uca, gerçek stdio
-```
-
-## Benzerleri ve farkı
-
-Türkçe hukuk MCP'leri ve başka dillerde hızla yayılan hukuk sunucuları Kasım 2026'da incelendi.
-
-| Proje | Yaklaşım | hukuk-mcp'nin farkı |
-| --- | --- | --- |
-| saidsurucu/yargi-mcp | Türk içtihat arama; ücretsiz barındırılan uç kapandı, ücretli sürüme yönlendiriyor | ücretsiz, yerel, hesap gerekmez |
-| saidsurucu/mevzuat-mcp (bir çatalı) | 26 araç, Chromium ile canlı kazıma (~480 MB) | 5 araç, tarayıcı yok, çevrimdışı |
-| aydincan/turk-hukuku-mevzuat-mcp | mevzuat.gov.tr'den canlı güncel metin | süre ve merci hesabı, vatandaş dili; canlı güncellik bizde yok |
-| chrisryugj/korean-law-mcp (Kore) | ~250 kısaltma, sıfır sonuçta geri düşme zinciri, serbest metin atıf denetimi | aynı fikirler Türkçeye uyarlandı: kısaltma ve halk dili köprüsü, atıf denetimi |
-| aa0101181514/tw-legal-rag (Tayvan) | ~22,8 milyon karar, atıf beyaz listesi, temyiz zinciri | küçük ve gömülü korpus; temyiz zinciri henüz yok |
-
-Bilerek alınmayanlar: sorgu yolunda LLM, gömme (embedding) ve vektör veritabanı, canlı kaynak
-çağrısı, onlarca araç. Hepsi ya korpusu büyütür ya çevrimdışı çalışmayı bozar ya da her turda
-token maliyetini artırır.
+Kira, iş hukuku (kıdem, ihbar), ceza ve aile hukuku kapsam dışıdır. Sunucu bunu söyler, konu uydurmaz.
 
 ## Sınırlar
 
-- Korpus tüm içtihat değildir. 3.018 karar, tüketici ve SGK konularında bedesten'in ifade
-  aramasıyla toplandı. Yanıttaki kararlar örnektir, emsal taraması değildir.
-- Kural parametrelerinin bir kısmı `[teyit bekliyor]` etiketlidir: değer kaynaklıdır ama bir
-  avukatın onayından geçmemiştir. 2027 tüketici hakem heyeti sınırları Aralık 2026 tebliğiyle
-  güncellenecek.
-- Kararların tam metni saklanmaz; özet (L0/L1) ve arama anahtarı saklanır. Tam metin için
-  kaynak bağlantısı verilir.
-- Yönetmelikler (ör. Mesafeli Sözleşmeler Yönetmeliği) korpusta yoktur; sunucu bunları
-  `[+1 ikincil mevzuat]` diye sayar, çözülemeyen kimlik üretmez.
-- Emeklilik yaşı ve aylık hesabı, kıdem ve ihbar, malpraktis ve dilekçe üretimi kapsam dışıdır.
-- Mevzuat ve içtihat değişir. Yanıt korpus tarihine kadar geçerlidir.
+- Korpus tüm içtihat değildir. Yanıttaki kararlar örnektir, emsal taraması yerine geçmez.
+- Bazı kural parametreleri `[teyit bekliyor]` etiketlidir: değer kaynaklıdır ama avukat onayından
+  geçmemiştir.
+- Yönetmelikler korpusta yoktur. Kararların tam metni saklanmaz, kaynak bağlantısı verilir.
+- `dogrula` yalnız varlık denetimi yapar; maddenin içeriğinin doğru aktarılıp aktarılmadığına bakmaz.
+- Yanıt korpus tarihine kadar geçerlidir.
+
+Ölçümler ve nasıl üretildikleri: [eval/README.md](eval/README.md). Benzer projelerle karşılaştırma:
+[docs/RAKIPLER.md](docs/RAKIPLER.md).
 
 ## Gizlilik
 
-Sunucu yereldir. Soru hiçbir sunucuya gönderilmez, telemetri yoktur, kalıcı log tutulmaz.
-İnternet yalnız korpusu derlerken kullanılır.
+Soru hiçbir yere gönderilmez. Telemetri ve kalıcı log yoktur. İnternet yalnız korpus derlenirken
+kullanılır.
 
 ## Yasal uyarı
 
-Bu araç hukuki danışmanlık vermez ve avukatın yerini almaz. Resmî metne erişimi kolaylaştırır;
-somut olaya uygulamak sizin ya da avukatınızın işidir. Zamanaşımı, haciz, tahliye, işten çıkarma
-gibi telafisi zor durumlarda bir avukata veya baroya (adli yardım) başvurun.
+Bu araç hukuki danışmanlık vermez. Zamanaşımı, haciz, tahliye, işten çıkarma gibi durumlarda bir
+avukata ya da baroya (adli yardım) başvurun.
 
 ## Kaynaktan derleme
 
 ```bash
 git clone https://github.com/ihsansoycelik/hukuk-mcp && cd hukuk-mcp
 pnpm install
-python3 pipeline/collect/bedesten.py      # kararlar, saniyede 1 istek
-python3 pipeline/build.py                 # kanunları indirir, data/build/hukuk.db üretir
-node scripts/build-graph.ts               # karar→madde atıfları ve temyiz zinciri (pnpm build:data ikisini birlikte çalıştırır)
-pnpm check                                # typecheck + testler + kabul testi
-node scripts/build-npm.ts                 # dist-npm/ (npm paketi ve .mcpb içeriği)
+python3 pipeline/collect/bedesten.py   # kararlar, saniyede 1 istek
+pnpm build:data                        # kanunlar ve atıf grafiği, data/build/hukuk.db
+pnpm check                             # typecheck, testler, kabul testi
 ```
 
-## Kaynaklar
+Veri kaynakları: [mevzuat.gov.tr](https://www.mevzuat.gov.tr),
+[bedesten.adalet.gov.tr](https://bedesten.adalet.gov.tr), [resmigazete.gov.tr](https://www.resmigazete.gov.tr).
+Erişim kuralları [ADR-001](docs/adr/ADR-001-kaynak-erisim.md) içinde.
 
-- Mevzuat: [mevzuat.gov.tr](https://www.mevzuat.gov.tr) (Cumhurbaşkanlığı Mevzuat Bilgi Sistemi)
-- Kararlar: Adalet Bakanlığı [bedesten.adalet.gov.tr](https://bedesten.adalet.gov.tr), UYAP Emsal ve
-  mevzuat.adalet.gov.tr'nin arka ucu
-- Parasal sınırlar: [resmigazete.gov.tr](https://www.resmigazete.gov.tr) tebliğleri
-- Erişim kuralları: [ADR-001](docs/adr/ADR-001-kaynak-erisim.md). Mimari kararlar: [`docs/adr/`](docs/adr/)
+## Lisans
 
-Katkı: [CONTRIBUTING.md](CONTRIBUTING.md). Lisans: kod MIT ([LICENSE](LICENSE)), korpus notu
-[DATA-LICENSE.md](DATA-LICENSE.md).
+Kod MIT ([LICENSE](LICENSE)). Korpus için [DATA-LICENSE.md](DATA-LICENSE.md). Katkı:
+[CONTRIBUTING.md](CONTRIBUTING.md).
